@@ -1,0 +1,22 @@
+<style>
+  #episode-list {
+      padding-left: 30px;
+  }
+    .user-list-avatar {
+        width: 30px;
+        border-radius: 20px;
+        margin-left: -15px;
+        vertical-align: middle;
+    }
+</style>
+<ul id="episode-list">
+    {% for id, episode in episodes.items %}
+<li>
+    {% for user in episode.users  %} <img class="user-list-avatar" src="https://{{ base }}/{{ user.avatar }}" /> {% endfor %}
+        <a href="{{ episode.url }}">{{ episode.title }}</a> |
+    {% for user in episode.users %}
+     {{ user.name }}{% include "episodelist/comma.html" %}
+    {% endfor %}
+    </li>
+    {% endfor %}
+</ul>
