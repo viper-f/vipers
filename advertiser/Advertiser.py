@@ -90,10 +90,10 @@ class Advertiser:
     def work(self, url):
         self.driver1.get(url)
         code_home = self.get_code(self.driver1)
-        print(code_home)
         self.login(self.driver1)
         self.links += self.scrape_links(self.driver1, url)
         n = 0
+        print(self.links)
         while n < len(self.links):
             self.driver2.get(self.links[n])
             code_partner = self.get_code(self.driver2)
@@ -103,8 +103,10 @@ class Advertiser:
                 self.go_to_last_page(self.driver1)
                 link = self.find_last_post_link(self.driver1)
                 full_code_home = code_home + '\n' + '[url=' + link + ']Ваша реклама[/url]'
-                print(full_code_home)
+                #print(full_code_home)
                 #self.post(self.driver2, full_code_home)
+            else:
+                print('Not logged in:' + self.links[n])
             n += 1
 
 
