@@ -1,0 +1,5 @@
+.idea
+venv
+advertiser/__pycache__
+episodelist/__pycache__
+vipers/__pycache__
