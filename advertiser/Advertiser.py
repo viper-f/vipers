@@ -36,8 +36,9 @@ class Advertiser:
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "navlogout"))
             )
+            return True
         except:
-            driver.quit()
+            return False
 
     def get_code(self, driver):
         WebDriverWait(driver, 5).until(
@@ -64,19 +65,27 @@ class Advertiser:
                 EC.presence_of_element_located((By.CSS_SELECTOR, '#mail-reply, #post'))
             )
         except:
-            driver.find_element_by_tag_name('body').send_keys("Keys.ESCAPE")
+            driver.find_element(By.TAG_NAME, 'body').send_keys("Keys.ESCAPE")
         try:
             form = driver.find_element(By.ID, "main-reply")
         except:
-            try:
-                form = driver.find_element(By.ID, "post")
-            except:
-                return False
+            return False
         form.clear()
-        form.send_keys("Keys.CONTROL" + "a")
-        form.send_keys("Keys.DELETE")
         form.send_keys(message)
+        driver.find_element(By.CSS_SELECTOR, '.punbb .formsubmit input.submit').click()
         return True
+
+    def go_to_last_page(self, driver):
+        if len(driver.find_elements(By.CSS_SELECTOR, '.linkst .pagelink a:nth-last-child(2)')) > 0:
+            last_page = driver.find_element(By.CSS_SELECTOR, '.linkst .pagelink a:nth-last-child(2)').get_attribute('href')
+            driver.get(last_page)
+
+    def find_last_post_link(self, driver):
+        permalink = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '.endpost .permalink'))
+        )
+        return permalink.get_attribute("href")
+
 
     def work(self, url):
         self.driver1.get(url)
@@ -85,13 +94,20 @@ class Advertiser:
         self.login(self.driver1)
         self.links += self.scrape_links(self.driver1, url)
         n = 0
-        # while n < len(self.links):
-        #     self.driver2.get(self.links[n])
-        #     code_partner = self.get_code(self.driver2)
-        #     print(code_partner)
-        #     n += 1
+        while n < len(self.links):
+            self.driver2.get(self.links[n])
+            code_partner = self.get_code(self.driver2)
+            logged_id = self.login(self.driver2)
+            if logged_id:
+                self.post(self.driver1, code_partner)
+                self.go_to_last_page(self.driver1)
+                link = self.find_last_post_link(self.driver1)
+                full_code_home = code_home + '\n' + '[url=' + link + ']Ваша реклама[/url]'
+                print(full_code_home)
+                #self.post(self.driver2, full_code_home)
+            n += 1
 
 
 
 advertiser = Advertiser()
-advertiser.work("https://kingscross.f-rpg.me/viewtopic.php?id=6471&p=42#p788489")
+advertiser.work("http://viperstest.rusff.me/viewtopic.php?id=2#p2")
