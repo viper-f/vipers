@@ -17,14 +17,16 @@ parser.add_option("-u", '--url', dest="base_url")
 channel_layer = get_channel_layer()
 group_name = 'test'
 
-advertiser = Advertiser(log_mode='channel', channel=channel_layer, group_name=group_name)
-advertiser.work(options.base_url)
+# advertiser = Advertiser(log_mode='channel', channel=channel_layer, group_name=group_name)
+# advertiser.work(options.base_url)
 
-# async_to_sync(channel_layer.group_send)(
-#     'test',
-#     {
-#         'type': 'chat_message',
-#         'message': str(links),
-#     })
+for i in range(20):
+    async_to_sync(channel_layer.group_send)(
+        'test',
+        {
+            'type': 'chat_message',
+            'message': 'Some line of text',
+        })
+    time.sleep(2)
 # print('Message sent')
 

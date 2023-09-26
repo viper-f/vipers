@@ -1,5 +1,13 @@
 let chatSocket = null;
 
+Date.prototype.today = function () {
+    return ((this.getDate() < 10)?"0":"") + this.getDate() +"."+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"."+ this.getFullYear();
+}
+
+Date.prototype.timeNow = function () {
+     return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
+}
+
 function connect() {
     chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/test/");
 
@@ -21,7 +29,8 @@ function connect() {
 
         switch (data.type) {
             case "chat_message":
-                document.getElementById('result').innerHTML += data.message + "\n";
+                var newDate = new Date();
+                document.getElementById('result').innerHTML += '<span class="log-time">' + newDate.today() + " " + newDate.timeNow() + '</span> ' + data.message + "<br />";
                 break;
             default:
                 console.error("Unknown message type!");
