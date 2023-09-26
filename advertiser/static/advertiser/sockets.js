@@ -21,7 +21,7 @@ function connect() {
 
         switch (data.type) {
             case "chat_message":
-                document.getElementById('result').innerHTML = data.message;
+                document.getElementById('result').innerHTML += data.message + "\n";
                 break;
             default:
                 console.error("Unknown message type!");
