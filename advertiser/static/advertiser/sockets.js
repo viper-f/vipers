@@ -28,9 +28,14 @@ function connect() {
         console.log(data);
 
         switch (data.type) {
-            case "chat_message":
+            case "log_message":
                 var newDate = new Date();
-                document.getElementById('result').innerHTML += '<span class="log-time">' + newDate.today() + " " + newDate.timeNow() + '</span> ' + data.message + "<br />";
+                payload = JSON.parse(data.message)
+                document.getElementById('total').innerHTML = payload.total
+                document.getElementById('total').innerHTML = payload.visited
+                document.getElementById('success').innerHTML = payload.success
+                document.getElementById('skipped').innerHTML = payload.skipped
+                document.getElementById('logs').innerHTML += '<span class="log-time">' + newDate.today() + " " + newDate.timeNow() + '</span> ' + payload.message + "<br />";
                 break;
             default:
                 console.error("Unknown message type!");

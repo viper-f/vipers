@@ -6,6 +6,7 @@ import socket
 from selenium import webdriver
 from Advertiser import Advertiser
 from optparse import OptionParser
+import json
 
 sys.path.insert(0, './../vipers')
 import vipers
@@ -24,8 +25,14 @@ for i in range(20):
     async_to_sync(channel_layer.group_send)(
         'test',
         {
-            'type': 'chat_message',
-            'message': 'Some line of text',
+            'type': 'log_message',
+            'message': json.dumps({
+                "total": (i+10),
+                "visited": i,
+                "success": (i * 0.7),
+                "skipped": (i * 0.3),
+                "message": "Now loading http://google.com"
+            }),
         })
     time.sleep(2)
 # print('Message sent')

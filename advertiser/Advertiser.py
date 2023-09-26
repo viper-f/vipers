@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from asgiref.sync import async_to_sync
+import json
 
 
 class Advertiser:
@@ -15,15 +16,21 @@ class Advertiser:
         self.channel = channel
         self.group_name = group_name
 
-    def log(self, message):
+    def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
-            print(message)
+            print('Total: ' + total + '; Success: ' + success + '; Message: ' + message)
         if self.log_mode == 'channel':
             async_to_sync(self.channel.group_send)(
                 self.group_name,
                 {
-                    'type': 'chat_message',
-                    'message': message,
+                    'type': 'log_message',
+                    'message': json.dumps({
+                        "total": total,
+                        "visited": visited,
+                        "success": success,
+                        "skipped": skipped,
+                        "message": message
+                    }),
                 })
 
     def test(self):

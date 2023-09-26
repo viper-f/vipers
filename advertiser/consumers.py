@@ -25,8 +25,14 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name,
         )
         self.send(text_data=json.dumps({
-                'type': 'chat_message',
-                'message': 'This is a message',
+                'type': 'log_message',
+                'message': json.dumps({
+                    'total': 0,
+                    'visited': 0,
+                    'success': 0,
+                    'skipped': 0,
+                    'message': "Connecting to the worker..."
+                }),
             }))
 
     def disconnect(self, close_code):
@@ -43,10 +49,10 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
-                'type': 'chat_message',
+                'type': 'log_message',
                 'message': message,
             }
         )
 
-    def chat_message(self, event):
+    def log_message(self, event):
         self.send(text_data=json.dumps(event))
