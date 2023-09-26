@@ -1,12 +1,17 @@
 <html>
-<body>
-
+<head>
+    {% load static %}
+        <link rel="stylesheet" href="{% static 'css/neumorphism-ui.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body class="light-mode">
+<div id="wrapper">
 <form action="/advertiser/" method="post">
     {% csrf_token %}
    {{ form }}
-    <input type="submit" value="OK">
+    <input type="submit" class="sul-btn" value="OK">
 </form>
-
+</div>
 
 
 </body>
