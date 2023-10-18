@@ -48,7 +48,7 @@ def process(request):
     #                       stderr=subprocess.STDOUT) as process:
     #     for line in process.stdout:
     #         print(line.decode('utf8'))
-    subprocess.Popen(["python", "advertiser/advertiser_process.py",
+    subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
                       "-u", url,
                       "-su", start_url,
                       "-t", template,
