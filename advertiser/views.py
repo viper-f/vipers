@@ -14,6 +14,11 @@ def index(request):
         form = UrlForm(request.POST)
         if form.is_valid():
             request.session['url'] = form.cleaned_data['url']
+            request.session['start_url'] = form.cleaned_data['start_url']
+            request.session['template'] = form.cleaned_data['template']
+            request.session['custom_credentials'] = form.cleaned_data['custom_credentials']
+            request.session['custom_username'] = form.cleaned_data['custom_username']
+            request.session['custom_password'] = form.cleaned_data['custom_password']
             return HttpResponseRedirect(reverse('advertiser:process'))
         else:
             print('Something is wrong')
@@ -23,12 +28,24 @@ def index(request):
 
 
 def process(request):
-    data = request.session['url']
+    url = request.session['url']
+    start_url = request.session['start_url']
+    template = request.session['template']
+    custom_credentials = request.session['custom_credentials']
+    custom_username = request.session['custom_username']
+    custom_password = request.session['custom_password']
     # with subprocess.Popen(["python", "advertiser/advertiser_process.py", "-u", data, "symbol"],
     #                       stdout=subprocess.PIPE,
     #                       stderr=subprocess.STDOUT) as process:
     #     for line in process.stdout:
     #         print(line.decode('utf8'))
-    subprocess.Popen(["python", "advertiser/advertiser_process.py", "-u", data, "symbol"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.Popen(["python", "advertiser/advertiser_process.py",
+                      "-u", url,
+                      "-su", start_url,
+                      "-t", template,
+                      "-cc", custom_credentials,
+                      "-cu", custom_username,
+                      "-cp", custom_password,
+                      "symbol"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     template = loader.get_template("advertiser/process.html")
     return HttpResponse(template.render())
