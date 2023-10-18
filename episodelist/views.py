@@ -5,7 +5,6 @@ import requests
 
 def index(request, ids):
     base = 'kingscross.f-rpg.me'
-    ids = '2188,2184'
     cookie = dict(mybb_ru='MjE4OHwzfDkyOTZmNzM1ZjMxNjliYmM1ZWE4MjhhMTViNjVlNTc3YmViMzNiOTE=')
     url = 'https://'+base+'/api.php?method=users.get&user_id='+ids+'&fields=user_id,username,avatar'
     response = requests.get(url, cookies=cookie)
