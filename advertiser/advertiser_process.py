@@ -52,7 +52,7 @@ custom_login_code = {
 }
 
 advertiser = Advertiser(log_mode='channel', channel=channel_layer, group_name=group_name, data_grab=False)
-if options.custom_credentians:
+if options.custom_credentians == 1:
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
 advertiser.work(
     url=options.base_url,

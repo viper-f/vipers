@@ -31,7 +31,10 @@ def process(request):
     url = request.session['url']
     start_url = request.session['start_url']
     template = request.session['template']
-    custom_credentials = request.session['custom_credentials']
+    if request.session['custom_credentials']:
+        custom_credentials = 1
+    else:
+        custom_credentials = 0
     custom_username = request.session['custom_username']
     custom_password = request.session['custom_password']
     # with subprocess.Popen(["python", "advertiser/advertiser_process.py", "-u", data, "symbol"],
