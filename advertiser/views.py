@@ -23,7 +23,13 @@ def index(request):
         else:
             print('Something is wrong')
     else:
-        form = UrlForm
+        form = UrlForm(initial={
+            'url': 'https://kingscross.f-rpg.me/viewtopic.php?id=6570&p=11',
+            'start_url': 'https://kingscross.f-rpg.me/viewtopic.php?id=6570&p=11',
+            'template': "[align=center][size=20][font=Impact]A devil family in search of a [url=https://kingscross.f-rpg.me/viewtopic.php?pid=789065#p789065]sister[/url][/font][/size]\n[url=https://kingscross.f-rpg.me/viewtopic.php?pid=789065#p789065][img]https://i.imgur.com/wHedyqx.png[/img][/url]\n[size=20][font=Impact]Scheming, spying, backstabbing, possible incest[/font][/size][/align]",
+            'custom_credentials': True,
+            'custom_username': 'Assistant'
+        })
         return render(request, "advertiser/index.html", {"form": form})
 
 
@@ -32,9 +38,9 @@ def process(request):
     start_url = request.session['start_url']
     template = request.session['template']
     if request.session['custom_credentials']:
-        custom_credentials = 1
+        custom_credentials = 'true'
     else:
-        custom_credentials = 0
+        custom_credentials = 'false'
     custom_username = request.session['custom_username']
     custom_password = request.session['custom_password']
     # with subprocess.Popen(["python", "advertiser/advertiser_process.py", "-u", data, "symbol"],
