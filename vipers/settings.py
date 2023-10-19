@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-tp^1r-%f25$1p*cr0vxeonruy!(pbp^)p8va-1nk)d@8pb)&px
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['162.19.249.59', 'viper-frpg.ovh', 'vps-30dd994d.vps.ovh.net', 'localhost']
+ALLOWED_HOSTS = ['162.19.249.59', '127.0.0.1', 'viper-frpg.ovh', 'vps-30dd994d.vps.ovh.net', 'localhost']
 
 
 # Application definition

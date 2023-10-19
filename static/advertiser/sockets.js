@@ -30,12 +30,14 @@ function connect() {
         switch (data.type) {
             case "log_message":
                 var newDate = new Date();
-                payload = JSON.parse(data.message)
+                var payload = JSON.parse(data.message)
                 document.getElementById('total').innerHTML = payload.total
                 document.getElementById('total').innerHTML = payload.visited
                 document.getElementById('success').innerHTML = payload.success
                 document.getElementById('skipped').innerHTML = payload.skipped
-                document.getElementById('logs').innerHTML += '<span class="log-time">' + newDate.today() + " " + newDate.timeNow() + '</span> ' + payload.message + "<br />";
+                var logs = document.getElementById('logs')
+                logs.innerHTML += '<span class="log-time">' + newDate.today() + " " + newDate.timeNow() + '</span> ' + payload.message + "<br />";
+                logs.scrollTop = scroll_to_bottom.scrollHeight;
                 break;
             default:
                 console.error("Unknown message type!");

@@ -1,13 +1,28 @@
 <html>
-<body>
-<p>Here will be the result:</p>
-<div class="block"><span style="block-title">Total</span><div id="total"></div></div>
-<div class="block"><span style="block-title">Visited</span><div id="visited"></div></div>
-<div class="block"><span style="block-title">Success</span><div id="success"></div></div>
-<div class="block"><span style="block-title">Skipped</span><div id="skipped"></div></div>
-<div id="logs"></div>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/neumorphism-ui.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body class="light-mode">
+<div id="wrapper">
+    <div id="total-blocks">
+    <div class="block sul-box-raised-2"><span style="block-title">Total</span>
+        <div id="total"></div>
+    </div>
+    <div class="block sul-box-raised-2"><span style="block-title">Visited</span>
+        <div id="visited"></div>
+    </div>
+    <div class="block sul-box-raised-2"><span style="block-title">Success</span>
+        <div id="success"></div>
+    </div>
+    <div class="block sul-box-raised-2"><span style="block-title">Skipped</span>
+        <div id="skipped"></div>
+    </div>
+    </div>
+    <div id="logs" class="sul-box-inset-1"></div>
 
-{% load static %}
- <script src="{% static 'advertiser/sockets.js' %}"></script>
+    <script src="{% static 'advertiser/sockets.js' %}"></script>
+</div>
 </body>
 </html>

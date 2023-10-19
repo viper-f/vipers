@@ -3,3 +3,26 @@
     margin: auto;
     padding: 6rem 15px 1rem 15px;
 }
+
+#total-blocks {
+    display: flex;
+    justify-content: space-between;
+}
+
+.block {
+    padding: 2em 3em;
+}
+
+#logs {
+    padding: 1em;
+    width: 100%;
+    margin-top: 2em;
+    height: 40em;
+    max-height: 40em;
+    overflow-y: scroll;
+}
+
+.log-time {
+    color: #8b8a8a;
+    margin-right: 1em;
+}
