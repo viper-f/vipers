@@ -55,6 +55,6 @@ def process(request):
                       "-cc", custom_credentials,
                       "-cu", custom_username,
                       "-cp", custom_password,
-                      "symbol"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                      "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
     template = loader.get_template("advertiser/process.html")
     return HttpResponse(template.render())
