@@ -233,6 +233,7 @@ class Advertiser:
                 self.driver2.get(self.links[n])
             except:
                 skipped += 1
+                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Could not load page: ' + self.links[n])
                 n += 1
@@ -252,6 +253,7 @@ class Advertiser:
 
             if self_present:
                 skipped += 1
+                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Already has our post on the last page: ' + self.links[n])
                 n += 1
@@ -261,12 +263,14 @@ class Advertiser:
                 code_partner = self.get_code(self.driver2)
                 if not self.validate_code(code_partner):
                     skipped += 1
+                    visited += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message='Invalid code: ' + self.links[n])
                     n += 1
                     continue
             except:
                 skipped += 1
+                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='No code: ' + self.links[n])
                 n += 1
@@ -287,27 +291,28 @@ class Advertiser:
                     full_code_home = code_home + '\n' + '[url=' + link + ']Ваша реклама[/url]'
                     self.post(self.driver2, full_code_home)
                     success += 1
+                    visited += 1
                     if not self_form:
-                        skipped += 1
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                                  message='Topic is over')
                         return
                 else:
                     skipped += 1
+                    visited += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message='No message form:' + self.links[n])
+                             message='No message form: ' + self.links[n])
                     n += 1
                     continue
             else:
                 skipped += 1
+                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Not logged in:' + self.links[n])
+                         message='Not logged in: ' + self.links[n])
                 n += 1
                 continue
             n += 1
-            visited += 1
             self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                     message="continue")
+                     message="Success: " + self.links[n])
         if self.data_grab:
             with open('data/data.csv', 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=';')
