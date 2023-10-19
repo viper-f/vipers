@@ -7,6 +7,7 @@ import re
 import csv
 from asgiref.sync import async_to_sync
 import json
+from datetime import datetime
 
 
 class Advertiser:
@@ -203,6 +204,7 @@ class Advertiser:
         return driver.current_url
 
     def work(self, url, start_url=False, stop_list=False, template=False, custom_login_code={}):
+        print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')
         track = url.split('/viewtopic')[0]
@@ -210,7 +212,6 @@ class Advertiser:
         if stop_list is not False:
             self.tracked += stop_list
         self.home_base = track
-        print(self.tracked)
 
         if not start_url:
             start_url = url
