@@ -1,5 +1,5 @@
 #wrapper {
-    max-width: 800px;
+    max-width: 980px;
     margin: auto;
     padding: 6rem 15px 1rem 15px;
 }
@@ -11,6 +11,10 @@
 
 .block {
     padding: 2em 3em;
+}
+
+.block div {
+    display: inline-block
 }
 
 #logs {

@@ -32,7 +32,7 @@ function connect() {
                 var newDate = new Date();
                 var payload = JSON.parse(data.message)
                 document.getElementById('total').innerHTML = payload.total
-                document.getElementById('total').innerHTML = payload.visited
+                document.getElementById('visited').innerHTML = payload.visited
                 document.getElementById('success').innerHTML = payload.success
                 document.getElementById('skipped').innerHTML = payload.skipped
                 var logs = document.getElementById('logs')

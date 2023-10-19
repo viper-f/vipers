@@ -245,7 +245,7 @@ class Advertiser:
                     v = self.driver2.execute_script('return FORUM.topic.forum_id')
                     self.data[partner_domain] = v
                 except:
-                    print("Could not gram data: " + self.links[n])
+                    print("Could not grab data: " + self.links[n])
 
             self.go_to_last_page(self.driver2)
             self_present = self.scrape_links(self.driver2)
@@ -255,7 +255,7 @@ class Advertiser:
                 skipped += 1
                 visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Already has our post on the last page: ' + self.links[n])
+                         message='Post on last page: ' + self.links[n])
                 n += 1
                 continue
 
@@ -294,7 +294,7 @@ class Advertiser:
                     visited += 1
                     if not self_form:
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                                 message='Topic is over')
+                                 message='Your topic is over!')
                         return
                 else:
                     skipped += 1
@@ -318,3 +318,5 @@ class Advertiser:
                 writer = csv.writer(csvfile, delimiter=';')
                 for key in self.data:
                     writer.writerow([key, self.data[key]])
+        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                 message="Finished!")
