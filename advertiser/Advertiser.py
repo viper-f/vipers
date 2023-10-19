@@ -221,20 +221,20 @@ class Advertiser:
 
         if not self.logged_in:
             self.login(self.driver1, url)
-        n = 0
+        n = -1
         total = 0
         success = 0
         skipped = 0
         visited = 0
         while n < len(self.links):
+            n += 1
+            visited += 1
             try:
                 self.driver2.get(self.links[n])
             except:
                 skipped += 1
-                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Could not load page: ' + self.links[n])
-                n += 1
                 continue
             partner_domain = self.links[n].split('/viewtopic')[0]
 
@@ -251,27 +251,21 @@ class Advertiser:
 
             if self_present:
                 skipped += 1
-                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Post on last page: ' + self.links[n])
-                n += 1
                 continue
 
             try:
                 code_partner = self.get_code(self.driver2)
                 if not self.validate_code(code_partner):
                     skipped += 1
-                    visited += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message='Invalid code: ' + self.links[n])
-                    n += 1
                     continue
             except:
                 skipped += 1
-                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='No code: ' + self.links[n])
-                n += 1
                 continue
 
             #   code_partner += "\n\n[size=10][Posted by bot][/size]"
@@ -289,28 +283,24 @@ class Advertiser:
                     full_code_home = code_home + '\n' + '[url=' + link + ']Ваша реклама[/url]'
                     self.post(self.driver2, full_code_home)
                     success += 1
-                    visited += 1
+                    self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                             message="Success: " + self.links[n])
+
                     if not self_form:
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                                  message='Your topic is over!')
                         return
                 else:
                     skipped += 1
-                    visited += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message='No message form: ' + self.links[n])
-                    n += 1
                     continue
             else:
                 skipped += 1
-                visited += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Not logged in: ' + self.links[n])
-                n += 1
                 continue
-            n += 1
-            self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                     message="Success: " + self.links[n])
+
         if self.data_grab:
             with open('data/data.csv', 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=';')
