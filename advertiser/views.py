@@ -49,7 +49,7 @@ def process(request):
     #     for line in process.stdout:
     #         print(line.decode('utf8'))
     subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
-                      "-u", url,
+                      "-l", url,
                       "-s", start_url,
                       "-t", template,
                       "-c", custom_credentials,
