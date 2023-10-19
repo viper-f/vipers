@@ -159,7 +159,6 @@ class Advertiser:
             )
             form = driver.find_element(By.ID, "main-reply")
             form.clear()
-            WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".punbb .formsubmit input.submit")))
         except:
             return False
         return True
@@ -177,12 +176,7 @@ class Advertiser:
             return False
         tarea.clear()
         tarea.send_keys(message)
-        button = driver.find_element(By.CSS_SELECTOR, '.punbb .formsubmit input.submit')
-        if button:
-            button.click()
-        else:
-            form = driver.find_element(By.ID, 'post')
-            form.submit()
+        driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 
     def go_to_last_page(self, driver):
