@@ -37,7 +37,7 @@ function connect() {
                 document.getElementById('skipped').innerHTML = payload.skipped
                 var logs = document.getElementById('logs')
                 logs.innerHTML += '<span class="log-time">' + newDate.today() + " " + newDate.timeNow() + '</span> ' + payload.message + "<br />";
-                logs.scrollTop = scroll_to_bottom.scrollHeight;
+                logs.scrollTop = logs.scrollHeight;
                 break;
             default:
                 console.error("Unknown message type!");
