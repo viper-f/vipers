@@ -50,11 +50,11 @@ def process(request):
     #         print(line.decode('utf8'))
     subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
                       "-u", url,
-                      "-su", start_url,
+                      "-s", start_url,
                       "-t", template,
-                      "-cc", custom_credentials,
-                      "-cu", custom_username,
-                      "-cp", custom_password,
+                      "-c", custom_credentials,
+                      "-u", custom_username,
+                      "-p", custom_password,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
     template = loader.get_template("advertiser/process.html")
     return HttpResponse(template.render())

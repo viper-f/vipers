@@ -29,11 +29,11 @@ async_to_sync(channel_layer.group_send)(
 
 parser = OptionParser()
 parser.add_option("-u", '--url', dest="base_url")
-parser.add_option("-su", '--start-url', dest="start_url")
+parser.add_option("-s", '--start-url', dest="start_url")
 parser.add_option("-t", '--template', dest="template")
-parser.add_option("-cc", '--custom-credentials', dest="custom_credentials")
-parser.add_option("-cu", '--custom-username', dest="custom_username")
-parser.add_option("-cp", '--custom-password', dest="custom_password")
+parser.add_option("-c", '--custom-credentials', dest="custom_credentials")
+parser.add_option("-u", '--custom-username', dest="custom_username")
+parser.add_option("-p", '--custom-password', dest="custom_password")
 (options, args) = parser.parse_args()
 
 async_to_sync(channel_layer.group_send)(
