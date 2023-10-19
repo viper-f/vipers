@@ -94,7 +94,7 @@ async_to_sync(channel_layer.group_send)(
         }),
     })
 
-if options.custom_credentians == 'true':
+if options.custom_credentials == 'true':
     async_to_sync(channel_layer.group_send)(
         'test',
         {
