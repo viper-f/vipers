@@ -229,6 +229,7 @@ class Advertiser:
         while n < len(self.links):
             n += 1
             visited += 1
+            print(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + self.links[n])
             try:
                 self.driver2.get(self.links[n])
             except:
