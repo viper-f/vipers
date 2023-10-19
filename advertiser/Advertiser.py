@@ -159,6 +159,7 @@ class Advertiser:
             )
             form = driver.find_element(By.ID, "main-reply")
             form.clear()
+            WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".punbb .formsubmit input.submit")))
         except:
             return False
         return True
