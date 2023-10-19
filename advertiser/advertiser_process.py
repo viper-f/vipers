@@ -1,15 +1,31 @@
 import sys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import time
 import socket
-from selenium import webdriver
 from Advertiser import Advertiser
 from optparse import OptionParser
 import json
 
 sys.path.insert(0, './../vipers')
 import vipers
+
+channel_layer = get_channel_layer()
+group_name = 'test'
+
+
+async_to_sync(channel_layer.group_send)(
+    'test',
+    {
+        'type': 'log_message',
+        'message': json.dumps({
+            "total": 0,
+            "visited": 0,
+            "success": 0,
+            "skipped": 0,
+            "message": "Bot is starting"
+        }),
+    })
+
 
 parser = OptionParser()
 parser.add_option("-u", '--url', dest="base_url")
@@ -20,8 +36,20 @@ parser.add_option("-cu", '--custom-username', dest="custom_username")
 parser.add_option("-cp", '--custom-password', dest="custom_password")
 (options, args) = parser.parse_args()
 
-channel_layer = get_channel_layer()
-group_name = 'test'
+async_to_sync(channel_layer.group_send)(
+    'test',
+    {
+        'type': 'log_message',
+        'message': json.dumps({
+            "total": 0,
+            "visited": 0,
+            "success": 0,
+            "skipped": 0,
+            "message": "Parameters read"
+        }),
+    })
+
+
 
 stop_list = [
     "https://vampdynasties.mybb.ru",
@@ -52,8 +80,35 @@ custom_login_code = {
 }
 
 advertiser = Advertiser(log_mode='channel', channel=channel_layer, group_name=group_name, data_grab=False)
+
+async_to_sync(channel_layer.group_send)(
+    'test',
+    {
+        'type': 'log_message',
+        'message': json.dumps({
+            "total": 0,
+            "visited": 0,
+            "success": 0,
+            "skipped": 0,
+            "message": "Instance created"
+        }),
+    })
+
 if options.custom_credentians == 'true':
+    async_to_sync(channel_layer.group_send)(
+        'test',
+        {
+            'type': 'log_message',
+            'message': json.dumps({
+                "total": 0,
+                "visited": 0,
+                "success": 0,
+                "skipped": 0,
+                "message": "Attempting custom login"
+            }),
+        })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
+
 advertiser.work(
     url=options.base_url,
     start_url=options.start_url,
@@ -62,19 +117,5 @@ advertiser.work(
     custom_login_code=custom_login_code
 )
 
-for i in range(20):
-    async_to_sync(channel_layer.group_send)(
-        'test',
-        {
-            'type': 'log_message',
-            'message': json.dumps({
-                "total": (i+10),
-                "visited": i,
-                "success": (i * 0.7),
-                "skipped": (i * 0.3),
-                "message": "Now loading http://google.com"
-            }),
-        })
-    time.sleep(2)
 # print('Message sent')
 
