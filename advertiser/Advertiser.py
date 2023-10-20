@@ -322,6 +322,8 @@ class Advertiser:
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Not logged in: ' + self.links[n])
                 continue
+        self.driver2.quit()
+        self.driver1.quit()
 
         if self.data_grab:
             with open('data/data.csv', 'w', newline='') as csvfile:
