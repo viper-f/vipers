@@ -72,7 +72,7 @@ class Advertiser:
 
     def check_self_present(self, sample, driver):
         for img in sample:
-            el = driver.find_elements(By.CLASS_NAME, 'img[src="'+img+'"]')
+            el = driver.find_elements(By.CSS_SELECTOR, 'img[src="'+img+'"]')
             if not el:
                 return False
         return True
@@ -235,7 +235,8 @@ class Advertiser:
         success = 0
         skipped = 0
         visited = 0
-        while n < len(self.links) - 1:
+        #while n < len(self.links) - 1:
+        while n < 10:
             n += 1
             visited += 1
             try:
