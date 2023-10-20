@@ -68,7 +68,19 @@ class Advertiser:
                 counter += 1
             if code[i] == ']':
                 counter -= 1
-        return counter == 0
+        if counter != 0:
+            return False
+
+        tags = ['/url', 'img', '/img']
+        for tag in tags:
+            pos = code.find(tag)
+            if pos == -1:
+                continue
+            if code[pos - 1] != '[':
+                return False
+            if code[pos + len(tag)] != ']':
+                return False
+        return True
 
     def check_self_present(self, sample, driver):
         for img in sample:
