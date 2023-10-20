@@ -70,8 +70,14 @@ class Advertiser:
                 counter -= 1
         return counter == 0
 
+    def check_self_present(self, sample, driver):
+        for img in sample:
+            el = driver.find_elements(By.CLASS_NAME, 'img[src="'+img+'"]')
+            if not el:
+                return False
+        return True
+
     def scrape_links(self, driver):
-        self_present = False
         posts = driver.find_elements(By.CLASS_NAME, "post-content")
         for post in posts:
             urls = post.find_elements(By.TAG_NAME, 'a')
@@ -83,13 +89,10 @@ class Advertiser:
                         continue
                     l = l.replace("http://", "https://")
                     track = l.split('/viewtopic')[0]
-                    if self.home_base in l:
-                        self_present = True
                     if track not in self.tracked:
                         parts = l.split('#')
                         self.links.append(parts[0])
                         self.tracked.append(track)
-        return self_present
 
     def login(self, driver, url):
         try:
@@ -151,6 +154,9 @@ class Advertiser:
             EC.presence_of_element_located((By.CSS_SELECTOR, ".topicpost pre:first-child"))
         )
         return element.text
+
+    def sample_template(self, code):
+        return re.findall(r'\[img\](.*)\[\/img\]', code)
 
     def check_answer_form(self, driver):
         try:
@@ -219,6 +225,9 @@ class Advertiser:
         else:
             code_home = template
 
+        sample = self.sample_template(code_home)
+        print(' '.join(sample))
+
         if not self.logged_in:
             self.login(self.driver1, url)
         n = -1
@@ -229,7 +238,6 @@ class Advertiser:
         while n < len(self.links) - 1:
             n += 1
             visited += 1
-            print(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + self.links[n])
             try:
                 self.driver2.get(self.links[n])
             except:
@@ -247,7 +255,8 @@ class Advertiser:
                     print("Could not grab data: " + self.links[n])
 
             self.go_to_last_page(self.driver2)
-            self_present = self.scrape_links(self.driver2)
+            self_present = self.check_self_present(sample, self.driver2)
+            self.scrape_links(self.driver2)
             total = len(self.links)
 
             if self_present:
@@ -278,11 +287,11 @@ class Advertiser:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     link = self.find_current_link(self.driver1)
                     full_code_home = code_home + '\n' + '[url=' + link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + self.links[n])
