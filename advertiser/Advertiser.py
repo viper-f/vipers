@@ -73,7 +73,7 @@ class Advertiser:
     def check_self_present(self, sample, driver):
         for img in sample:
             el = driver.find_elements(By.CSS_SELECTOR, 'img[src="'+img+'"]')
-            if not el:
+            if not len(el):
                 return False
         return True
 
