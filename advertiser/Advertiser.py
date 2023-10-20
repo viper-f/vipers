@@ -71,7 +71,7 @@ class Advertiser:
         if counter != 0:
             return False
 
-        tags = ['/url', 'img', '/img']
+        tags = ['/url', 'img', '/img', 'align=center', '/align']
         for tag in tags:
             pos = code.find(tag)
             if pos == -1:
