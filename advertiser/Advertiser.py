@@ -226,7 +226,7 @@ class Advertiser:
         success = 0
         skipped = 0
         visited = 0
-        while n < len(self.links):
+        while n < len(self.links) - 1:
             n += 1
             visited += 1
             print(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + self.links[n])
