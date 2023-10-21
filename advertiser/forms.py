@@ -17,6 +17,5 @@ class AdForm(forms.Form):
 
 class PartnerForm(forms.Form):
     session_id = forms.CharField(label="sessionid", max_length=10, widget=forms.HiddenInput())
-    urls = forms.CharField(label="Urls", max_length=100,
-                           widget=forms.Textarea(attrs={"rows": "10", 'class': 'sul-text-field'}))
+    urls = forms.CharField(label="Urls",  widget=forms.Textarea(attrs={"rows": "10", 'class': 'sul-text-field'}))
     template = forms.CharField(label="Template", widget=forms.Textarea(attrs={"rows": "5", 'class': 'sul-text-field'}))
