@@ -76,9 +76,10 @@ async_to_sync(channel_layer.group_send)(
         }),
     })
 
+urls = options.urls.split("\n")
 
 mailer.work(
-    urls=options.urls,
+    urls=urls,
     template=options.template,
     custom_login_code=custom_login_code
 )

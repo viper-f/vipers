@@ -4,7 +4,7 @@ import string
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from .forms import AdForm
+from .forms import AdForm, PartnerForm
 from django.urls import reverse
 import subprocess
 
@@ -61,4 +61,33 @@ def process(request):
                       "-p", custom_password,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
     template = loader.get_template("advertiser/process.html")
+    return HttpResponse(template.render())
+
+def partner_form(request):
+    if request.method == "POST":
+        form = PartnerForm(request.POST)
+        if form.is_valid():
+            request.session['session_id'] = form.cleaned_data['session_id']
+            request.session['urls'] = form.cleaned_data['urls']
+            request.session['template'] = form.cleaned_data['template']
+            return HttpResponseRedirect(reverse('advertiser:partner-process'))
+        else:
+            print('Something is wrong')
+    else:
+        form = PartnerForm(initial={
+            'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+        })
+        return render(request, "advertiser/partner_form.html", {"form": form})
+
+
+def partner_process(request):
+    session_id = request.session['session_id']
+    urls = request.session['url']
+    template = request.session['template']
+    subprocess.Popen(["venv/bin/python", "advertiser/partner_mailer_process.py",
+                      "-u", urls,
+                      "-i", session_id,
+                      "-t", template,
+                      "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
+    template = loader.get_template("partner/process.html")
     return HttpResponse(template.render())
