@@ -56,7 +56,8 @@ stop_list = [
     "https://curama.mybb.ru",
     "http://curama.mybb.ru",
     "http://themostsupernatural.ru",
-    "https://themostsupernatural.ru"
+    "https://themostsupernatural.ru",
+    "https://grishaversesab.ru"
     # "https://faceinless.ru",
     # "https://crossteller.ru",
     # "https://incident.rusff.me",
