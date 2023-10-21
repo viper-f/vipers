@@ -168,7 +168,7 @@ class Advertiser:
         return element.text
 
     def sample_template(self, code):
-        return re.findall(r'\[img\](.*)\[\/img\]', code)
+        return re.findall(r'\[img\]([^\[]*)\[\/img\]', code)
 
     def check_answer_form(self, driver):
         try:
