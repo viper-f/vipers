@@ -8,8 +8,9 @@ from .forms import AdForm, PartnerForm
 from django.urls import reverse
 import subprocess
 
+
 def index(request):
-    #template = loader.get_template("advertiser/index.html")
+    # template = loader.get_template("advertiser/index.html")
     if request.method == "POST":
         form = AdForm(request.POST)
         if form.is_valid():
@@ -60,8 +61,9 @@ def process(request):
                       "-u", custom_username,
                       "-p", custom_password,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
-    template = loader.get_template("advertiser/process.html")
-    return HttpResponse(template.render())
+
+    return render(request, "advertiser/process.html", {"session_id": session_id})
+
 
 def partner_form(request):
     if request.method == "POST":
@@ -89,5 +91,5 @@ def partner_process(request):
                       "-i", session_id,
                       "-t", template,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
-    template = loader.get_template("advertiser/partner_process.html")
-    return HttpResponse(template.render())
+
+    return render(request, "advertiser/partner_process.html", {"session_id": session_id})

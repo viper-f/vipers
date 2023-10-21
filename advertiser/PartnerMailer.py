@@ -150,7 +150,7 @@ class PartnerMailer:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    #self.post(self.driver2, template)
+                    self.post(self.driver2, template)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + url)

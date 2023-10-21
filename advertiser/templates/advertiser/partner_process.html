@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+    <input type="hidden" id="session_id" value="{{ session_id }}" />
     <div id="total-blocks">
     <div class="block sul-box-raised-2"><span class="block-title">Found</span>
         <div id="total"></div>
