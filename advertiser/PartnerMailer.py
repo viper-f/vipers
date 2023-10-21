@@ -8,6 +8,8 @@ import csv
 from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
+import pyperclip as pc
+from selenium.webdriver.common.keys import Keys
 
 
 class PartnerMailer:
@@ -100,7 +102,8 @@ class PartnerMailer:
         except:
             return False
         tarea.clear()
-        tarea.send_keys(message)
+        pc.copy(message)
+        tarea.send_keys(Keys.CONTROL, 'v')
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 
