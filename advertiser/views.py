@@ -1,16 +1,19 @@
+import random
+import string
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from .forms import UrlForm
+from .forms import AdForm
 from django.urls import reverse
 import subprocess
-
 
 def index(request):
     #template = loader.get_template("advertiser/index.html")
     if request.method == "POST":
-        form = UrlForm(request.POST)
+        form = AdForm(request.POST)
         if form.is_valid():
+            request.session['session_id'] = form.cleaned_data['session_id']
             request.session['url'] = form.cleaned_data['url']
             request.session['start_url'] = form.cleaned_data['start_url']
             request.session['template'] = form.cleaned_data['template']
@@ -21,7 +24,8 @@ def index(request):
         else:
             print('Something is wrong')
     else:
-        form = UrlForm(initial={
+        form = AdForm(initial={
+            'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
             'url': 'https://kingscross.f-rpg.me/viewtopic.php?id=6570&p=11',
             'start_url': 'https://kingscross.f-rpg.me/viewtopic.php?id=6570&p=11',
             'template': "[align=center][size=20][font=Impact]A devil family in search of a [url=https://kingscross.f-rpg.me/viewtopic.php?pid=789065#p789065]sister[/url][/font][/size]\n[url=https://kingscross.f-rpg.me/viewtopic.php?pid=789065#p789065][img]https://i.imgur.com/wHedyqx.png[/img][/url]\n[size=20][font=Impact]Scheming, spying, backstabbing, possible incest[/font][/size][/align]",
@@ -32,6 +36,7 @@ def index(request):
 
 
 def process(request):
+    session_id = request.session['session_id']
     url = request.session['url']
     start_url = request.session['start_url']
     template = request.session['template']
@@ -49,6 +54,7 @@ def process(request):
     subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
                       "-l", url,
                       "-s", start_url,
+                      "-i", session_id,
                       "-t", template,
                       "-c", custom_credentials,
                       "-u", custom_username,

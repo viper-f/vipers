@@ -9,12 +9,16 @@ import json
 sys.path.insert(0, '..')
 import vipers
 
-channel_layer = get_channel_layer()
-group_name = 'test'
+parser = OptionParser()
+parser.add_option("-u", '--urls', dest="urls")
+parser.add_option("-t", '--template', dest="template")
+parser.add_option("-i", '--session-id', dest="session_id")
+(options, args) = parser.parse_args()
 
+channel_layer = get_channel_layer()
 
 async_to_sync(channel_layer.group_send)(
-    'test',
+    options.session_id,
     {
         'type': 'log_message',
         'message': json.dumps({
@@ -27,13 +31,8 @@ async_to_sync(channel_layer.group_send)(
     })
 
 
-parser = OptionParser()
-parser.add_option("-u", '--urls', dest="urls")
-parser.add_option("-t", '--template', dest="template")
-(options, args) = parser.parse_args()
-
 async_to_sync(channel_layer.group_send)(
-    'test',
+    options.session_id,
     {
         'type': 'log_message',
         'message': json.dumps({
@@ -62,10 +61,10 @@ custom_login_code = {
     "https://daas.rusff.me": "PR['in_2']()"
 }
 
-mailer = PartnerMailer(log_mode='channel', channel=channel_layer, group_name=group_name)
+mailer = PartnerMailer(log_mode='channel', channel=channel_layer, group_name=options.session_id)
 
 async_to_sync(channel_layer.group_send)(
-    'partner',
+    options.session_id,
     {
         'type': 'log_message',
         'message': json.dumps({
