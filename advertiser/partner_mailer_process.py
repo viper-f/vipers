@@ -15,10 +15,12 @@ parser.add_option("-t", '--template', dest="template")
 parser.add_option("-i", '--session-id', dest="session_id")
 (options, args) = parser.parse_args()
 
+grop_name = 'comm_' + options.session_id
+
 channel_layer = get_channel_layer()
 
 async_to_sync(channel_layer.group_send)(
-    options.session_id,
+    grop_name,
     {
         'type': 'log_message',
         'message': json.dumps({
@@ -32,7 +34,7 @@ async_to_sync(channel_layer.group_send)(
 
 
 async_to_sync(channel_layer.group_send)(
-    options.session_id,
+    grop_name,
     {
         'type': 'log_message',
         'message': json.dumps({
@@ -61,10 +63,10 @@ custom_login_code = {
     "https://daas.rusff.me": "PR['in_2']()"
 }
 
-mailer = PartnerMailer(log_mode='channel', channel=channel_layer, group_name=options.session_id)
+mailer = PartnerMailer(log_mode='channel', channel=channel_layer, group_name=grop_name)
 
 async_to_sync(channel_layer.group_send)(
-    options.session_id,
+    grop_name,
     {
         'type': 'log_message',
         'message': json.dumps({
