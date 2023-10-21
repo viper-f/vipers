@@ -13,8 +13,8 @@ class ChatConsumer(WebsocketConsumer):
         self.room = None
 
     def connect(self):
-        self.room_name = 'test'
-        self.room_group_name = 'test'
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_group_name = "comm_%s" % self.room_name
 
         # connection has to be accepted
         self.accept()
