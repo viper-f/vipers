@@ -89,5 +89,5 @@ def partner_process(request):
                       "-i", session_id,
                       "-t", template,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
-    template = loader.get_template("partner/process.html")
+    template = loader.get_template("advertiser/partner_process.html")
     return HttpResponse(template.render())
