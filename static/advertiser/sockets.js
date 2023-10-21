@@ -22,7 +22,7 @@ function makeid(length) {
 
 function connect() {
     session_id = makeid(10)
-    chatSocket = new WebSocket("wss://" + window.location.host + "/ws/comm/"+session_id);
+    chatSocket = new WebSocket("wss://" + window.location.host + "/ws/comm/"+session_id+"/");
 
     chatSocket.onopen = function(e) {
         console.log("Successfully connected to the WebSocket.");
