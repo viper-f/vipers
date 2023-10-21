@@ -70,7 +70,7 @@ def partner_form(request):
             request.session['session_id'] = form.cleaned_data['session_id']
             request.session['urls'] = form.cleaned_data['urls']
             request.session['template'] = form.cleaned_data['template']
-            return HttpResponseRedirect(reverse('advertiser:partner-process'))
+            return HttpResponseRedirect(reverse('advertiser:partner_process'))
         else:
             print('Something is wrong')
     else:
