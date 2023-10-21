@@ -121,7 +121,7 @@ class PartnerMailer:
         return permalink.get_attribute("href")
 
     def work(self, urls, template, custom_login_code={}):
-        print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        print('Partner mailer: starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')
 
@@ -150,7 +150,7 @@ class PartnerMailer:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver2, template)
+                    #self.post(self.driver2, template)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + url)

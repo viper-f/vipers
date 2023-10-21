@@ -67,9 +67,9 @@ def partner_form(request):
     if request.method == "POST":
         form = PartnerForm(request.POST)
         if form.is_valid():
-            request.session['session_id'] = form.cleaned_data['session_id']
-            request.session['urls'] = form.cleaned_data['urls']
-            request.session['template'] = form.cleaned_data['template']
+            request.session['partner_session_id'] = form.cleaned_data['session_id']
+            request.session['partner_urls'] = form.cleaned_data['urls']
+            request.session['partner_template'] = form.cleaned_data['template']
             return HttpResponseRedirect(reverse('advertiser:partner_process'))
         else:
             print('Something is wrong')
@@ -81,9 +81,9 @@ def partner_form(request):
 
 
 def partner_process(request):
-    session_id = request.session['session_id']
-    urls = request.session['url']
-    template = request.session['template']
+    session_id = request.session['partner_session_id']
+    urls = request.session['partner_urls']
+    template = request.session['partner_template']
     subprocess.Popen(["venv/bin/python", "advertiser/partner_mailer_process.py",
                       "-u", urls,
                       "-i", session_id,
