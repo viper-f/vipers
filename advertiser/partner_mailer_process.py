@@ -77,6 +77,7 @@ async_to_sync(channel_layer.group_send)(
     })
 
 urls = options.urls.split("\n")
+print(urls)
 
 mailer.work(
     urls=urls,
