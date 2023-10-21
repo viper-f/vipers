@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.template import loader
 import requests
+from django.shortcuts import render
 
 
 def index(request, ids):
@@ -34,3 +35,7 @@ def index(request, ids):
 
     template = loader.get_template("episodelist/index.html")
     return HttpResponse(template.render({'episodes': episodes, 'base': base}))
+
+def about(request):
+    code = '<div id="list"></div>\n<script>\nlet url = "https://viper-frpg.ovh/episodelist/2202,2180,2196,2189,2184,2224,2209,2190,2186,2234,2195,2201,2188,2181";\nfetch(url, {\n    method: "GET" \n})\n    .then((response) => {\n        if (!response.ok) {\n            throw Error(response.statusText);\n        }\n        return response.text();\n    })\n    .then((html) => {\n        document.getElementById("list").innerHTML = html;\n    })\n.catch((error) => {\n    console.error(error);\n});\n</script>'
+    return render(request, "episodelist/about.html", {"code": code})

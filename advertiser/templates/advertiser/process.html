@@ -1,11 +1,6 @@
-<html>
-<head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/neumorphism-ui.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-</head>
-<body class="light-mode">
-<div id="wrapper">
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
     <div id="total-blocks">
     <div class="block sul-box-raised-2"><span class="block-title">Found</span>
         <div id="total"></div>
@@ -23,6 +18,4 @@
     <div id="logs" class="sul-box-inset-1"></div>
 
     <script src="{% static 'advertiser/sockets.js' %}"></script>
-</div>
-</body>
-</html>
+{% endblock %}

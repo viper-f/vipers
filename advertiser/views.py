@@ -4,8 +4,6 @@ from django.template import loader
 from .forms import UrlForm
 from django.urls import reverse
 import subprocess
-import sys
-import requests
 
 
 def index(request):

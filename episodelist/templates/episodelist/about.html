@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title-section">Список эпизодов</h2>
+<p style="margin-bottom: 2rem">Работает только для форума <a href="https://kingscross.f-rpg.me">King's Cross</a>.</p>
+<h2 class="title-section">How it works</h2>
+<p>На отдельной странице этого сайта с помощью API форумов соибирается список всех тем, на которые подписан определенный пользователь.
+ID пользователя нужно передать в ссылке.</p>
+<p>Пример: <a href="https://viper-frpg.ovh/episodelist/2188" target="_blank">https://viper-frpg.ovh/episodelist/2188</a></p>
+<p>Если передать несколько ID, то список будет составлен из всех тем, на которые подписан хотя бы один из пользователей.</p>
+<p>Пример: <a href="https://viper-frpg.ovh/episodelist/2184,2188" target="_blank">https://viper-frpg.ovh/episodelist/2184,2188</a></p>
+
+<h2 class="title-section">What to do</h2>
+<p>Если вы хотите сделать автоматически обновляющийся список эпизодов своего каста, вам нужно сделать три вещи:</p>
+<ul>
+    <li>Сложная часть: уговорите всех игроков в касте начать подписываться на свои эпизоды</li>
+    <li>В коде ниже замените id в ссылке id игроков из вашего каста</li>
+    <li>Вставьте скрипт на видное место и гордитесь</li>
+</ul>
+
+<pre>
+{% autoescape on %}
+{{ code }}
+{% endautoescape %}
+    </pre>
+
+
+{% endblock %}
