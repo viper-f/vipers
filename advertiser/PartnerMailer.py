@@ -140,7 +140,7 @@ class PartnerMailer:
                 continue
             partner_domain = url.split('/viewtopic')[0]
 
-            self.go_to_last_page(self.driver2)
+           # self.go_to_last_page(self.driver2)
 
             if partner_domain in custom_login_code:
                 logged_id = self.custom_login_code(self.driver2, url, custom_login_code[partner_domain])
