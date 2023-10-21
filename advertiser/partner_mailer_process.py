@@ -6,7 +6,7 @@ from PartnerMailer import PartnerMailer
 from optparse import OptionParser
 import json
 
-sys.path.insert(0, '..')
+sys.path.insert(0, './../vipers')
 import vipers
 
 parser = OptionParser()
