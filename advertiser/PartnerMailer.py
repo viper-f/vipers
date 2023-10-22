@@ -26,8 +26,6 @@ class PartnerMailer:
                  }
         options.add_experimental_option("prefs", prefs)
         self.driver2 = webdriver.Chrome(options=options)
-        self.driver2.set_permissions('clipboard-read', 'granted')
-        self.driver2.set_permissions('clipboard-write', 'granted')
         self.links = []
         self.tracked = []
         self.log_mode = log_mode
@@ -108,6 +106,8 @@ class PartnerMailer:
             tarea = driver.find_element(By.ID, "main-reply")
         except:
             return False
+        self.driver2.set_permissions('clipboard-read', 'granted')
+        self.driver2.set_permissions('clipboard-write', 'granted')
         tarea.clear()
         pc.copy(message)
         tarea.send_keys(Keys.CONTROL, 'v')
