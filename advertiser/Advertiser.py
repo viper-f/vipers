@@ -204,9 +204,6 @@ class Advertiser:
             last_page = next_page.find_element(By.XPATH, "preceding-sibling::*[1]").get_attribute(
                 'href')
             driver.get(last_page)
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "navlogout"))
-            )
 
     def find_last_post_link(self, driver):
         permalink = WebDriverWait(driver, 20).until(
