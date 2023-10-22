@@ -193,7 +193,8 @@ class Advertiser:
         except:
             return False
         tarea.clear()
-        tarea.send_keys(message)
+        driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
+        #tarea.send_keys(message)
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 

@@ -106,13 +106,7 @@ class PartnerMailer:
         except:
             return False
         tarea.clear()
-
         driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
-        #pc.copy(message)
-        #tarea.send_keys(Keys.CONTROL, 'v')
-
-
-        # tarea.send_keys(message)
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 
