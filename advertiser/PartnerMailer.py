@@ -2,12 +2,15 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import re
 import csv
 from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
+import klembord
+
 
 
 class PartnerMailer:
@@ -26,6 +29,7 @@ class PartnerMailer:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
+        klembord.init()
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
@@ -100,7 +104,9 @@ class PartnerMailer:
         except:
             return False
         tarea.clear()
-        tarea.send_keys(message)
+        klembord.set_text(message)
+        tarea.send_keys(Keys.CONTROL, 'v')
+        # tarea.send_keys(message)
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 
