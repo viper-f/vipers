@@ -100,6 +100,7 @@ class PartnerMailer:
         except:
             return False
         tarea.clear()
+        print('document.getElementById("main-reply").value="'+message.replace("'", "\'").replace('"', '\"')+'";')
         driver.execute_script('document.getElementById("main-reply").value="'+message.replace("'", "\'").replace('"', '\"')+'";')
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
