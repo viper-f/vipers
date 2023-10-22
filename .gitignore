@@ -5,3 +5,4 @@ episodelist/__pycache__
 vipers/__pycache__
 .pg_service.conf
 .my_pgpass
+vipers/settings.py
