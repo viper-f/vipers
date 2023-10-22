@@ -100,7 +100,7 @@ class PartnerMailer:
         except:
             return False
         tarea.clear()
-        m = message.replace('"', '\\"')
+        m = message.replace('"', '\\"').replace('\n', '\\n')
         print('document.getElementById("main-reply").value="'+m+'";')
         driver.execute_script('document.getElementById("main-reply").value="'+m+'";')
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
