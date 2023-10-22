@@ -107,7 +107,7 @@ class PartnerMailer:
             return False
         tarea.clear()
 
-        driver.execute_script("arguments[0].setAttribute('value',arguments[1])", tarea, message)
+        driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
         #pc.copy(message)
         #tarea.send_keys(Keys.CONTROL, 'v')
 
