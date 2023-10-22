@@ -27,6 +27,9 @@
                     <li><a href="/login">Вход</a></li>
                     {% endif %}
                     <li><a href="#0">Перенос эпизодов</a></li>
+                     {% if is_auth %}
+                      <li><a href="/logout">Выход</a></li>
+                    {% endif %}
                     <li class="small">by Viper, 2023</li>
                 </ul>
             </div>
