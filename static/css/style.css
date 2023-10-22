@@ -189,3 +189,16 @@ a:hover {
 #bot-form input[type="submit"] {
   margin-top: 1.5rem;
 }
+
+#forum-wrapper {
+    margin-top: 1rem
+}
+
+.forum-box {
+    padding: 1rem 2rem 1rem;
+    width: 30%
+}
+
+.forum-box ul {
+    margin-top: 1rem;
+}

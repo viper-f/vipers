@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title-section">Зайти к змею</h2>
+<form action="/login" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="sul-btn" value="Login">
+    </form>
+{% endblock %}
