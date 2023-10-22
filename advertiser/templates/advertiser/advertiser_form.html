@@ -4,7 +4,7 @@
 <p style="margin-bottom: 2rem">Заполни форму и иди пить чай</p>
 
 <div id="bot-form" class="block sul-box-raised-2">
-    <form action="/advertiser/" method="post">
+    <form action="/advertiser/advertiser/{{ id }}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" class="sul-btn" value="OK">

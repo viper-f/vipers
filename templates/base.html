@@ -20,9 +20,12 @@
             <div id="nav-content"  class="sul-box-raised-3" tabindex="0">
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/advertiser">Реклама</a></li>
-                     <li><a href="/advertiser/partner">Партнерство</a></li>
+                    {% if is_auth %}
+                    <li><a href="/user-index">Мои форумы</a></li>
                     <li><a href="/episodelist/about">Список эпизодов</a></li>
+                    {% else %}
+                    <li><a href="/login">Вход</a></li>
+                    {% endif %}
                     <li><a href="#0">Перенос эпизодов</a></li>
                     <li class="small">by Viper, 2023</li>
                 </ul>

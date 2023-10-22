@@ -4,7 +4,7 @@
 <p style="margin-bottom: 2rem">Вставь ссылки на партнерские темы по одной в строку</p>
 
 <div id="bot-form" class="block sul-box-raised-2">
-    <form action="/advertiser/partner" method="post">
+    <form action="/advertiser/partner/{{ id }}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" class="sul-btn" value="OK">

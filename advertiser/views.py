@@ -1,6 +1,7 @@
 import random
 import string
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import AdForm, PartnerForm, ForumForm
@@ -9,8 +10,8 @@ import subprocess
 
 from .models import HomeForum, CustomCredentials, PartnerTopic
 
-
-def index(request):
+@login_required
+def advertiser_form(request, id):
     # template = loader.get_template("advertiser/index.html")
     if request.method == "POST":
         form = AdForm(request.POST)
@@ -22,22 +23,27 @@ def index(request):
             request.session['custom_credentials'] = form.cleaned_data['custom_credentials']
             request.session['custom_username'] = form.cleaned_data['custom_username']
             request.session['custom_password'] = form.cleaned_data['custom_password']
-            return HttpResponseRedirect(reverse('advertiser:process'))
+            return HttpResponseRedirect(reverse('advertiser:advertiser_process'))
         else:
             print('Something is wrong')
     else:
+        forum = HomeForum.objects.get(pk=id)
+        try:
+            credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id)
+        except CustomCredentials.DoesNotExist:
+            credentials = False
+
         form = AdForm(initial={
             'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
-            'url': 'https://kingscross.f-rpg.me/viewtopic.php?id=6570&p=11',
-            'start_url': 'https://kingscross.f-rpg.me/viewtopic.php?id=6570&p=11',
-            'template': "[align=center][size=20][font=Impact]A devil family in search of a [url=https://kingscross.f-rpg.me/viewtopic.php?pid=789065#p789065]sister[/url][/font][/size]\n[url=https://kingscross.f-rpg.me/viewtopic.php?pid=789065#p789065][img]https://i.imgur.com/wHedyqx.png[/img][/url]\n[size=20][font=Impact]Scheming, spying, backstabbing, possible incest[/font][/size][/align]",
-            'custom_credentials': True,
-            'custom_username': 'Assistant'
+            'url': forum.ad_topic_url,
+            'custom_credentials': credentials != False,
+            'custom_username': credentials.username if credentials != False else '',
+            'custom_password': credentials.password if credentials != False else ''
         })
-        return render(request, "advertiser/index.html", {"form": form})
+        return render(request, "advertiser/advertiser_form.html", {"form": form})
 
-
-def process(request):
+@login_required
+def advertiser_process(request):
     session_id = request.session['session_id']
     url = request.session['url']
     start_url = request.session['start_url']
@@ -63,10 +69,10 @@ def process(request):
                       "-p", custom_password,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
-    return render(request, "advertiser/process.html", {"session_id": session_id})
+    return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})
 
-
-def partner_form(request):
+@login_required
+def partner_form(request, id):
     if request.method == "POST":
         form = PartnerForm(request.POST)
         if form.is_valid():
@@ -77,12 +83,20 @@ def partner_form(request):
         else:
             print('Something is wrong')
     else:
+        forum = HomeForum.objects.get(pk=id)
+        partners = PartnerTopic.objects.filter(home_forum=id)
+        partner_urls = []
+        for partner in partners:
+            partner_urls.append(partner.url)
+        partner_urls = "\n".join(partner_urls)
+
         form = PartnerForm(initial={
-            'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+            'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
+            'urls': partner_urls
         })
         return render(request, "advertiser/partner_form.html", {"form": form})
 
-
+@login_required
 def partner_process(request):
     session_id = request.session['partner_session_id']
     urls = request.session['partner_urls']
@@ -96,6 +110,7 @@ def partner_process(request):
     return render(request, "advertiser/partner_process.html", {"session_id": session_id})
 
 
+@login_required
 def forum_edit(request, id):
     if request.method == "POST":
         form = ForumForm(request.POST)
@@ -134,6 +149,8 @@ def forum_edit(request, id):
             keep = []
 
             for partner_url in new_partner_urls:
+                if partner_url == '':
+                    continue
                 found = False
                 for existing_partner in existing_partners:
                     if existing_partner.url == partner_url:
