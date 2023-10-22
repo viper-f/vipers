@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title-section">{{ forum.name }}</h2>
+<p style="margin-bottom: 2rem">Редактировать информацию</p>
+
+<div id="bot-form" class="block sul-box-raised-2">
+    <form action="/advertiser/forum-edit/{{ forum.id }}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="sul-btn" value="Save">
+    </form>
+</div>
+{% endblock %}

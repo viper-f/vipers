@@ -2,11 +2,12 @@ import random
 import string
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
-from .forms import AdForm, PartnerForm
+from django.http import HttpResponseRedirect
+from .forms import AdForm, PartnerForm, ForumForm
 from django.urls import reverse
 import subprocess
+
+from .models import HomeForum, CustomCredentials, PartnerTopic
 
 
 def index(request):
@@ -93,3 +94,83 @@ def partner_process(request):
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
     return render(request, "advertiser/partner_process.html", {"session_id": session_id})
+
+
+def forum_edit(request, id):
+    if request.method == "POST":
+        form = ForumForm(request.POST)
+        if form.is_valid():
+            id = form.cleaned_data['id']
+            forum = HomeForum.objects.get(pk=id)
+            forum.name = form.cleaned_data['name']
+            forum.domain = form.cleaned_data['domain']
+            forum.ad_topic_url = form.cleaned_data['ad_topic_url']
+            forum.save()
+
+            if form.cleaned_data['custom_credentials']:
+                try:
+                    credentials = CustomCredentials.objects.get(home_forum=forum, user=request.user)
+                    credentials.username = form.cleaned_data['custom_username']
+                    credentials.password = form.cleaned_data['custom_password']
+                    credentials.save()
+                except CustomCredentials.DoesNotExist:
+                    credentials = CustomCredentials(
+                        home_forum=forum,
+                        user=request.user,
+                        username=form.cleaned_data['custom_username'],
+                        password=form.cleaned_data['custom_password']
+                    )
+                    credentials.save()
+            else:
+                try:
+                    credentials = CustomCredentials.objects.get(home_forum=forum, user=request.user)
+                    credentials.delete()
+                except CustomCredentials.DoesNotExist:
+                    pass
+
+            partner_urls = form.cleaned_data['partner_urls']
+            new_partner_urls = partner_urls.split("\n")
+            existing_partners = PartnerTopic.objects.filter(home_forum=id)
+            keep = []
+
+            for partner_url in new_partner_urls:
+                found = False
+                for existing_partner in existing_partners:
+                    if existing_partner.url == partner_url:
+                        keep.append(existing_partner.id)
+                        found = True
+                        continue
+                if not found:
+                    new_partner_url = PartnerTopic(home_forum=forum, url=partner_url)
+                    new_partner_url.save()
+                    keep.append(new_partner_url.id)
+
+            PartnerTopic.objects.filter(home_forum=id).exclude(pk__in=keep).delete()
+
+            return HttpResponseRedirect(reverse('advertiser:forum_edit', kwargs={'id': id}))
+        else:
+            print('Something is wrong')
+    else:
+        forum = HomeForum.objects.get(pk=id)
+        try:
+            credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id)
+        except CustomCredentials.DoesNotExist:
+            credentials = False
+
+        partners = PartnerTopic.objects.filter(home_forum=id)
+        partner_urls = []
+        for partner in partners:
+            partner_urls.append(partner.url)
+        partner_urls = "\n".join(partner_urls)
+
+        form = ForumForm(initial={
+            'id': forum.id,
+            'name': forum.name,
+            'domain': forum.domain,
+            'ad_topic_url': forum.ad_topic_url,
+            'partner_urls': partner_urls,
+            'custom_credentials': credentials != False,
+            'custom_username': credentials.username if credentials != False else '',
+            'custom_password': credentials.password if credentials != False else '',
+        })
+        return render(request, "advertiser/forum_form.html", {"form": form, "forum": forum})

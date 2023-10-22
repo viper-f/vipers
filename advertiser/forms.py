@@ -8,14 +8,30 @@ class AdForm(forms.Form):
                                 widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
     template = forms.CharField(label="Template", widget=forms.Textarea(attrs={"rows": "5", 'class': 'sul-text-field'}))
     custom_credentials = forms.BooleanField(label="Custom Credentials",
-                                            widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}))
+                                            widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
     custom_username = forms.CharField(label="Custom Username", max_length=100,
-                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
     custom_password = forms.CharField(label="Custom Password", max_length=100,
-                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
 
 
 class PartnerForm(forms.Form):
     session_id = forms.CharField(label="sessionid", max_length=10, widget=forms.HiddenInput())
-    urls = forms.CharField(label="Urls",  widget=forms.Textarea(attrs={"rows": "10", 'class': 'sul-text-field'}))
+    urls = forms.CharField(label="Urls", widget=forms.Textarea(attrs={"rows": "10", 'class': 'sul-text-field'}))
     template = forms.CharField(label="Template", widget=forms.Textarea(attrs={"rows": "5", 'class': 'sul-text-field'}))
+
+
+class ForumForm(forms.Form):
+    id = forms.CharField(label="id", max_length=10, widget=forms.HiddenInput())
+    name = forms.CharField(label="Name", max_length=100, widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+    domain = forms.CharField(label="Domain", max_length=100, widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+    ad_topic_url = forms.CharField(label="Current Ad Topic", max_length=100,
+                               widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+    partner_urls = forms.CharField(label="Urls of Partner Topics",
+                                   widget=forms.Textarea(attrs={"rows": "10", 'class': 'sul-text-field'}), required=False)
+    custom_credentials = forms.BooleanField(label="Custom Credentials",
+                                            widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
+    custom_username = forms.CharField(label="Custom Username", max_length=100,
+                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
+    custom_password = forms.CharField(label="Custom Password", max_length=100,
+                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
