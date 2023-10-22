@@ -9,19 +9,25 @@ import csv
 from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
-import klembord
+import pyperclip as pc
 
 
 
 class PartnerMailer:
     def __init__(self, log_mode='console', channel=None, group_name=None):
+
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
+
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        prefs = {"profile.managed_default_content_settings.images": 2}
+        prefs = {
+            "profile.managed_default_content_settings.images": 2,
+                 }
         options.add_experimental_option("prefs", prefs)
         self.driver2 = webdriver.Chrome(options=options)
+        self.driver2.set_permissions('clipboard-read', 'granted')
+        self.driver2.set_permissions('clipboard-write', 'granted')
         self.links = []
         self.tracked = []
         self.log_mode = log_mode
@@ -29,7 +35,6 @@ class PartnerMailer:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
-        klembord.init()
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
@@ -104,8 +109,10 @@ class PartnerMailer:
         except:
             return False
         tarea.clear()
-        klembord.set_text(message)
+        pc.copy(message)
         tarea.send_keys(Keys.CONTROL, 'v')
+
+
         # tarea.send_keys(message)
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
