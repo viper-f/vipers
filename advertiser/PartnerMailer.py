@@ -9,7 +9,6 @@ import csv
 from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
-import pyperclip as pc
 
 
 
@@ -106,11 +105,11 @@ class PartnerMailer:
             tarea = driver.find_element(By.ID, "main-reply")
         except:
             return False
-        self.driver2.set_permissions('clipboard-read', 'granted')
-        self.driver2.set_permissions('clipboard-write', 'granted')
         tarea.clear()
-        pc.copy(message)
-        tarea.send_keys(Keys.CONTROL, 'v')
+
+        driver.execute_script("arguments[0].setAttribute('value',arguments[1])", tarea, message)
+        #pc.copy(message)
+        #tarea.send_keys(Keys.CONTROL, 'v')
 
 
         # tarea.send_keys(message)
