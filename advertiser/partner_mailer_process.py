@@ -54,26 +54,6 @@ async_to_sync(channel_layer.group_send)(
         }),
     })
 
-
-# custom_login_code = {
-#     "https://phoenixlament.f-rpg.me": "PiarIn()",
-#     "https://execute.rusff.me": "PR['in_2']()",
-#     "https://intovoid.f-rpg.me": "PR['in_2']()",
-#     "https://sacramento.rusff.me": "PrLogin('pr')",
-#     "https://asphodel.rusff.me": "PR['in_2']()",
-#     "https://timess.rusff.me": "PR['in_2']()",
-#     "https://verbaveritatis.rusff.me": "PR['in_2']()",
-#     "https://miyron.rolka.me": "PiarIn(PiarNik1,PiarPas1)",
-#     "https://drinkbutterbeer.ru": "PrLogin('pr')",
-#     "https://dragonageone.mybb.ru": "PR['in_2']()",
-#     "https://toeden.rusff.me": "PR['in_2']()",
-#     "https://kakbicross.ru": "PR['in_2']()",
-#     "https://daas.rusff.me": "PR['in_2']()",
-#     "https://hornyjail.ru": "PR['in_2']()",
-#     "https://rains.rusff.me": "PrLogin('pr')",
-#     "https://docnight.rusff.me": "PR['in_2']()"
-# }
-
 cl_forums = Forum.objects.filter(custom_login__isnull=False)
 custom_login_code = {}
 for cl_forum in cl_forums:

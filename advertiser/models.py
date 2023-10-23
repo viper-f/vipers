@@ -5,7 +5,7 @@ from django.db import models
 class Forum(models.Model):
     domain = models.CharField(max_length=100)
     custom_login = models.CharField(max_length=200, default=None, blank=True, null=True)
-    stop = models.BooleanField(default=False)
+    stop = models.BooleanField(default=False, blank=True)
 
 class HomeForum(models.Model):
     name = models.CharField(max_length=100)
