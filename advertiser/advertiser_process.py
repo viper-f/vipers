@@ -74,18 +74,9 @@ async_to_sync(channel_layer.group_send)(
     })
 
 
-# stop_list = [
-#     # "https://vampdynasties.mybb.ru",
-#     # "https://curama.mybb.ru",
-#     # "http://curama.mybb.ru",
-#     "http://themostsupernatural.ru",
-#     "https://themostsupernatural.ru",
-#     # "https://grishaversesab.ru"
-#     # "https://faceinless.ru",
-#     # "https://crossteller.ru",
-#     # "https://incident.rusff.me",
-#     # "http://fear.rusff.me/viewtopic.php?id=54&p=9
-# ]
+stop_list = [
+    "https://lepidus.ru"
+]
 
 custom_login_code = {
     "https://phoenixlament.f-rpg.me": "PiarIn()",
@@ -140,7 +131,8 @@ visited, success = advertiser.work(
     url=options.base_url,
     start_url=options.start_url,
     template=options.template,
-    custom_login_code=custom_login_code
+    custom_login_code=custom_login_code,
+    stop_list=stop_list
 )
 
 now = datetime.now()
