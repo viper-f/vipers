@@ -79,8 +79,8 @@ def advertiser_process(request):
                       "-c", custom_credentials,
                       "-u", custom_username,
                       "-p", custom_password,
-                      '-f', forum_id,
-                      '-q', user_id,
+                      '-f', str(forum_id),
+                      '-q', str(user_id),
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
     return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})

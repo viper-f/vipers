@@ -26,8 +26,8 @@ parser.add_option("-f", '--username', dest="user_id")
 parser.add_option("-q", '--forum', dest="forum_id")
 (options, args) = parser.parse_args()
 
-user = User.objects.get(pk=options.user_id)
-forum = HomeForum.objects.get(pk=options.forum_id)
+user = User.objects.get(pk=int(options.user_id))
+forum = HomeForum.objects.get(pk=int(options.forum_id))
 now = datetime.now()
 record = BotSession(
     home_forum=forum,
