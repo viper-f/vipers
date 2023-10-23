@@ -9,6 +9,9 @@ import json
 
 sys.path.insert(0, './../vipers')
 import vipers
+
+import django
+django.setup()
 from django.contrib.auth.models import User
 from advertiser.models import HomeForum, BotSession
 
