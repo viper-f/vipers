@@ -22,3 +22,9 @@ class CustomCredentials(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=200)
+
+
+class AdTemplate(models.Model):
+    home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    code = models.TextField()

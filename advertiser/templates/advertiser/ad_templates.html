@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title-section">Рекламные шаблоны</h2>
+
+<div id="forum-wrapper">
+    {% for template in templates %}
+    <div class="template-box sul-box-raised-2"><h3 class="forum-title">{{ template.name }}</h3>
+        <pre class="bb-code">{{ template.code }} </pre>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="title-section">Добавить</h2>
+<div id="bot-form" class="block sul-box-raised-2">
+    <form action="/advertiser/templates/{{ id }}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="sul-btn" value="Add">
+    </form>
+</div>
+{% endblock %}

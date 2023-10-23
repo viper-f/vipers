@@ -202,3 +202,15 @@ a:hover {
 .forum-box ul {
     margin-top: 1rem;
 }
+
+.template-box {
+    padding: 1rem 2rem 1rem;
+}
+
+.bb-code {
+    overflow-x: scroll;
+}
+
+#id_template_choices div {
+  margin-right: 1rem
+}

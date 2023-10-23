@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <h2 class="title-section">Рекламный бот</h2>
 <p style="margin-bottom: 2rem">Заполни форму и иди пить чай</p>
@@ -10,4 +11,5 @@
         <input type="submit" class="sul-btn" value="OK">
     </form>
 </div>
+ <script src="{% static 'advertiser/templates.js' %}"></script>
 {% endblock %}

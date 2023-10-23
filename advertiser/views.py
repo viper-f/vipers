@@ -4,11 +4,12 @@ import string
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .forms import AdForm, PartnerForm, ForumForm
+from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm
 from django.urls import reverse
 import subprocess
 
-from .models import HomeForum, CustomCredentials, PartnerTopic
+from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate
+
 
 @login_required
 def advertiser_form(request, id):
@@ -39,7 +40,7 @@ def advertiser_form(request, id):
             'custom_credentials': credentials != False,
             'custom_username': credentials.username if credentials != False else '',
             'custom_password': credentials.password if credentials != False else ''
-        })
+        }, forum_id=id)
         return render(request, "advertiser/advertiser_form.html", {"form": form})
 
 @login_required
@@ -83,7 +84,6 @@ def partner_form(request, id):
         else:
             print('Something is wrong')
     else:
-        forum = HomeForum.objects.get(pk=id)
         partners = PartnerTopic.objects.filter(home_forum=id)
         partner_urls = []
         for partner in partners:
@@ -191,3 +191,26 @@ def forum_edit(request, id):
             'custom_password': credentials.password if credentials != False else '',
         })
         return render(request, "advertiser/forum_form.html", {"form": form, "forum": forum})
+
+
+@login_required
+def ad_templates(request, id):
+    if request.method == "POST":
+        form = AdTemplateForm(request.POST)
+        if form.is_valid():
+            forum = HomeForum.objects.get(pk=id)
+            template = AdTemplate(home_forum=forum, name=form.cleaned_data['name'],  code=form.cleaned_data['code'])
+            template.save()
+            return HttpResponseRedirect(reverse('advertiser:ad_templates', kwargs={'id': id}))
+        else:
+            print('Something is wrong')
+    else:
+        templates = AdTemplate.objects.filter(home_forum=id)
+
+        for template in templates:
+            template.template_view = 'Coming later'
+
+        form = AdTemplateForm(initial={
+            'forum_id': id
+        })
+        return render(request, "advertiser/ad_templates.html", {"form": form, "templates": templates, "id": id})
