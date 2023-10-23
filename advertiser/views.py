@@ -15,7 +15,7 @@ from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate
 def advertiser_form(request, id):
     # template = loader.get_template("advertiser/index.html")
     if request.method == "POST":
-        form = AdForm(request.POST)
+        form = AdForm(request.POST, forum_id=id)
         if form.is_valid():
             request.session['session_id'] = form.cleaned_data['session_id']
             request.session['url'] = form.cleaned_data['url']
