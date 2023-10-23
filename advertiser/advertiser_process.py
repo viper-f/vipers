@@ -25,7 +25,7 @@ parser.add_option("-c", '--custom-credentials', dest="custom_credentials")
 parser.add_option("-u", '--custom-username', dest="custom_username")
 parser.add_option("-p", '--custom-password', dest="custom_password")
 parser.add_option("-f", '--forum', dest="forum_id")
-parser.add_option("-q", '--username', dest="fuser_id")
+parser.add_option("-q", '--username', dest="user_id")
 (options, args) = parser.parse_args()
 
 user = User.objects.get(pk=int(options.user_id))
