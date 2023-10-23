@@ -178,3 +178,4 @@ class PartnerMailer:
 
         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                  message="Finished!")
+        return visited, success

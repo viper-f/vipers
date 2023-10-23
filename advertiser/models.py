@@ -2,6 +2,11 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Forum(models.Model):
+    domain = models.CharField(max_length=100)
+    custom_login = models.CharField(max_length=200, default=None, blank=True, null=True)
+    stop = models.BooleanField(default=False)
+
 class HomeForum(models.Model):
     name = models.CharField(max_length=100)
     domain = models.CharField(max_length=100)
@@ -31,6 +36,7 @@ class AdTemplate(models.Model):
 
 
 class BotSession(models.Model):
+    type = models.CharField(max_length=20, default='advertiser')
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     session_id = models.CharField(max_length=100)

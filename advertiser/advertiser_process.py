@@ -13,8 +13,7 @@ import vipers
 import django
 django.setup()
 from django.contrib.auth.models import User
-from advertiser.models import HomeForum, BotSession
-
+from advertiser.models import HomeForum, BotSession, Forum
 
 parser = OptionParser()
 parser.add_option("-l", '--url', dest="base_url")
@@ -32,6 +31,7 @@ user = User.objects.get(pk=int(options.user_id))
 forum = HomeForum.objects.get(pk=int(options.forum_id))
 now = datetime.now()
 record = BotSession(
+    type='advertiser',
     home_forum=forum,
     user=user,
     session_id=options.session_id,
@@ -58,44 +58,36 @@ async_to_sync(channel_layer.group_send)(
     })
 
 
+# stop_list = [
+#     "https://lepidus.ru"
+# ]
 
+# custom_login_code = {
+#     "https://phoenixlament.f-rpg.me": "PiarIn()",
+#     "https://execute.rusff.me": "PR['in_2']()",
+#     "https://intovoid.f-rpg.me": "PR['in_2']()",
+#     "https://sacramento.rusff.me": "PrLogin('pr')",
+#     "https://asphodel.rusff.me": "PR['in_2']()",
+#     "https://timess.rusff.me": "PR['in_2']()",
+#     "https://verbaveritatis.rusff.me": "PR['in_2']()",
+#     "https://miyron.rolka.me": "PiarIn(PiarNik1,PiarPas1)",
+#     "https://drinkbutterbeer.ru": "PrLogin('pr')",
+#     "https://dragonageone.mybb.ru": "PR['in_2']()",
+#     "https://toeden.rusff.me": "PR['in_2']()",
+#     "https://kakbicross.ru": "PR['in_2']()",
+#     "https://daas.rusff.me": "PR['in_2']()",
+#     "https://hornyjail.ru": "PR['in_2']()",
+#     "https://rains.rusff.me": "PrLogin('pr')",
+#     "https://docnight.rusff.me": "PR['in_2']()"
+# }
 
-async_to_sync(channel_layer.group_send)(
-    grop_name,
-    {
-        'type': 'log_message',
-        'message': json.dumps({
-            "total": 0,
-            "visited": 0,
-            "success": 0,
-            "skipped": 0,
-            "message": "Parameters read"
-        }),
-    })
+cl_forums = Forum.objects.filter(custom_login__isnull=False)
+custom_login_code = {}
+for cl_forum in cl_forums:
+    custom_login_code[cl_forum.domain] = cl_forum.custom_login
 
+stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
-stop_list = [
-    "https://lepidus.ru"
-]
-
-custom_login_code = {
-    "https://phoenixlament.f-rpg.me": "PiarIn()",
-    "https://execute.rusff.me": "PR['in_2']()",
-    "https://intovoid.f-rpg.me": "PR['in_2']()",
-    "https://sacramento.rusff.me": "PrLogin('pr')",
-    "https://asphodel.rusff.me": "PR['in_2']()",
-    "https://timess.rusff.me": "PR['in_2']()",
-    "https://verbaveritatis.rusff.me": "PR['in_2']()",
-    "https://miyron.rolka.me": "PiarIn(PiarNik1,PiarPas1)",
-    "https://drinkbutterbeer.ru": "PrLogin('pr')",
-    "https://dragonageone.mybb.ru": "PR['in_2']()",
-    "https://toeden.rusff.me": "PR['in_2']()",
-    "https://kakbicross.ru": "PR['in_2']()",
-    "https://daas.rusff.me": "PR['in_2']()",
-    "https://hornyjail.ru": "PR['in_2']()",
-    "https://rains.rusff.me": "PrLogin('pr')",
-    "https://docnight.rusff.me": "PR['in_2']()"
-}
 
 advertiser = Advertiser(log_mode='channel', channel=channel_layer, group_name=grop_name, data_grab=False)
 

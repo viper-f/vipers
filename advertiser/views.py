@@ -93,6 +93,7 @@ def partner_form(request, id):
             request.session['partner_session_id'] = form.cleaned_data['session_id']
             request.session['partner_urls'] = form.cleaned_data['urls']
             request.session['partner_template'] = form.cleaned_data['template']
+            request.session['forum_id'] = id
             return HttpResponseRedirect(reverse('advertiser:partner_process'))
         else:
             print('Something is wrong')
@@ -114,10 +115,14 @@ def partner_process(request):
     session_id = request.session['partner_session_id']
     urls = request.session['partner_urls']
     template = request.session['partner_template']
+    forum_id = request.session['forum_id']
+    user_id = request.user.id
     subprocess.Popen(["venv/bin/python", "advertiser/partner_mailer_process.py",
                       "-u", urls,
                       "-i", session_id,
                       "-t", template,
+                      '-f', str(forum_id),
+                      '-q', str(user_id),
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
     return render(request, "advertiser/partner_process.html", {"session_id": session_id})
