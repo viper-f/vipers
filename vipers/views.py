@@ -10,8 +10,8 @@ from .forms import LoginForm
 
 
 def index(request):
-    template = loader.get_template("vipers/index.html")
-    return HttpResponse(template.render())
+    return render(request, "vipers/index.html", {
+    })
 
 def user_index(request):
     forums = HomeForum.objects.filter(users=request.user)
