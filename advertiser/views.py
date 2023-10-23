@@ -41,7 +41,7 @@ def advertiser_form(request, id):
             'custom_username': credentials.username if credentials != False else '',
             'custom_password': credentials.password if credentials != False else ''
         }, forum_id=id)
-        return render(request, "advertiser/advertiser_form.html", {"form": form})
+        return render(request, "advertiser/advertiser_form.html", {"form": form, "id": id})
 
 @login_required
 def advertiser_process(request):
@@ -94,7 +94,7 @@ def partner_form(request, id):
             'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
             'urls': partner_urls
         })
-        return render(request, "advertiser/partner_form.html", {"form": form})
+        return render(request, "advertiser/partner_form.html", {"form": form, "id": id})
 
 @login_required
 def partner_process(request):
