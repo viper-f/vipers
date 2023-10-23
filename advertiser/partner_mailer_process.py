@@ -60,7 +60,10 @@ custom_login_code = {
     "https://dragonageone.mybb.ru": "PR['in_2']()",
     "https://toeden.rusff.me": "PR['in_2']()",
     "https://kakbicross.ru": "PR['in_2']()",
-    "https://daas.rusff.me": "PR['in_2']()"
+    "https://daas.rusff.me": "PR['in_2']()",
+    "https://hornyjail.ru": "PR['in_2']()",
+    "https://rains.rusff.me": "PrLogin('pr')",
+    "https://docnight.rusff.me": "PR['in_2']()"
 }
 
 mailer = PartnerMailer(log_mode='channel', channel=channel_layer, group_name=grop_name)
