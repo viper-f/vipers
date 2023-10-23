@@ -3,13 +3,13 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import socket
 from datetime import datetime
-from django.contrib.auth.models import User
 from Advertiser import Advertiser
 from optparse import OptionParser
 import json
 
 sys.path.insert(0, './../vipers')
 import vipers
+from django.contrib.auth.models import User
 from advertiser.models import HomeForum, BotSession
 
 
