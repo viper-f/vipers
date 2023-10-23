@@ -1,11 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.template import loader
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.urls import reverse
 
-from advertiser.models import HomeForum
+from advertiser.models import HomeForum, BotSession
 from .forms import LoginForm
 
 
@@ -14,10 +13,16 @@ def index(request):
     })
 
 def user_index(request):
+    active_sessions = BotSession.objects.filter(status='active')
+    if len(active_sessions):
+        lock = True
+    else:
+        lock = False
     forums = HomeForum.objects.filter(users=request.user)
     return render(request, "vipers/user_index.html", {
         "username": request.user.username,
-        "forums": forums
+        "forums": forums,
+        "lock": lock
     })
 
 def login_view(request):

@@ -8,7 +8,7 @@ from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm
 from django.urls import reverse
 import subprocess
 
-from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate
+from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession
 
 
 @login_required
@@ -24,10 +24,15 @@ def advertiser_form(request, id):
             request.session['custom_credentials'] = form.cleaned_data['custom_credentials']
             request.session['custom_username'] = form.cleaned_data['custom_username']
             request.session['custom_password'] = form.cleaned_data['custom_password']
+            request.session['forum_id'] = id
             return HttpResponseRedirect(reverse('advertiser:advertiser_process'))
         else:
             print('Something is wrong')
     else:
+        active_sessions = BotSession.objects.filter(status='active')
+        if len(active_sessions):
+            return render(request, "advertiser/stop.html")
+
         forum = HomeForum.objects.get(pk=id)
         try:
             credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id)
@@ -45,10 +50,16 @@ def advertiser_form(request, id):
 
 @login_required
 def advertiser_process(request):
+    active_sessions = BotSession.objects.filter(status='active')
+    if len(active_sessions):
+        return render(request, "advertiser/stop.html")
+
     session_id = request.session['session_id']
     url = request.session['url']
     start_url = request.session['start_url']
     template = request.session['template']
+    forum_id = request.session['forum_id']
+    user_id = request.user.id
     if request.session['custom_credentials']:
         custom_credentials = 'true'
     else:
@@ -68,6 +79,8 @@ def advertiser_process(request):
                       "-c", custom_credentials,
                       "-u", custom_username,
                       "-p", custom_password,
+                      '-f', forum_id,
+                      '-q', user_id,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
     return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})

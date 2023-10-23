@@ -28,3 +28,15 @@ class AdTemplate(models.Model):
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     code = models.TextField()
+
+
+class BotSession(models.Model):
+    home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session_id = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)
+    time_start = models.DateTimeField()
+    time_end = models.DateTimeField(default=None, blank=True, null=True)
+    visited = models.IntegerField(default=None, blank=True, null=True)
+    success = models.IntegerField(default=None, blank=True, null=True)
+

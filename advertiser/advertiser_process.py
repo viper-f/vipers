@@ -2,9 +2,13 @@ import sys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import socket
+from datetime import datetime
+from django.contrib.auth.models import User
 from Advertiser import Advertiser
 from optparse import OptionParser
 import json
+
+from advertiser.models import HomeForum, BotSession
 
 sys.path.insert(0, './../vipers')
 import vipers
@@ -18,7 +22,21 @@ parser.add_option("-i", '--session-id', dest="session_id")
 parser.add_option("-c", '--custom-credentials', dest="custom_credentials")
 parser.add_option("-u", '--custom-username', dest="custom_username")
 parser.add_option("-p", '--custom-password', dest="custom_password")
+parser.add_option("-f", '--username', dest="user_id")
+parser.add_option("-q", '--forum', dest="forum_id")
 (options, args) = parser.parse_args()
+
+user = User.objects.get(pk=options.user_id)
+forum = HomeForum.objects.get(pk=options.forum_id)
+now = datetime.now()
+record = BotSession(
+    home_forum=forum,
+    user=user,
+    session_id=options.session_id,
+    status='active',
+    time_start=now.isoformat()
+)
+record.save()
 
 grop_name = 'comm_' + options.session_id
 
@@ -113,12 +131,17 @@ if options.custom_credentials == 'true':
         })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
 
-advertiser.work(
+visited, success = advertiser.work(
     url=options.base_url,
     start_url=options.start_url,
     template=options.template,
     custom_login_code=custom_login_code
 )
 
-# print('Message sent')
+now = datetime.now()
+record.time_end = now.isoformat()
+record.visited = visited
+record.success = success
+record.status = 'finished'
+record.save()
 
