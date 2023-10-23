@@ -71,15 +71,17 @@ class PartnerMailer:
                 return False
 
     def custom_login_code(self, driver, url, code):
+        print("here1" + code) 
         try:
             driver.execute_script(code)
-            WebDriverWait(driver, 5).until(
+            WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "navlogout"))
             )
             driver.get(url)
             self.logged_in = True
             return True
         except:
+             print("here2" + code) 
             return False
 
 
@@ -147,6 +149,7 @@ class PartnerMailer:
             partner_domain = url.split('/viewtopic')[0]
 
            # self.go_to_last_page(self.driver2)
+            print(partner_domain)
 
             if partner_domain in custom_login_code:
                 logged_id = self.custom_login_code(self.driver2, url, custom_login_code[partner_domain])
@@ -156,7 +159,7 @@ class PartnerMailer:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver2, template)
+                    #self.post(self.driver2, template)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + url)
