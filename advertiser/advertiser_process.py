@@ -8,10 +8,9 @@ from Advertiser import Advertiser
 from optparse import OptionParser
 import json
 
-from advertiser.models import HomeForum, BotSession
-
 sys.path.insert(0, './../vipers')
 import vipers
+from advertiser.models import HomeForum, BotSession
 
 
 parser = OptionParser()
