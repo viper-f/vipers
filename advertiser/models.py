@@ -7,6 +7,9 @@ class Forum(models.Model):
     custom_login = models.CharField(max_length=200, default=None, blank=True, null=True)
     stop = models.BooleanField(default=False, blank=True)
 
+    def __str__(self):
+        return self.domain
+
 class HomeForum(models.Model):
     name = models.CharField(max_length=100)
     domain = models.CharField(max_length=100)
