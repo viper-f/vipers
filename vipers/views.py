@@ -1,17 +1,20 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth import logout
 from django.urls import reverse
 
 from advertiser.models import HomeForum, BotSession
-from .forms import LoginForm
+from .forms import LoginForm, UserSettingsForm
 
 
 def index(request):
     return render(request, "vipers/index.html", {
     })
 
+@login_required
 def user_index(request):
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
@@ -24,6 +27,29 @@ def user_index(request):
         "forums": forums,
         "lock": lock
     })
+
+@login_required
+def user_settings(request):
+    if request.method == "POST":
+        form = UserSettingsForm(request.POST)
+        if form.is_valid():
+            old_password = request.POST["old_password"]
+            password = request.POST["password"]
+            password_repeat = request.POST["password_repeat"]
+            if request.user.check_password(old_password):
+                if password == password_repeat:
+                    request.user.set_password(password)
+                    request.user.save()
+                    update_session_auth_hash(request, request.user)
+                    messages.success(request, "Your password has been changed")
+                else:
+                    messages.success(request, "Passwords do not match")
+            else:
+                messages.error(request, "Wrong current password")
+        return HttpResponseRedirect(reverse('user_settings'))
+    else:
+        form = UserSettingsForm()
+        return render(request, "vipers/user_settings.html", {"form": form, "username": request.user.username})
 
 def login_view(request):
     if request.method == "POST":

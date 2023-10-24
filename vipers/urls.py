@@ -23,6 +23,7 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("user-index", views.user_index, name="user_index"),
+    path("user-settings", views.user_settings, name="user_settings"),
     path("episodelist/", include("episodelist.urls")),
     path("advertiser/", include("advertiser.urls")),
     path('admin/', admin.site.urls),

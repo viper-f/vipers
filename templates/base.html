@@ -23,6 +23,7 @@
                     {% if is_auth %}
                     <li><a href="/user-index">Мои форумы</a></li>
                     <li><a href="/episodelist/about">Список эпизодов</a></li>
+                    <li><a href="/user-settings">Настройки</a></li>
                     {% else %}
                     <li><a href="/login">Вход</a></li>
                     {% endif %}
@@ -41,8 +42,16 @@
 </header>
 
 
-
 <div id="wrapper">
+
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
      {% block content %}
     {% endblock %}
 </div>
