@@ -1,3 +1,4 @@
 from django.contrib import admin
+from advetiser.models import HomeForum
 
-# Register your models here.
+admin.site.register(HomeForum)
