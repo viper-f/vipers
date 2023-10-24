@@ -1,4 +1,4 @@
 from django.contrib import admin
-from advetiser.models import HomeForum
+from advertiser.models import HomeForum
 
 admin.site.register(HomeForum)
