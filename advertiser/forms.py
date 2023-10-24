@@ -17,7 +17,7 @@ class AdForm(forms.Form):
     custom_username = forms.CharField(label="Custom Username", max_length=100,
                                       widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
     custom_password = forms.CharField(label="Custom Password", max_length=100,
-                                      widget=forms.PasswordInput(attrs={'class': 'sul-text-field'}), required=False, render_value = True)
+                                      widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
 
     def __init__(self, *args, **kwargs):
         self.forum_id = kwargs.pop("forum_id")
