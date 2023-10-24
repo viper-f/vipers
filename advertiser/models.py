@@ -6,6 +6,13 @@ class Forum(models.Model):
     domain = models.CharField(max_length=100)
     custom_login = models.CharField(max_length=200, default=None, blank=True, null=True)
     stop = models.BooleanField(default=False, blank=True)
+    type = models.CharField(max_length=100)
+    predicted_forum_id = models.IntegerField(default=None, blank=True, null=True)
+    predicted_topic_name = models.CharField(max_length=200, ddefault=None, blank=True, null=True)
+    prediction_date = models.DateTimeField(default=None, blank=True, null=True)
+    verified_forum_id = models.IntegerField(default=None, blank=True, null=True)
+    verified_topic_name = models.CharField(max_length=200, ddefault=None, blank=True, null=True)
+    verification_date = models.DateTimeField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.domain
