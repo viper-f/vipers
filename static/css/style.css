@@ -209,6 +209,7 @@ a:hover {
 
 .bb-code {
     overflow-x: scroll;
+    margin-top: 0.5rem;
 }
 
 #id_template_choices div {
@@ -216,5 +217,6 @@ a:hover {
 }
 
 .template-edit {
-float: right
+float: right;
+margin-left: 0.5rem
 }

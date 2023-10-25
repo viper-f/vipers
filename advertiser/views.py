@@ -9,11 +9,12 @@ from django.urls import reverse
 import subprocess
 
 from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession
+from .restrictions import check_allowed
 
 
 @login_required
 def advertiser_form(request, id):
-    # template = loader.get_template("advertiser/index.html")
+    check_allowed(request, id)
     if request.method == "POST":
         form = AdForm(request.POST, forum_id=id)
         if form.is_valid():
@@ -50,6 +51,8 @@ def advertiser_form(request, id):
 
 @login_required
 def advertiser_process(request):
+    forum_id = request.session['forum_id']
+    check_allowed(request, forum_id)
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
         return render(request, "advertiser/stop.html")
@@ -58,7 +61,6 @@ def advertiser_process(request):
     url = request.session['url']
     start_url = request.session['start_url']
     template = request.session['template']
-    forum_id = request.session['forum_id']
     user_id = request.user.id
     if request.session['custom_credentials']:
         custom_credentials = 'true'
@@ -87,6 +89,7 @@ def advertiser_process(request):
 
 @login_required
 def partner_form(request, id):
+    check_allowed(request, id)
     if request.method == "POST":
         form = PartnerForm(request.POST)
         if form.is_valid():
@@ -112,10 +115,11 @@ def partner_form(request, id):
 
 @login_required
 def partner_process(request):
+    forum_id = request.session['forum_id']
+    check_allowed(request, forum_id)
     session_id = request.session['partner_session_id']
     urls = request.session['partner_urls']
     template = request.session['partner_template']
-    forum_id = request.session['forum_id']
     user_id = request.user.id
     subprocess.Popen(["venv/bin/python", "advertiser/partner_mailer_process.py",
                       "-u", urls,
@@ -130,6 +134,7 @@ def partner_process(request):
 
 @login_required
 def forum_edit(request, id):
+    check_allowed(request, id)
     if request.method == "POST":
         form = ForumForm(request.POST)
         if form.is_valid():
@@ -213,6 +218,7 @@ def forum_edit(request, id):
 
 @login_required
 def ad_templates(request, id):
+    check_allowed(request, id)
     if request.method == "POST":
         form = AdTemplateForm(request.POST)
         if form.is_valid():
@@ -232,3 +238,11 @@ def ad_templates(request, id):
             'forum_id': id
         })
         return render(request, "advertiser/ad_templates.html", {"form": form, "templates": templates, "id": id})
+
+@login_required
+def delete_template(request, id):
+    template = AdTemplate.objects.get(pk=id)
+    check_allowed(request, template.home_forum)
+    template.delete()
+    return HttpResponseRedirect(reverse('advertiser:ad_templates', kwargs={'id': template.home_forum.id}))
+

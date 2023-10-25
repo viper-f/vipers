@@ -5,8 +5,8 @@
 <div id="forum-wrapper">
     {% for template in templates %}
     <div class="template-box sul-box-raised-2"><h3 class="forum-title">{{ template.name }}
-        <a href="#" class="template-edit" title="Edit">🖊️</a>
-        <a href="#" class="template-edit" title="Delete">✂️</a>
+        <a href="/advertiser/templates/delete/{{ template.id }}" class="template-edit" title="Delete">✂️</a>
+        <!--<a href="#" class="template-edit" title="Edit">🖊️</a>-->
     </h3>
         <pre class="bb-code">{{ template.code }} </pre>
     </div>
