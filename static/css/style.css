@@ -214,3 +214,7 @@ a:hover {
 #id_template_choices div {
   margin-right: 1rem
 }
+
+.template-edit {
+float: right
+}
