@@ -140,11 +140,10 @@ class Advertiser:
 
     def custom_login(self, url, username, password):
         try:
-            self.driver1.get(url)
-            button = self.driver1.find_element(By.ID, "navlogin")
-            button.click()
+            base_url = url.split('/viewtopic')[0]
+            self.driver1.get(base_url + '/login.php')
             WebDriverWait(self.driver1, 5).until(
-                EC.presence_of_element_located((By.ID, "form-login"))
+                EC.presence_of_element_located((By.ID, "login"))
             )
             self.driver1.find_element(By.ID, "fld1").send_keys(username)
             self.driver1.find_element(By.ID, "fld2").send_keys(password)
