@@ -3,10 +3,10 @@ from django.db import models
 
 
 class Forum(models.Model):
-    domain = models.CharField(max_length=100)
+    domain = models.CharField(max_length=100, unique=True)
     custom_login = models.CharField(max_length=200, default=None, blank=True, null=True)
-    stop = models.BooleanField(default=False, blank=True)
-    type = models.CharField(max_length=100)
+    stop = models.BooleanField(default=None, blank=True, null=True)
+    type = models.CharField(max_length=100, default=None, blank=True, null=True)
     predicted_forum_id = models.IntegerField(default=None, blank=True, null=True)
     predicted_topic_name = models.CharField(max_length=200, default=None, blank=True, null=True)
     prediction_date = models.DateTimeField(default=None, blank=True, null=True)
@@ -19,7 +19,7 @@ class Forum(models.Model):
 
 class HomeForum(models.Model):
     name = models.CharField(max_length=100)
-    domain = models.CharField(max_length=100)
+    domain = models.CharField(max_length=100, unique=True)
     ad_topic_url = models.CharField(max_length=200)
     users = models.ManyToManyField(User, related_name="manager")
 

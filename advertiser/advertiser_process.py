@@ -1,9 +1,8 @@
 import sys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import socket
 from datetime import datetime
-from Advertiser import Advertiser
+from AdvertiserV2 import AdvertiserV2
 from optparse import OptionParser
 import json
 
@@ -12,6 +11,7 @@ import vipers
 
 import django
 django.setup()
+from django.db import connection
 from django.contrib.auth.models import User
 from advertiser.models import HomeForum, BotSession, Forum
 
@@ -66,7 +66,7 @@ for cl_forum in cl_forums:
 stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
 
-advertiser = Advertiser(log_mode='channel', channel=channel_layer, group_name=grop_name, data_grab=False)
+advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, group_name=grop_name, data_grab=False)
 
 async_to_sync(channel_layer.group_send)(
     grop_name,
@@ -96,13 +96,22 @@ if options.custom_credentials == 'true':
         })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
 
-visited, success = advertiser.work(
+visited, success, links = advertiser.work(
     url=options.base_url,
     start_url=options.start_url,
     template=options.template,
     custom_login_code=custom_login_code,
     stop_list=stop_list
 )
+
+sql_links = []
+for link in links:
+    sql_links.append("('"+link[0]+"',"+str(link[1])+")")
+sql_links = ', '.join(sql_links)
+with connection.cursor() as cursor:
+    cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
+    row = cursor.fetchone()
+
 
 now = datetime.now()
 record.time_end = now.isoformat()
