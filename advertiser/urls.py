@@ -11,4 +11,6 @@ urlpatterns = [
     path("advertiser-process", views.advertiser_process, name="advertiser_process"),
     path("partner/<int:id>", views.partner_form, name="partner_form"),
     path("partner-process", views.partner_process, name="partner_process"),
+    path("history/<int:id>", views.history, name="history"),
+    path("history/<int:id>/<int:page>", views.history, name="history"),
 ]

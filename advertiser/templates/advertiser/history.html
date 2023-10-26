@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<table id="session-history">
+    <thead>
+    <tr>
+        <th>Тип</th>
+        <th>Время начала</th>
+        <th>Время окончания</th>
+        <th>Статус</th>
+        <th>Пользователь</th>
+        <th>Пройдено</th>
+        <th>Реклам</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for session in sessions %}
+    <tr>
+        <td>{{ session.type }}</td>
+        <td>{{ session.time_start }}</td>
+        <td>{{ session.time_end }}</td>
+        <td>{{ session.status }}</td>
+        <td>{{ session.user.username }}</td>
+        <td>{{ session.visited }}</td>
+        <td>{{ session.success }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

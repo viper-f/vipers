@@ -246,3 +246,11 @@ def delete_template(request, id):
     template.delete()
     return HttpResponseRedirect(reverse('advertiser:ad_templates', kwargs={'id': template.home_forum.id}))
 
+@login_required
+def history(request, id, page=0):
+    forum = HomeForum.objects.get(pk=id)
+    check_allowed(request, forum)
+    page_size = 50
+    sessions = BotSession.objects.filter(home_forum=forum).order_by('-time_start')[page*page_size:(page+1)*page_size]
+    return render(request, "advertiser/history.html", {'sessions': sessions})
+
