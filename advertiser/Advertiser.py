@@ -143,11 +143,12 @@ class Advertiser:
             base_url = url.split('/viewtopic')[0]
             self.driver1.get(base_url + '/login.php')
             WebDriverWait(self.driver1, 5).until(
-                EC.presence_of_element_located((By.ID, "login"))
+                EC.presence_of_element_located((By.CSS_SELECTOR, "#pun-main .formal>#login"))
             )
-            self.driver1.find_element(By.ID, "fld1").send_keys(username)
-            self.driver1.find_element(By.ID, "fld2").send_keys(password)
-            self.driver1.find_element(By.NAME, "login").click()
+            form = self.driver1.find_element(By.CSS_SELECTOR, "#pun-main .formal>#login")
+            form.find_element(By.ID, "fld1").send_keys(username)
+            form.find_element(By.ID, "fld2").send_keys(password)
+            form.find_element(By.NAME, "login").click()
             WebDriverWait(self.driver1, 5).until(
                 EC.presence_of_element_located((By.ID, "navlogout"))
             )
