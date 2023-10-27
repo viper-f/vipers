@@ -34,7 +34,7 @@ class AdvertiserV2:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
-        self.load_from_db()
+        #self.load_from_db()
 
 
     def load_from_db(self):
@@ -315,11 +315,11 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    #self.post(self.driver1, code_partner)
+                    self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
                     full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    #self.post(self.driver2, full_code_home)
+                    self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
