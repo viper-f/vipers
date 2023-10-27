@@ -110,7 +110,7 @@ class AdvertiserV2:
                     track = l.split('/viewtopic')[0]
                     if track not in self.tracked:
                         parts = l.split('#')
-                        self.links.append([parts[0], 'null', 'new'])
+                        self.links.append([parts[0], 0, 'new'])
                         self.tracked.append(track)
 
     def login(self, driver, url):
@@ -272,11 +272,10 @@ class AdvertiserV2:
 
             if self.links[n][2] == 'new':
                 partner_domain = link.split('/viewtopic')[0]
-                self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
-                # try:
-                #     self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
-                # except:
-                #     print("Could not grab forum id: " + link)
+                try:
+                    self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
+                except:
+                    print("Could not grab forum id: " + link)
 
             self.go_to_last_page(self.driver2)
             self_present = self.check_self_present(sample, self.driver2)
