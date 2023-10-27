@@ -8,6 +8,8 @@ from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
 from topic_search import get_topic_url
+import django
+django.setup()
 from advertiser.models import Forum
 
 
