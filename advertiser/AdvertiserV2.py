@@ -261,6 +261,11 @@ class AdvertiserV2:
                 link = get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
                 partner_domain = self.links[n][0]
                 print(link)
+                if link == False:
+                    skipped += 1
+                    self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                             message='Could not find ad topic: ' + link)
+                    continue
 
             try:
                 self.driver2.get(link)
