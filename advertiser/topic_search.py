@@ -44,7 +44,7 @@ def scrape(url):
         if int(post_number.text) > max_message:
             max_message = int(post_number.text)
 
-        if topic_n > 10:
+        if topic_n > 9:
             break
 
     max_author = 0
