@@ -273,6 +273,7 @@ class AdvertiserV2:
             if self.links[n][2] == 'new':
                 partner_domain = link.split('/viewtopic')[0]
                 try:
+                    self.links[n][0] = partner_domain
                     self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
                 except:
                     print("Could not grab forum id: " + link)
@@ -309,11 +310,11 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    #self.post(self.driver1, code_partner)
+                    self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
                     full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    #self.post(self.driver2, full_code_home)
+                    self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
