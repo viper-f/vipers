@@ -4,14 +4,15 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import re
-import csv
 from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
+from topic_search import get_topic_url
+from advertiser.models import Forum
 
 
 class AdvertiserV2:
-    def __init__(self, log_mode='console', channel=None, group_name=None, data_grab=False):
+    def __init__(self, log_mode='console', channel=None, group_name=None):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
@@ -27,17 +28,17 @@ class AdvertiserV2:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
-        self.data_grab = data_grab
-        self.data = {}
-        if data_grab:
-            self.load_data()
+        self.load_from_db()
 
 
-    def load_data(self):
-        with open('data/data.csv', newline='') as f:
-            reader = csv.reader(f, delimiter=';')
-            for row in reader:
-                self.data[row[0]] = row[1]
+    def load_from_db(self):
+        self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
+                 message='Loading known data')
+        forums = Forum.objects.filter(stop=False)
+        for forum in forums:
+            self.tracked.append((forum.domain, forum.verified_forum_id, 'old'))
+
+
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
@@ -103,7 +104,7 @@ class AdvertiserV2:
                     track = l.split('/viewtopic')[0]
                     if track not in self.tracked:
                         parts = l.split('#')
-                        self.links.append((parts[0], 'null'))
+                        self.links.append((parts[0], 'null', 'new'))
                         self.tracked.append(track)
 
     def login(self, driver, url):
@@ -249,6 +250,11 @@ class AdvertiserV2:
             n += 1
             visited += 1
             link = self.links[n][0]
+
+            if self.links[n][2] == 'old':
+                link = get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
+                partner_domain = self.links[n][0]
+                print(link)
             try:
                 self.driver2.get(link)
             except:
@@ -256,12 +262,13 @@ class AdvertiserV2:
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Could not load page: ' + link)
                 continue
-            partner_domain = link.split('/viewtopic')[0]
 
-            try:
-                self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
-            except:
-                print("Could not grab data: " + link)
+            if self.links[n][2] == 'new':
+                partner_domain = link.split('/viewtopic')[0]
+                try:
+                    self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
+                except:
+                    print("Could not grab forum id: " + link)
 
             self.go_to_last_page(self.driver2)
             self_present = self.check_self_present(sample, self.driver2)
@@ -295,11 +302,11 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
                     full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
