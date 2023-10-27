@@ -125,7 +125,7 @@ def predict(X, parameters):
 
 
 def get_topic_url(url):
-    parameters = pickle.load(open('models/topic_search_model.pickle', 'rb'))
+    parameters = pickle.load(open('./advertiser/models/topic_search_model.pickle', 'rb'))
     X, data = scrape(url)
     X = np.reshape(X, (1, 141))
     X = X.T
