@@ -42,7 +42,7 @@ class AdvertiserV2:
                  message='Loading known data')
         forums = Forum.objects.filter(stop=False)
         for forum in forums:
-            self.tracked.append((forum.domain, forum.verified_forum_id, 'old'))
+            self.links.append((forum.domain, forum.verified_forum_id, 'old'))
 
 
 
@@ -261,6 +261,7 @@ class AdvertiserV2:
                 link = get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
                 partner_domain = self.links[n][0]
                 print(link)
+
             try:
                 self.driver2.get(link)
             except:
@@ -271,10 +272,11 @@ class AdvertiserV2:
 
             if self.links[n][2] == 'new':
                 partner_domain = link.split('/viewtopic')[0]
-                try:
-                    self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
-                except:
-                    print("Could not grab forum id: " + link)
+                self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
+                # try:
+                #     self.links[n][1] = self.driver2.execute_script('return FORUM.topic.forum_id')
+                # except:
+                #     print("Could not grab forum id: " + link)
 
             self.go_to_last_page(self.driver2)
             self_present = self.check_self_present(sample, self.driver2)
