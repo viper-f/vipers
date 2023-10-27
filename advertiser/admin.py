@@ -3,3 +3,4 @@ from advertiser.models import Forum, HomeForum
 
 admin.site.register(Forum)
 admin.site.register(HomeForum)
+admin.site.register(BotSession)
