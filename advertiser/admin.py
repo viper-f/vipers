@@ -1,5 +1,5 @@
 from django.contrib import admin
-from advertiser.models import Forum, HomeForum
+from advertiser.models import Forum, HomeForum, BotSession
 
 admin.site.register(Forum)
 admin.site.register(HomeForum)
