@@ -42,7 +42,7 @@ class AdvertiserV2:
                  message='Loading known data')
         forums = Forum.objects.filter(stop=False)
         for forum in forums:
-            self.links.append((forum.domain, forum.verified_forum_id, 'old'))
+            self.links.append([forum.domain, forum.verified_forum_id, 'old'])
 
 
 
@@ -110,7 +110,7 @@ class AdvertiserV2:
                     track = l.split('/viewtopic')[0]
                     if track not in self.tracked:
                         parts = l.split('#')
-                        self.links.append((parts[0], 'null', 'new'))
+                        self.links.append([parts[0], 'null', 'new'])
                         self.tracked.append(track)
 
     def login(self, driver, url):
