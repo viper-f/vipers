@@ -107,7 +107,7 @@ visited, success, links = advertiser.work(
 sql_links = []
 if len(links):
     for link in links:
-        if link[2] == 'new' and not links[1] == 0:
+        if link[2] == 'new' and links[1] != 0:
             sql_links.append("('"+link[0]+"',"+str(link[1])+")")
     sql_links = ', '.join(sql_links)
     with connection.cursor() as cursor:
