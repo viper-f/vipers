@@ -243,7 +243,6 @@ class AdvertiserV2:
             code_home = template
 
         sample = self.sample_template(code_home)
-        print(' '.join(sample))
 
         if not self.logged_in:
             self.login(self.driver1, url)

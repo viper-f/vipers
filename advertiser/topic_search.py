@@ -44,7 +44,7 @@ def scrape(url):
         if int(post_number.text) > max_message:
             max_message = int(post_number.text)
 
-        if topic_n > 9:
+        if topic_n > 10:
             break
 
     max_author = 0
@@ -135,7 +135,7 @@ def get_topic_url(url):
     topic_url = False
     #topic_title = ''
 
-    for i in range(0, 40):
+    for i in range(0, 9):
         if prediction[0][i] and i <= len(data):
             topic_url = data[i - 1]['last_page_url']  # topic numbers start with 1, arrays start with 0
             #topic_title = data[i - 1]['topic_title']
