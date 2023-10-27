@@ -105,13 +105,14 @@ visited, success, links = advertiser.work(
 )
 
 sql_links = []
-for link in links:
-    if link[2] == 'new':
-        sql_links.append("('"+link[0]+"',"+str(link[1])+")")
-sql_links = ', '.join(sql_links)
-with connection.cursor() as cursor:
-    cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
-    row = cursor.fetchone()
+if len(links):
+    for link in links:
+        if link[2] == 'new':
+            sql_links.append("('"+link[0]+"',"+str(link[1])+")")
+    sql_links = ', '.join(sql_links)
+    with connection.cursor() as cursor:
+        cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
+        row = cursor.fetchone()
 
 
 now = datetime.now()
