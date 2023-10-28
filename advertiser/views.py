@@ -20,7 +20,6 @@ def advertiser_form(request, id):
         if form.is_valid():
             request.session['session_id'] = form.cleaned_data['session_id']
             request.session['url'] = form.cleaned_data['url']
-            request.session['start_url'] = form.cleaned_data['start_url']
             request.session['template'] = form.cleaned_data['template']
             request.session['custom_credentials'] = form.cleaned_data['custom_credentials']
             request.session['custom_username'] = form.cleaned_data['custom_username']
