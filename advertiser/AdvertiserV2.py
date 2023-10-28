@@ -43,6 +43,7 @@ class AdvertiserV2:
         forums = Forum.objects.filter(stop=False)
         for forum in forums:
             self.links.append([forum.domain, forum.verified_forum_id, 'old'])
+            self.tracked.append(forum.domain)
 
 
 
