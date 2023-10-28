@@ -1,6 +1,4 @@
-import csv
 import requests
-import tensorflow as tf
 from bs4 import BeautifulSoup
 import numpy as np
 import re
@@ -102,22 +100,3 @@ def analize(url):
         i += 1
 
     return X, topics
-
-def get_topic_url(url):
-    X, data = analize(url)
-    model = tf.keras.models.load_model('topic_model')
-    prediction = model.predict(np.array([X]), verbose=0)
-    topic_url = False
-
-    max_v = -1
-    max_n = -1
-
-    for i in range(0, min(9, (len(data) - 1))):
-        if prediction[0][i] > max_v:
-            max_v = prediction[0][i]
-            max_n = i
-    try:
-        topic_url = data[max_n]['last_page_url']
-    except:
-        pass
-    return topic_url

@@ -7,8 +7,10 @@ import re
 from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
-from topic_search import get_topic_url
+from topic_search import analize
 import sys
+import tensorflow as tf
+import numpy as np
 
 sys.path.insert(0, './../vipers')
 import vipers
@@ -34,6 +36,25 @@ class AdvertiserV2:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
+        self.model = tf.keras.models.load_model('topic_model')
+
+    def get_topic_url(self, url):
+        X, data = analize(url)
+        prediction = self.model.predict(np.array([X]), verbose=0)
+        topic_url = False
+
+        max_v = -1
+        max_n = -1
+
+        for i in range(0, min(9, (len(data) - 1))):
+            if prediction[0][i] > max_v:
+                max_v = prediction[0][i]
+                max_n = i
+        try:
+            topic_url = data[max_n]['last_page_url']
+        except:
+            pass
+        return topic_url
 
 
     def load_from_db(self, home_forum_id):
