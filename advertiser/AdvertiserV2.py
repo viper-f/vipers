@@ -276,7 +276,7 @@ class AdvertiserV2:
             link = self.links[n][0]
 
             if self.links[n][2] == 'old':
-                link = get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
+                link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
                 partner_domain = self.links[n][0]
                 print(link)
                 if not link:
