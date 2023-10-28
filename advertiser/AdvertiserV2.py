@@ -345,7 +345,7 @@ class AdvertiserV2:
                     if not self_form:
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                                  message='Your topic is over!')
-                        return
+                        return visited, success, self.links
                 else:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
