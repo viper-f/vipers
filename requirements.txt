@@ -10,3 +10,4 @@ numpy
 pickle
 requests
 bs4
+tensorflow

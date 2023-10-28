@@ -34,7 +34,7 @@ class AdvertiserV2:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
-        #self.load_from_db()
+        self.load_from_db()
 
 
     def load_from_db(self):

@@ -1,10 +1,12 @@
-import pickle
-import numpy as np
+import csv
 import requests
+import tensorflow as tf
 from bs4 import BeautifulSoup
+import numpy as np
 import re
 
-def scrape(url):
+
+def analize(url):
     html_text = requests.get(url).text
     soup = BeautifulSoup(html_text, 'html.parser')
     topics = []
@@ -12,6 +14,8 @@ def scrape(url):
 
     max_message = 0
     authors = {}
+
+    X = np.zeros(140)
 
     for line in soup.css.select('tbody tr'):
 
@@ -23,26 +27,37 @@ def scrape(url):
 
         topic_n += 1
 
-        last_post = line.css.select('.tcr>a')[0]
-        last_poster = line.css.select('.tcr .byuser')[0]
-        post_number = line.css.select('.tc2')[0]
+        if len(line.css.select('.tcr>a')):
+            last_post = line.css.select('.tcr>a')[0]
+            last_poster = line.css.select('.tcr .byuser')[0]
+            post_number = line.css.select('.tc2')[0]
 
-        if last_poster.text not in authors:
-            authors[last_poster.text] = 0
-        authors[last_poster.text] += 1
+            if last_poster.text not in authors:
+                authors[last_poster.text] = 0
+            authors[last_poster.text] += 1
 
-        topics.append({
-            'topic_url': topic['href'],
-            'topic_title': topic.text,
-            'poster_name': last_poster.text,
-            'last_post': last_post.text,
-            'last_page_url': last_post['href'],
-            'number': topic_n,
-            'post_number': int(post_number.text)
-        })
+            if int(post_number.text) > max_message:
+                max_message = int(post_number.text)
 
-        if int(post_number.text) > max_message:
-            max_message = int(post_number.text)
+            topics.append({
+                'topic_url': topic['href'],
+                'topic_title': topic.text,
+                'poster_name': last_poster.text,
+                'last_post': last_post.text,
+                'last_page_url': last_post['href'],
+                'number': topic_n,
+                'post_number': int(post_number.text)
+            })
+        else:
+            topics.append({
+                'topic_url': topic['href'],
+                'topic_title': topic.text,
+                'poster_name': '',
+                'last_post': '',
+                'last_page_url': '',
+                'number': topic_n,
+                'post_number': 0
+            })
 
         if topic_n > 9:
             break
@@ -54,8 +69,6 @@ def scrape(url):
             max_author = authors[author]
             max_author_name = author
 
-
-    X = np.zeros(141)
 
     i = 0
     for topic in topics:
@@ -83,62 +96,26 @@ def scrape(url):
         i += 1
         X[i] = int('вчера' in topic['last_post'].lower())
         i += 1
-        X[i] = int(topic['poster_name'] == max_author)
+        X[i] = int(topic['poster_name'] == max_author_name)
         i += 1
         X[i] = int(topic['post_number'] == max_message)
         i += 1
 
     return X, topics
 
-
-def sigmoid(x):
-    s = 1 / (1 + np.exp(-x))
-    return s
-
-
-def relu(x):
-    return np.maximum(0, x)
-
-
-def forward_propagation(X, parameters):
-    W1 = parameters["W1"]
-    b1 = parameters["b1"]
-    W2 = parameters["W2"]
-    b2 = parameters["b2"]
-    W3 = parameters["W3"]
-    b3 = parameters["b3"]
-
-    z1 = np.dot(W1, X) + b1
-    a1 = relu(z1)
-    z2 = np.dot(W2, a1) + b2
-    a2 = relu(z2)
-    z3 = np.dot(W3, a2) + b3
-    a3 = sigmoid(z3)
-
-    return a3.T
-
-
-def predict(X, parameters):
-    a3 = forward_propagation(X, parameters)
-    return np.round(a3)
-
-
-
 def get_topic_url(url):
-    parameters = pickle.load(open('./advertiser/models/topic_search_model.pickle', 'rb'))
-    X, data = scrape(url)
-    X = np.reshape(X, (1, 141))
-    X = X.T
-
-    prediction = predict(X, parameters)
-
+    X, data = analize(url)
+    model = tf.keras.models.load_model('topic_model')
+    prediction = model.predict(np.array([X]), verbose=0)
     topic_url = False
-    #topic_title = ''
 
-    for i in range(0, 9):
-        if prediction[0][i] and i <= len(data):
-            topic_url = data[i - 1]['last_page_url']  # topic numbers start with 1, arrays start with 0
-            #topic_title = data[i - 1]['topic_title']
-            break
+    max_v = -1
+    max_n = -1
 
+    for i in range(0, min(9, (len(data) - 1))):
+        if prediction[0][i] > max_v:
+            max_v = prediction[0][i]
+            max_n = i
+
+    topic_url = data[max_n]['last_page_url']
     return topic_url
