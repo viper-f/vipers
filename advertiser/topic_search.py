@@ -116,6 +116,8 @@ def get_topic_url(url):
         if prediction[0][i] > max_v:
             max_v = prediction[0][i]
             max_n = i
-
-    topic_url = data[max_n]['last_page_url']
+    try:
+        topic_url = data[max_n]['last_page_url']
+    except:
+        pass
     return topic_url

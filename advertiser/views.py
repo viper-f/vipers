@@ -59,7 +59,6 @@ def advertiser_process(request):
 
     session_id = request.session['session_id']
     url = request.session['url']
-    start_url = request.session['start_url']
     template = request.session['template']
     user_id = request.user.id
     if request.session['custom_credentials']:
@@ -75,7 +74,6 @@ def advertiser_process(request):
     #         print(line.decode('utf8'))
     subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
                       "-l", url,
-                      "-s", start_url,
                       "-i", session_id,
                       "-t", template,
                       "-c", custom_credentials,

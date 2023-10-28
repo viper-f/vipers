@@ -17,7 +17,6 @@ from advertiser.models import HomeForum, BotSession, Forum
 
 parser = OptionParser()
 parser.add_option("-l", '--url', dest="base_url")
-parser.add_option("-s", '--start-url', dest="start_url")
 parser.add_option("-t", '--template', dest="template")
 parser.add_option("-i", '--session-id', dest="session_id")
 parser.add_option("-c", '--custom-credentials', dest="custom_credentials")
@@ -98,7 +97,7 @@ if options.custom_credentials == 'true':
 
 visited, success, links = advertiser.work(
     url=options.base_url,
-    start_url=options.start_url,
+    home_forum_id=forum.forum.id,
     template=options.template,
     custom_login_code=custom_login_code,
     stop_list=stop_list

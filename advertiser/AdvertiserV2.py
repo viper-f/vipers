@@ -34,13 +34,12 @@ class AdvertiserV2:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
-        self.load_from_db()
 
 
-    def load_from_db(self):
+    def load_from_db(self, home_forum_id):
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Loading known data')
-        forums = Forum.objects.filter(stop=False)
+        forums = Forum.objects.filter(stop=False).exlude(pk=home_forum_id)
         for forum in forums:
             self.links.append([forum.domain, forum.verified_forum_id, 'old'])
             self.tracked.append(forum.domain)
@@ -222,8 +221,9 @@ class AdvertiserV2:
     def find_current_link(self, driver):
         return driver.current_url
 
-    def work(self, url, start_url=False, stop_list=False, template=False, custom_login_code={}):
+    def work(self, url, home_forum_id, stop_list=False, template=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        self.load_from_db(home_forum_id)
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')
         track = url.split('/viewtopic')[0]
@@ -231,11 +231,6 @@ class AdvertiserV2:
         if stop_list is not False:
             self.tracked += stop_list
         self.home_base = track
-
-        if not start_url:
-            start_url = url
-        self.driver1.get(start_url)
-        self.scrape_links(self.driver1)
 
         self.driver1.get(url)
         if template is False:
