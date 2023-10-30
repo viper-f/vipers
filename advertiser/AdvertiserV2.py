@@ -16,7 +16,7 @@ sys.path.insert(0, './../vipers')
 import vipers
 import django
 django.setup()
-from advertiser.models import Forum
+from advertiser.models import Forum, AdTemplate, HomeForum
 
 
 class AdvertiserV2:
@@ -31,6 +31,7 @@ class AdvertiserV2:
         self.driver2 = webdriver.Chrome(options=options)
         self.links = []
         self.tracked = []
+        self.templates = []
         self.log_mode = log_mode
         self.channel = channel
         self.group_name = group_name
@@ -66,6 +67,13 @@ class AdvertiserV2:
                 self.links.append([forum.domain, forum.verified_forum_id, 'old'])
             self.tracked.append(forum.domain)
 
+
+    def load_templates(self, home_forum_id):
+        self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
+                 message='Loading templates')
+        templates = AdTemplate.objects.filter(home_forum=home_forum_id).order_by("priority")
+        for template in templates:
+            self.templates.append((template.code, self.sample_template(template.code)))
 
 
     def log(self, total, success, skipped, visited, message):
@@ -243,9 +251,10 @@ class AdvertiserV2:
     def find_current_link(self, driver):
         return driver.current_url
 
-    def work(self, url, home_forum_id, stop_list=False, template=False, custom_login_code={}):
+    def work(self, url, home_forum_id, stop_list=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         self.load_from_db(home_forum_id)
+        self.load_templates(home_forum_id)
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')
         track = url.split('/viewtopic')[0]
@@ -255,12 +264,7 @@ class AdvertiserV2:
         self.home_base = track
 
         self.driver1.get(url)
-        if template is False:
-            code_home = self.get_code(self.driver1)
-        else:
-            code_home = template
 
-        sample = self.sample_template(code_home)
 
         if not self.logged_in:
             self.login(self.driver1, url)
@@ -302,60 +306,70 @@ class AdvertiserV2:
                     print("Could not grab forum id: " + link)
 
             self.go_to_last_page(self.driver2)
-            self_present = self.check_self_present(sample, self.driver2)
             self.scrape_links(self.driver2)
             total = len(self.links)
 
-            if self_present:
-                skipped += 1
-                self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Post on last page: ' + link)
-                continue
+            none_fit = True
+            for template in self.templates:
+                if not none_fit:
+                    break
 
-            try:
-                code_partner = self.get_code(self.driver2)
-                if not self.validate_code(code_partner):
+                self_present = self.check_self_present(template[1], self.driver2)
+
+                if self_present:
+                    continue
+
+                try:
+                    none_fit = False
+                    code_partner = self.get_code(self.driver2)
+                    if not self.validate_code(code_partner):
+                        skipped += 1
+                        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                                 message='Invalid code: ' + link)
+                        continue
+                except:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message='Invalid code: ' + link)
+                             message='No code: ' + link)
                     continue
-            except:
-                skipped += 1
-                self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='No code: ' + link)
-                continue
 
-            if partner_domain in custom_login_code:
-                logged_id = self.custom_login_code(self.driver2, link, custom_login_code[partner_domain])
-            else:
-                logged_id = self.login(self.driver2, link)
+                if partner_domain in custom_login_code:
+                    logged_id = self.custom_login_code(self.driver2, link, custom_login_code[partner_domain])
+                else:
+                    logged_id = self.login(self.driver2, link)
 
-            if logged_id:
-                form = self.check_answer_form(self.driver2)
-                if form:
-                    self.post(self.driver1, code_partner)
-                    self_form = self.check_answer_form(self.driver1)
-                    cur_link = self.find_current_link(self.driver1)
-                    full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
-                    success += 1
-                    self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message="Success: " + link)
-
-                    if not self_form:
+                if logged_id:
+                    form = self.check_answer_form(self.driver2)
+                    if form:
+                        self.post(self.driver1, code_partner)
+                        self_form = self.check_answer_form(self.driver1)
+                        cur_link = self.find_current_link(self.driver1)
+                        full_code_home = template[0] + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
+                        self.post(self.driver2, full_code_home)
+                        success += 1
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                                 message='Your topic is over!')
-                        return visited, success, self.links
+                                 message="Success: " + link)
+
+                        if not self_form:
+                            self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                                     message='Your topic is over!')
+                            return visited, success, self.links
+                    else:
+                        skipped += 1
+                        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                                 message='No message form: ' + link)
+                        continue
                 else:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message='No message form: ' + link)
+                             message='Not logged in: ' + link)
                     continue
-            else:
+
+            if none_fit:
                 skipped += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Not logged in: ' + link)
-                continue
+                         message='All templates present on last page: ' + link)
+
         self.driver2.quit()
         self.driver1.quit()
 
