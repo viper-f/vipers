@@ -47,7 +47,7 @@ class AdvertiserV2:
         max_v = -1
         max_n = -1
 
-        for i in range(0, min(9, (len(data) - 1))):
+        for i in range(0, min(9, (len(data)))):
             if prediction[0][i] > max_v:
                 max_v = prediction[0][i]
                 max_n = i
