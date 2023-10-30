@@ -57,3 +57,4 @@ class AdTemplateForm(forms.Form):
     forum_id = forms.CharField(label="forum_id", max_length=10, widget=forms.HiddenInput())
     name = forms.CharField(label="Name", widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
     code = forms.CharField(label="Code", widget=forms.Textarea(attrs={"rows": "5", 'class': 'sul-text-field'}))
+    priority = forms.CharField(label="priority", widget=forms.HiddenInput())

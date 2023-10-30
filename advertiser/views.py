@@ -1,9 +1,10 @@
+import json
 import random
 import string
-
+from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm
 from django.urls import reverse
 import subprocess
@@ -226,13 +227,18 @@ def ad_templates(request, id):
         else:
             print('Something is wrong')
     else:
-        templates = AdTemplate.objects.filter(home_forum=id)
+        templates = AdTemplate.objects.filter(home_forum=id).order_by("priority")
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT MAX(priority) FROM advertiser_adtemplate WHERE home_forum_id = %s", [id])
+            priority = cursor.fetchone()[0]
+        priority += 1
 
         for template in templates:
             template.template_view = 'Coming later'
 
         form = AdTemplateForm(initial={
-            'forum_id': id
+            'forum_id': id,
+            'priority': priority
         })
         return render(request, "advertiser/ad_templates.html", {"form": form, "templates": templates, "id": id})
 
@@ -242,6 +248,20 @@ def delete_template(request, id):
     check_allowed(request, template.home_forum)
     template.delete()
     return HttpResponseRedirect(reverse('advertiser:ad_templates', kwargs={'id': template.home_forum.id}))
+
+@login_required
+def change_priority_template(request, id):
+    check_allowed(request, id)
+    priorities = json.loads(request.POST.get('priorities'))
+
+    values = []
+    for priority in priorities:
+        values.append('('+str(priority[1])+','+str(priority[0])+')')
+    values = ','.join(values)
+    with connection.cursor() as cursor:
+        cursor.execute("update advertiser_adtemplate as templ set priority = c.column_a from (values "+values+") as c(column_a, column_b) where c.column_b = templ.id;")
+
+    return JsonResponse({"result": "success"})
 
 @login_required
 def history(request, id, page=0):

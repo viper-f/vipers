@@ -44,6 +44,7 @@ class AdTemplate(models.Model):
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     code = models.TextField()
+    priority = models.IntegerField(default=None, blank=True, null=True)
 
 
 class BotSession(models.Model):
