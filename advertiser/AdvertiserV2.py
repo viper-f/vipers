@@ -278,7 +278,7 @@ class AdvertiserV2:
             if self.links[n][2] == 'old':
                 link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
                 partner_domain = self.links[n][0]
-                print(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]) + ' - ' + link)
+                print(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]) + ' - ' + str(link))
                 if not link:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
