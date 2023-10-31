@@ -47,14 +47,14 @@ class AdvertiserV2:
         max_v = -1
         max_n = -1
 
-        for i in range(0, min(9, (len(data)))):
+        for i in range(0, 9):
             if prediction[0][i] > max_v:
                 max_v = prediction[0][i]
                 max_n = i
         try:
             topic_url = data[max_n]['last_page_url']
         except:
-            pass
+            return False
         return topic_url
 
 
@@ -282,7 +282,7 @@ class AdvertiserV2:
             if self.links[n][2] == 'old':
                 link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
                 partner_domain = self.links[n][0]
-                print(link)
+                print(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1])+ ' - ' + link)
                 if not link:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
@@ -341,11 +341,11 @@ class AdvertiserV2:
                 if logged_id:
                     form = self.check_answer_form(self.driver2)
                     if form:
-                        self.post(self.driver1, code_partner)
+                        #self.post(self.driver1, code_partner)
                         self_form = self.check_answer_form(self.driver1)
                         cur_link = self.find_current_link(self.driver1)
                         full_code_home = template[0] + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                        self.post(self.driver2, full_code_home)
+                        #self.post(self.driver2, full_code_home)
                         success += 1
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                                  message="Success: " + link)
