@@ -3,10 +3,15 @@ from django.template import loader
 import requests
 from django.shortcuts import render
 
+from episodelist.models import EpisodeListSettings
 
-def index(request, ids):
-    base = 'kingscross.f-rpg.me'
-    cookie = dict(mybb_ru='MjE4OHwzfDkyOTZmNzM1ZjMxNjliYmM1ZWE4MjhhMTViNjVlNTc3YmViMzNiOTE=')
+
+def index(request, forum_id, ids):
+    settings = EpisodeListSettings.objects.get(pk=forum_id)
+    if not settings:
+        raise Exception('This forum does not exist')
+    base = settings.url
+    cookie = dict(mybb_ru=settings.cookie)
     url = 'https://'+base+'/api.php?method=users.get&user_id='+ids+'&fields=user_id,username,avatar'
     response = requests.get(url, cookies=cookie)
     data = response.json()
