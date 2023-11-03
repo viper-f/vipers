@@ -231,6 +231,8 @@ def ad_templates(request, id):
         with connection.cursor() as cursor:
             cursor.execute("SELECT MAX(priority) FROM advertiser_adtemplate WHERE home_forum_id = %s", [id])
             priority = cursor.fetchone()[0]
+        if not priority:
+            priority = 0
         priority += 1
 
         for template in templates:
