@@ -269,8 +269,8 @@ class AdvertiserV2:
         success = 0
         skipped = 0
         visited = 0
-        #while n < 10:
-        while n < len(self.links) - 1:
+        while n < 10:
+        #while n < len(self.links) - 1:
             n += 1
             visited += 1
             link = self.links[n][0]
@@ -333,11 +333,12 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
+                    print(cur_link)
                     full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
