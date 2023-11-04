@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,6 +28,7 @@ class AdvertiserV2:
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
+        options.page_load_strategy = 'eager'
         self.driver1 = webdriver.Chrome(options=options)
         self.driver2 = webdriver.Chrome(options=options)
         self.links = []
@@ -89,6 +91,16 @@ class AdvertiserV2:
         self.driver1.get("https://www.selenium.dev/selenium/web/web-form.html")
         title = self.driver1.title
         return title
+
+    def load_page(self, driver):
+        driver = webdriver.Chrome(desired_capabilities=capa)
+        wait = WebDriverWait(driver, 20)
+
+        driver.get('http://stackoverflow.com/')
+
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#h-top-questions')))
+
+        driver.execute_script("window.stop();")
 
     def validate_code(self, code):
         counter = 0
