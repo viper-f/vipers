@@ -30,7 +30,7 @@ def advertiser_form(request, id):
             request.session['forum_id'] = id
             return HttpResponseRedirect(reverse('advertiser:advertiser_process'))
         else:
-            print('Something is wrong')
+            print('Something is wrong 1')
     else:
         active_sessions = BotSession.objects.filter(status='active')
         if len(active_sessions):
@@ -99,7 +99,7 @@ def partner_form(request, id):
             request.session['forum_id'] = id
             return HttpResponseRedirect(reverse('advertiser:partner_process'))
         else:
-            print('Something is wrong')
+            print('Something is wrong 2')
     else:
         partners = PartnerTopic.objects.filter(home_forum=id)
         partner_urls = []
@@ -194,7 +194,7 @@ def forum_edit(request, id):
 
             return HttpResponseRedirect(reverse('advertiser:forum_edit', kwargs={'id': id}))
         else:
-            print('Something is wrong')
+            print('Something is wrong 3')
     else:
         forum = HomeForum.objects.get(pk=id)
         try:
@@ -232,7 +232,7 @@ def ad_templates(request, id):
             template.save()
             return HttpResponseRedirect(reverse('advertiser:ad_templates', kwargs={'id': id}))
         else:
-            print('Something is wrong')
+            print('Something is wrong 4')
     else:
         templates = AdTemplate.objects.filter(home_forum=id).order_by("priority")
         with connection.cursor() as cursor:

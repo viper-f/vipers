@@ -85,6 +85,10 @@ class AdvertiserV2:
                     }),
                 })
 
+    def check_messages(self, ):
+        message = self.channel.recieve()
+        print(message)
+
     def test(self):
         self.driver1.get("https://www.selenium.dev/selenium/web/web-form.html")
         title = self.driver1.title
