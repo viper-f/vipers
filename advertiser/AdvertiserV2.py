@@ -264,6 +264,10 @@ class AdvertiserV2:
 
         if not self.logged_in:
             self.login(self.driver1, url)
+        self_form = self.check_answer_form(self.driver1)
+        if not self_form:
+            self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
+                     message='Your ad topic is over! Please, update forum settings!')
         n = -1
         total = 0
         success = 0
