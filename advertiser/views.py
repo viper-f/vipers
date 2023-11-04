@@ -1,6 +1,8 @@
 import json
 import random
 import string
+
+from django.contrib import messages
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -136,10 +138,15 @@ def forum_edit(request, id):
     if request.method == "POST":
         form = ForumForm(request.POST)
         if form.is_valid():
+
             id = form.cleaned_data['id']
             forum = HomeForum.objects.get(pk=id)
+
+            if forum.domain not in form.cleaned_data['ad_topic_url']:
+                messages.error(request, "Домен в ссылке рекламной темы не совпадает с доменом форума")
+                return HttpResponseRedirect(reverse('advertiser:forum_edit', kwargs={'id': id}))
+
             forum.name = form.cleaned_data['name']
-            forum.domain = form.cleaned_data['domain']
             forum.ad_topic_url = form.cleaned_data['ad_topic_url']
             forum.save()
 

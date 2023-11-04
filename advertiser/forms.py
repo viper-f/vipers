@@ -40,7 +40,6 @@ class PartnerForm(forms.Form):
 class ForumForm(forms.Form):
     id = forms.CharField(label="id", max_length=10, widget=forms.HiddenInput())
     name = forms.CharField(label="Name", max_length=100, widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
-    domain = forms.CharField(label="Domain", max_length=100, widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
     ad_topic_url = forms.CharField(label="Current Ad Topic", max_length=100,
                                widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
     partner_urls = forms.CharField(label="Urls of Partner Topics",
