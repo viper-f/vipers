@@ -24,7 +24,7 @@ class AdForm(forms.Form):
 
     def get_templates(self):
         templates = AdTemplate.objects.filter(home_forum=self.forum_id)
-        choices = [('', 'None')]
+        choices = []
         for template in templates:
             choices.append((template.code, template.name))
         return choices
