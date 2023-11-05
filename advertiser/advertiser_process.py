@@ -1,4 +1,3 @@
-import os
 import sys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -16,7 +15,6 @@ from django.db import connection
 from django.contrib.auth.models import User
 from advertiser.models import HomeForum, BotSession, Forum
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 parser = OptionParser()
 parser.add_option("-l", '--url', dest="base_url")
