@@ -90,8 +90,8 @@ def advertiser_process(request):
 @login_required
 def advertiser_process_observe(request, session_id):
     active_session = BotSession.objects.filter(status='active', session_id=session_id).first()
-    check_allowed(request, active_session.forum_id)
-    
+    check_allowed(request, active_session.home_forum)
+
     if active_session is None:
         return HttpResponseRedirect(reverse('user_index'))
 
