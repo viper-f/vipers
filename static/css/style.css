@@ -195,7 +195,10 @@ a:hover {
 }
 
 #forum-wrapper {
-    margin-top: 1rem
+    margin-top: 1rem;
+    display: flex;
+    gap: 10px;
+    row-gap: 10px;
 }
 
 .forum-box {
