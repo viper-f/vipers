@@ -10,6 +10,7 @@ urlpatterns = [
     path("templates/priority/<int:id>", views.change_priority_template, name="change_priority_template"),
     path("advertiser/<int:id>", views.advertiser_form, name="advertiser_form"),
     path("advertiser-process", views.advertiser_process, name="advertiser_process"),
+    path("observe-advertiser-process/<str:session_id>", views.advertiser_process_observe, name="advertiser_process_observe"),
     path("partner/<int:id>", views.partner_form, name="partner_form"),
     path("partner-process", views.partner_process, name="partner_process"),
     path("history/<int:id>", views.history, name="history"),

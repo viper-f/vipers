@@ -16,16 +16,22 @@ def index(request):
 
 @login_required
 def user_index(request):
-    active_sessions = BotSession.objects.filter(status='active')
-    if len(active_sessions):
+    active_session = BotSession.objects.filter(status='active').first()
+    session_id = False
+    lock = False
+
+    if active_session is not None:
         lock = True
-    else:
-        lock = False
+        home_forum = active_session.home_forum
+        if request.user in home_forum.users:
+            session_id = active_session.session_id
+
     forums = HomeForum.objects.filter(users=request.user)
     return render(request, "vipers/user_index.html", {
         "username": request.user.username,
         "forums": forums,
-        "lock": lock
+        "lock": lock,
+        "session_id": session_id
     })
 
 @login_required

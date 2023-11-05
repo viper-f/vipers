@@ -88,6 +88,16 @@ def advertiser_process(request):
     return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})
 
 @login_required
+def advertiser_process_observe(request, session_id):
+    active_session = BotSession.objects.filter(status='active', session_id=session_id).first()
+    check_allowed(request, active_session.forum_id)
+    
+    if active_session is None:
+        return HttpResponseRedirect(reverse('user_index'))
+
+    return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})
+
+@login_required
 def partner_form(request, id):
     check_allowed(request, id)
     if request.method == "POST":
@@ -282,6 +292,7 @@ def history(request, id, page=0):
 
 def stop_session(request, session_id):
     session = BotSession.objects.filter(session_id=session_id).first()
+    check_allowed(request, session.forum_id)
     session.stop_signal = True
     session.save()
     return JsonResponse({"result": "success"})
