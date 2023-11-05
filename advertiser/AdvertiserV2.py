@@ -288,7 +288,7 @@ class AdvertiserV2:
             if self.check_stop_signal():
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Stop signal received')
-                return visited, success, self.links
+                break
 
             n += 1
             visited += 1
@@ -364,7 +364,7 @@ class AdvertiserV2:
                     if not self_form:
                         self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                                  message='Your topic is over!')
-                        return visited, success, self.links
+                        break
                 else:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
