@@ -66,7 +66,7 @@ for cl_forum in cl_forums:
 stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
 
-advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, group_name=grop_name)
+advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
 
 async_to_sync(channel_layer.group_send)(
     grop_name,

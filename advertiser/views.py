@@ -280,3 +280,8 @@ def history(request, id, page=0):
     sessions = BotSession.objects.filter(home_forum=forum).order_by('-time_start')[page*page_size:(page+1)*page_size]
     return render(request, "advertiser/history.html", {'sessions': sessions})
 
+def stop_session(session_id):
+    session = BotSession.objects.first(session_id=session_id)
+    session.stop_signal = True
+    session.save()
+    return JsonResponse({"result": "success"})

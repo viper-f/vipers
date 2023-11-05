@@ -57,4 +57,5 @@ class BotSession(models.Model):
     time_end = models.DateTimeField(default=None, blank=True, null=True)
     visited = models.IntegerField(default=None, blank=True, null=True)
     success = models.IntegerField(default=None, blank=True, null=True)
+    stop_signal = models.BooleanField(default=None, blank=True, null=True)
 

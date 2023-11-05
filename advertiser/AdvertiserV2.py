@@ -17,11 +17,11 @@ sys.path.insert(0, './../vipers')
 import vipers
 import django
 django.setup()
-from advertiser.models import Forum
+from advertiser.models import Forum, BotSession
 
 
 class AdvertiserV2:
-    def __init__(self, log_mode='console', channel=None, group_name=None):
+    def __init__(self, log_mode='console', channel=None, session_id=None):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
@@ -34,8 +34,9 @@ class AdvertiserV2:
         self.links = []
         self.tracked = []
         self.log_mode = log_mode
+        self.session_id = session_id
         self.channel = channel
-        self.group_name = group_name
+        self.group_name = 'comm_' + session_id
         self.home_base = ''
         self.logged_in = False
         self.model = tf.keras.models.load_model('topic_model')
@@ -68,6 +69,12 @@ class AdvertiserV2:
                 self.links.append([forum.domain, forum.verified_forum_id, 'old'])
             self.tracked.append(forum.domain)
 
+    def check_stop_signal(self):
+        session = BotSession.objects.first(session_id=self.session_id)
+        if session.stop_signal:
+            return True
+        else:
+            return False
 
 
     def log(self, total, success, skipped, visited, message):
@@ -91,16 +98,6 @@ class AdvertiserV2:
         self.driver1.get("https://www.selenium.dev/selenium/web/web-form.html")
         title = self.driver1.title
         return title
-
-    def load_page(self, driver):
-        driver = webdriver.Chrome(desired_capabilities=capa)
-        wait = WebDriverWait(driver, 20)
-
-        driver.get('http://stackoverflow.com/')
-
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#h-top-questions')))
-
-        driver.execute_script("window.stop();")
 
     def validate_code(self, code):
         counter = 0
@@ -285,8 +282,14 @@ class AdvertiserV2:
         success = 0
         skipped = 0
         visited = 0
-        #while n < 10:
-        while n < len(self.links) - 1:
+        while n < 10:
+        #while n < len(self.links) - 1:
+
+            if self.check_stop_signal():
+                self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                         message='Stop signal received')
+                return visited, success, self.links
+
             n += 1
             visited += 1
             link = self.links[n][0]
@@ -349,11 +352,11 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
                     full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
