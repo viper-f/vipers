@@ -281,7 +281,7 @@ def history(request, id, page=0):
     return render(request, "advertiser/history.html", {'sessions': sessions})
 
 def stop_session(session_id):
-    session = BotSession.objects.first(session_id=session_id)
+    session = BotSession.objects.filter(session_id=session_id).first()
     session.stop_signal = True
     session.save()
     return JsonResponse({"result": "success"})

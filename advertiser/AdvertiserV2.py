@@ -70,7 +70,7 @@ class AdvertiserV2:
             self.tracked.append(forum.domain)
 
     def check_stop_signal(self):
-        session = BotSession.objects.first(session_id=self.session_id)
+        session = BotSession.objects.filter(session_id=self.session_id).first()
         if session.stop_signal:
             return True
         else:
