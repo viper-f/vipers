@@ -23,7 +23,7 @@ def user_index(request):
     if active_session is not None:
         lock = True
         home_forum = active_session.home_forum
-        if request.user in home_forum.users:
+        if request.user in home_forum.users.all():
             session_id = active_session.session_id
 
     forums = HomeForum.objects.filter(users=request.user)
