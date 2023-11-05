@@ -14,5 +14,5 @@ urlpatterns = [
     path("partner-process", views.partner_process, name="partner_process"),
     path("history/<int:id>", views.history, name="history"),
     path("history/<int:id>/<int:page>", views.history, name="history"),
-    path("stop_session/<string:session_id>", views.stop_session, name="stop_session"),
+    path("stop_session/<str:session_id>", views.stop_session, name="stop_session"),
 ]
