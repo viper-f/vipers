@@ -285,8 +285,8 @@ class AdvertiserV2:
         success = 0
         skipped = 0
         visited = 0
-        #while n < 10:
-        while n < len(self.links) - 1:
+        while n < 10:
+        #while n < len(self.links) - 1:
             n += 1
             visited += 1
             link = self.links[n][0]
