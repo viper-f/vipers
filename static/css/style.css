@@ -225,3 +225,10 @@ margin-left: 0.5rem
     background: #ddd;
     padding: 0.3rem 1rem;
 }
+
+#stop {
+    margin-top: 1em;
+    width: 7em;
+    border: 3px #bb4242 solid;
+    background: #f5caca;
+}
