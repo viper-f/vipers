@@ -81,7 +81,7 @@ def post_count(request, forum_id, user_id, time, before):
         if int(datum['posted']) < time:
             break
 
-        if int(datum['user_id']) == user_id and int(datum['id']) not in start_posts and int(datum['posted']) > time:
+        if int(datum['user_id']) == user_id and datum['id'] not in start_posts and int(datum['posted']) > time:
             count = len(strip_tags(datum['message']))
             category = get_category(count)
             t = {
