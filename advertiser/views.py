@@ -292,7 +292,7 @@ def history(request, id, page=0):
 
 def stop_session(request, session_id):
     session = BotSession.objects.filter(session_id=session_id).first()
-    check_allowed(request, session.forum_id)
+    check_allowed(request, session.home_forum)
     session.stop_signal = True
     session.save()
     return JsonResponse({"result": "success"})
