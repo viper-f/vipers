@@ -3,7 +3,7 @@
 {% block content %}
 <h2 class="title-section">Рекламные шаблоны</h2>
 
-<div id="forum-wrapper">
+<div id="template-wrapper">
     {% for template in templates %}
     <div draggable="true" class="template-box sul-box-raised-2"><h3 class="forum-title" data-id="{{ template.id }}">{{ template.name }}
         <a href="/advertiser/templates/delete/{{ template.id }}" class="template-edit" title="Delete">✂️</a>
