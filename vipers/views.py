@@ -31,7 +31,10 @@ def user_index(request):
         "username": request.user.username,
         "forums": forums,
         "lock": lock,
-        "session_id": session_id
+        "session": {
+            "id": session_id,
+            "forum_id": active_session.home_forum.id
+        }
     })
 
 @login_required
