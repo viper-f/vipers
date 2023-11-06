@@ -18,6 +18,7 @@ def index(request):
 def user_index(request):
     active_session = BotSession.objects.filter(status='active').first()
     session_id = False
+    forum_id = False
     lock = False
 
     if active_session is not None:
@@ -25,6 +26,7 @@ def user_index(request):
         home_forum = active_session.home_forum
         if request.user in home_forum.users.all():
             session_id = active_session.session_id
+            forum_id = active_session.home_forum.id
 
     forums = HomeForum.objects.filter(users=request.user)
     return render(request, "vipers/user_index.html", {
@@ -33,7 +35,7 @@ def user_index(request):
         "lock": lock,
         "session": {
             "id": session_id,
-            "forum_id": active_session.home_forum.id
+            "forum_id": forum_id
         }
     })
 
