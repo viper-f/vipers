@@ -24,4 +24,6 @@ def get_category(count):
 
 
 def get_category_text(category):
+    if category == 1:
+        return str(category) + ' билет'
     return str(category) + ' билета'
