@@ -5,5 +5,6 @@ from . import views
 app_name = 'episodelist'
 urlpatterns = [
     path("about", views.about, name="about"),
-    path("<int:forum_id>/<str:ids>", views.index, name="index"),
+    path("list/<int:forum_id>/<str:ids>", views.index, name="index"),
+    path("count/<int:forum_id>/<int:user_id>/<int:time>/<int:before>", views.post_count, name="post_count"),
 ]

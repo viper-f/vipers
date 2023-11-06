@@ -1,0 +1,4 @@
+{{ new_total }}|{% for post in posts %}
+пост {{ post.count }} символов - {{ post.text }} [ https://{{ base }}/viewtopic.php?id={{ post.topic_id }}#p{{ post.post_id }} ] <br />
+{% endfor %}
+Итого в профиле: {{ before }} + {{ total }} = {{ new_total }}
