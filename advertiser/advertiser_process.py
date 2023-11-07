@@ -38,7 +38,11 @@ record = BotSession(
     status='active',
     time_start=now.isoformat()
 )
-record.save()
+try:
+    record.save()
+except:
+    print('This session was already started')
+    exit(0)
 
 grop_name = 'comm_' + options.session_id
 

@@ -58,4 +58,11 @@ class BotSession(models.Model):
     visited = models.IntegerField(default=None, blank=True, null=True)
     success = models.IntegerField(default=None, blank=True, null=True)
     stop_signal = models.BooleanField(default=None, blank=True, null=True)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session_id"],
+                name="unique_session_id"
+            )
+        ]
 
