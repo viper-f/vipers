@@ -10,7 +10,6 @@ from episodelist.models import EpisodeListSettings
 
 def index(request, forum_id, ids):
     referrer = request.headers.get('ref', False)
-    return HttpResponse(referrer)
     if not referrer:
         return HttpResponse('')
 
@@ -19,6 +18,7 @@ def index(request, forum_id, ids):
     if not settings:
         raise Exception('This forum does not exist')
     base = settings.url
+    return HttpResponse(base + ' - ' + referrer)
     if referrer != base:
         return HttpResponse('')
 
