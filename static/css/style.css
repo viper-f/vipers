@@ -240,3 +240,7 @@ margin-left: 0.5rem
     border: 3px #bb4242 solid;
     background: #f5caca;
 }
+
+#breadcrumbs {
+    margin-bottom: 2rem;
+}
