@@ -36,7 +36,8 @@ def user_index(request):
         "session": {
             "id": session_id,
             "forum_id": forum_id
-        }
+        },
+        "breadcrumbs": [{"link": "/", "name": "Главная"}, {"link": "/user-index", "name": "Мои форумы"}]
     })
 
 @login_required
@@ -60,7 +61,13 @@ def user_settings(request):
         return HttpResponseRedirect(reverse('user_settings'))
     else:
         form = UserSettingsForm()
-        return render(request, "vipers/user_settings.html", {"form": form, "username": request.user.username})
+        return render(request, "vipers/user_settings.html",
+                      {
+                          "form": form,
+                       "username": request.user.username,
+                          "breadcrumbs": [{"link": "/", "name": "Главная"},
+                                          {"link": "/user-settings", "name": "Мои настройки"}]
+                       })
 
 def login_view(request):
     if request.method == "POST":

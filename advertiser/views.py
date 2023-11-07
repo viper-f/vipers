@@ -49,7 +49,16 @@ def advertiser_form(request, id):
             'custom_username': credentials.username if credentials != False else '',
             'custom_password': credentials.password if credentials != False else ''
         }, forum_id=id)
-        return render(request, "advertiser/advertiser_form.html", {"form": form, "id": id})
+        return render(request, "advertiser/advertiser_form.html",
+                      {
+                          "form": form,
+                          "id": id,
+                          "breadcrumbs": [
+                              {"link": "/", "name": "Главная"},
+                              {"link": "/user-index", "name": "Мои форумы"},
+                              {"link": "/advertiser/advertiser/"+str(id), "name": "Запустить рекламу"}
+                          ]
+                      })
 
 @login_required
 def advertiser_process(request):
@@ -85,7 +94,15 @@ def advertiser_process(request):
                       '-q', str(user_id),
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
-    return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})
+    return render(request, "advertiser/advertiser_process.html",
+                  {
+                      "session_id": session_id,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/user-index", "name": "Мои форумы"},
+                          {"link": "/advertiser/advertiser-process", "name": "Рекламный процесс"}
+                      ]
+                  })
 
 @login_required
 def advertiser_process_observe(request, session_id):
@@ -95,7 +112,15 @@ def advertiser_process_observe(request, session_id):
     if active_session is None:
         return HttpResponseRedirect(reverse('user_index'))
 
-    return render(request, "advertiser/advertiser_process.html", {"session_id": session_id})
+    return render(request, "advertiser/advertiser_process.html",
+                  {
+                      "session_id": session_id,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/user-index", "name": "Мои форумы"},
+                          {"link": "/advertiser/observe-advertiser-process/" + session_id, "name": "Рекламный процесс"}
+                      ]
+                  })
 
 @login_required
 def partner_form(request, id):
@@ -121,7 +146,16 @@ def partner_form(request, id):
             'session_id': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
             'urls': partner_urls
         })
-        return render(request, "advertiser/partner_form.html", {"form": form, "id": id})
+        return render(request, "advertiser/partner_form.html",
+                      {
+                          "form": form,
+                          "id": id,
+                          "breadcrumbs": [
+                              {"link": "/", "name": "Главная"},
+                              {"link": "/user-index", "name": "Мои форумы"},
+                              {"link": "/advertiser/partner/" + str(id), "name": "Запустить партнерство"}
+                          ]
+                      })
 
 @login_required
 def partner_process(request):
@@ -139,7 +173,15 @@ def partner_process(request):
                       '-q', str(user_id),
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
-    return render(request, "advertiser/partner_process.html", {"session_id": session_id})
+    return render(request, "advertiser/partner_process.html",
+                  {
+                      "session_id": session_id,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/user-index", "name": "Мои форумы"},
+                          {"link": "/advertiser/partner-process", "name": "Процесс партнерства"}
+                      ]
+                  })
 
 
 @login_required
@@ -228,7 +270,16 @@ def forum_edit(request, id):
             'custom_username': credentials.username if credentials != False else '',
             'custom_password': credentials.password if credentials != False else '',
         })
-        return render(request, "advertiser/forum_form.html", {"form": form, "forum": forum})
+        return render(request, "advertiser/forum_form.html",
+                      {
+                          "form": form,
+                          "forum": forum,
+                          "breadcrumbs": [
+                              {"link": "/", "name": "Главная"},
+                              {"link": "/user-index", "name": "Мои форумы"},
+                              {"link": "/advertiser/forum-edit/" + str(id), "name": "Редактировать форум"}
+                          ]
+                      })
 
 
 @login_required
@@ -259,7 +310,17 @@ def ad_templates(request, id):
             'forum_id': id,
             'priority': priority
         })
-        return render(request, "advertiser/ad_templates.html", {"form": form, "templates": templates, "id": id})
+        return render(request, "advertiser/ad_templates.html",
+                      {
+                          "form": form,
+                          "templates": templates,
+                          "id": id,
+                          "breadcrumbs": [
+                              {"link": "/", "name": "Главная"},
+                              {"link": "/user-index", "name": "Мои форумы"},
+                              {"link": "/advertiser/templates/" + str(id), "name": "Рекламные шаблоны"}
+                          ]
+                      })
 
 @login_required
 def delete_template(request, id):
@@ -288,7 +349,15 @@ def history(request, id, page=0):
     check_allowed(request, forum)
     page_size = 50
     sessions = BotSession.objects.filter(home_forum=forum).order_by('-time_start')[page*page_size:(page+1)*page_size]
-    return render(request, "advertiser/history.html", {'sessions': sessions})
+    return render(request, "advertiser/history.html",
+                  {
+                      'sessions': sessions,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/user-index", "name": "Мои форумы"},
+                          {"link": "/advertiser/history/" + str(id), "name": "История"}
+                      ]
+                  })
 
 def stop_session(request, session_id):
     session = BotSession.objects.filter(session_id=session_id).first()

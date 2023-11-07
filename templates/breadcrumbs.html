@@ -1,0 +1,5 @@
+<div id="breadcrumbs">
+{% for crumb in breadcrumbs %}
+{% if not forloop.last %} <a href="{{ crumb.link }}">{{ crumb.name }}</a> > {% else %} {{ crumb.name }} {% endif %}
+{% endfor %}
+</div>
