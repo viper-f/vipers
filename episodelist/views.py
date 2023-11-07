@@ -10,6 +10,7 @@ from episodelist.models import EpisodeListSettings
 
 def index(request, forum_id, ids):
     referrer = request.headers.get('ref', False)
+    print("Ref: " + referrer)
     if not referrer:
         return HttpResponse('')
 
