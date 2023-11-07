@@ -9,10 +9,18 @@ from episodelist.models import EpisodeListSettings
 
 
 def index(request, forum_id, ids):
+    referrer = request.headers.get('ref', False)
+    if not referrer:
+        return HttpResponse('')
+
+    referrer = referrer.rstrip("/")
     settings = EpisodeListSettings.objects.get(pk=forum_id)
     if not settings:
         raise Exception('This forum does not exist')
     base = settings.url
+    if referrer != base:
+        return HttpResponse('')
+
     cookie = dict(mybb_ru=settings.cookie)
     url = 'https://'+base+'/api.php?method=users.get&user_id='+ids+'&fields=user_id,username,avatar'
     response = requests.get(url, cookies=cookie)
