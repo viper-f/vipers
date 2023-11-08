@@ -70,7 +70,8 @@ def advertiser_process(request):
 
     session_id = request.session['session_id']
     url = request.session['url']
-    template = request.session['template']
+    templates = request.session['templates']
+    templates = [str(i) for i in templates]
     user_id = request.user.id
     if request.session['custom_credentials']:
         custom_credentials = 'true'
@@ -78,15 +79,11 @@ def advertiser_process(request):
         custom_credentials = 'false'
     custom_username = request.session['custom_username']
     custom_password = request.session['custom_password']
-    # with subprocess.Popen(["python", "advertiser/advertiser_process.py", "-u", data, "symbol"],
-    #                       stdout=subprocess.PIPE,
-    #                       stderr=subprocess.STDOUT) as process:
-    #     for line in process.stdout:
-    #         print(line.decode('utf8'))
+
     subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
                       "-l", url,
                       "-i", session_id,
-                      "-t", template,
+                      "-t", ','.join(templates),
                       "-c", custom_credentials,
                       "-u", custom_username,
                       "-p", custom_password,

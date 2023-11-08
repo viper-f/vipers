@@ -244,3 +244,8 @@ margin-left: 0.5rem
 #breadcrumbs {
     margin-bottom: 2rem;
 }
+
+#id_templates {
+display: flex;
+    gap: 10px;
+    }

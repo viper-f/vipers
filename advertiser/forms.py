@@ -6,10 +6,9 @@ from advertiser.models import AdTemplate
 class AdForm(forms.Form):
     session_id = forms.CharField(label="sessionid", max_length=10, widget=forms.HiddenInput())
     url = forms.CharField(label="Url", max_length=100, widget=forms.HiddenInput())
-    template_choices = forms.ChoiceField(label="Existing Templates",
-                                         widget=forms.RadioSelect(attrs={'class': 'temp-radio'}),
+    templates = forms.ChoiceField(label="Chosen Templates",
+                                         widget=forms.CheckboxSelectMultiple(attrs={'checked': 'checked', 'class': ''}),
                                          required=False)
-    template = forms.CharField(label="Template", widget=forms.HiddenInput())
     custom_credentials = forms.BooleanField(label="Custom Credentials",
                                             widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
     custom_username = forms.CharField(label="Custom Username", max_length=100,
@@ -20,13 +19,13 @@ class AdForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.forum_id = kwargs.pop("forum_id")
         super(AdForm, self).__init__(*args, **kwargs)
-        self.fields['template_choices'].choices = self.get_templates()
+        self.fields['templates'].choices = self.get_templates()
 
     def get_templates(self):
         templates = AdTemplate.objects.filter(home_forum=self.forum_id)
         choices = []
         for template in templates:
-            choices.append((template.code, template.name))
+            choices.append((template.id, template.name))
         return choices
 
 

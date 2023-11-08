@@ -17,7 +17,7 @@ sys.path.insert(0, './../vipers')
 import vipers
 import django
 django.setup()
-from advertiser.models import Forum, BotSession
+from advertiser.models import Forum, BotSession, AdTemplate
 
 
 class AdvertiserV2:
@@ -40,6 +40,16 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.model = tf.keras.models.load_model('topic_model')
+        self.templates = []
+
+
+    def load_templates(self, ids):
+        templates = AdTemplate.objects.filter(id__in=ids)
+        for template in templates:
+            self.templates.append({
+                'code': template.code,
+                'sample': self.sample_template(template.code)
+            })
 
     def get_topic_url(self, url):
         X, data = analize(url)
@@ -252,7 +262,7 @@ class AdvertiserV2:
     def find_current_link(self, driver):
         return driver.current_url
 
-    def work(self, url, home_forum_id, stop_list=False, template=False, custom_login_code={}):
+    def work(self, url, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         self.load_from_db(home_forum_id)
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
@@ -264,12 +274,14 @@ class AdvertiserV2:
         self.home_base = track
 
         self.driver1.get(url)
-        if template is False:
-            code_home = self.get_code(self.driver1)
+        if templates is False:
+            home_code = self.get_code(self.driver1),
+            self.templates.append({
+                'code': home_code,
+                'sample': self.sample_template(home_code)
+            })
         else:
-            code_home = template
-
-        sample = self.sample_template(code_home)
+            self.load_templates(templates)
 
         if not self.logged_in:
             self.login(self.driver1, url)
@@ -321,14 +333,20 @@ class AdvertiserV2:
                     print("Could not grab forum id: " + link)
 
             self.go_to_last_page(self.driver2)
-            self_present = self.check_self_present(sample, self.driver2)
             self.scrape_links(self.driver2)
             total = len(self.links)
 
-            if self_present:
+            chosen_code = False
+            for template in self.templates:
+                self_present = self.check_self_present(template.sample, self.driver2)
+                if not self_present:
+                    chosen_code = template.code
+                    break
+
+            if not chosen_code:
                 skipped += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Post on last page: ' + link)
+                         message='All posts present on last page: ' + link)
                 continue
 
             try:
@@ -355,7 +373,7 @@ class AdvertiserV2:
                     self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
-                    full_code_home = code_home + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
+                    full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
                     self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
