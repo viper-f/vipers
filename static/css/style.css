@@ -248,4 +248,8 @@ margin-left: 0.5rem
 #id_templates {
 display: flex;
     gap: 10px;
-    }
+}
+
+#template-wrapper {
+  list-style: none
+}

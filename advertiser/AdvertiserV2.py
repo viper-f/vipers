@@ -44,7 +44,7 @@ class AdvertiserV2:
 
 
     def load_templates(self, ids):
-        templates = AdTemplate.objects.filter(id__in=ids)
+        templates = AdTemplate.objects.filter(id__in=ids).order_by("priority")
         for template in templates:
             self.templates.append({
                 'code': template.code,

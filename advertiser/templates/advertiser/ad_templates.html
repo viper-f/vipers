@@ -3,16 +3,16 @@
 {% block content %}
 <h2 class="title-section">Рекламные шаблоны</h2>
 
-<div id="template-wrapper">
+<ul id="template-wrapper">
     {% for template in templates %}
-    <div draggable="true" class="template-box sul-box-raised-2"><h3 class="forum-title" data-id="{{ template.id }}">{{ template.name }}
+    <li class="template-box sul-box-raised-2"><h3 class="forum-title" data-id="{{ template.id }}">{{ template.name }}
         <a href="/advertiser/templates/delete/{{ template.id }}" class="template-edit" title="Delete">✂️</a>
         <!--<a href="#" class="template-edit" title="Edit">🖊️</a>-->
     </h3>
         <pre class="bb-code">{{ template.code }} </pre>
-    </div>
+    </li>
     {% endfor %}
-</div>
+</ul>
 
 <h2 class="title-section">Добавить</h2>
 <div id="bot-form" class="block sul-box-raised-2">
@@ -27,5 +27,35 @@
     FORUM_ID = {{ id }}
     csrf_token = "{{ csrf_token }}"
 </script>
- <script src="{% static 'advertiser/drugndrop-templates.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+    var el = document.getElementById('template-wrapper');
+    var sortable = Sortable.create(el, {
+    onEnd: function (/**Event*/evt) {
+        let data = []
+        let items = document.querySelectorAll('.forum-title');
+        let n = 1
+        items.forEach(function(item) {
+            let id = parseInt(item.getAttribute('data-id'))
+            data.push([id, n])
+            n += 1
+        })
+        data = JSON.stringify(data)
+
+        data = {"priorities": data, "csrfmiddlewaretoken": csrf_token}
+        let body = Object.keys(data).map(
+            function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+        ).join('&');
+
+        fetch('/advertiser/templates/priority/'+FORUM_ID, {
+            method: "POST",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: body
+        }).then(response => response.text())
+            .then()
+
+        return false;
+    }
+});
+</script>
 {% endblock %}

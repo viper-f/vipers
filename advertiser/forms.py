@@ -6,7 +6,7 @@ from advertiser.models import AdTemplate
 class AdForm(forms.Form):
     session_id = forms.CharField(label="sessionid", max_length=10, widget=forms.HiddenInput())
     url = forms.CharField(label="Url", max_length=100, widget=forms.HiddenInput())
-    templates = forms.ChoiceField(label="Chosen Templates",
+    templates = forms.MultipleChoiceField(label="Chosen Templates",
                                          widget=forms.CheckboxSelectMultiple(attrs={'checked': 'checked', 'class': ''}),
                                          required=False)
     custom_credentials = forms.BooleanField(label="Custom Credentials",
@@ -22,7 +22,7 @@ class AdForm(forms.Form):
         self.fields['templates'].choices = self.get_templates()
 
     def get_templates(self):
-        templates = AdTemplate.objects.filter(home_forum=self.forum_id)
+        templates = AdTemplate.objects.filter(home_forum=self.forum_id).order_by("priority")
         choices = []
         for template in templates:
             choices.append((template.id, template.name))

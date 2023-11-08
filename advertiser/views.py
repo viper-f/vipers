@@ -23,7 +23,7 @@ def advertiser_form(request, id):
         if form.is_valid():
             request.session['session_id'] = form.cleaned_data['session_id']
             request.session['url'] = form.cleaned_data['url']
-            request.session['template'] = form.cleaned_data['template']
+            request.session['templates'] = form.cleaned_data['templates']
             request.session['custom_credentials'] = form.cleaned_data['custom_credentials']
             request.session['custom_username'] = form.cleaned_data['custom_username']
             request.session['custom_password'] = form.cleaned_data['custom_password']
@@ -31,6 +31,7 @@ def advertiser_form(request, id):
             return HttpResponseRedirect(reverse('advertiser:advertiser_process'))
         else:
             print('Something is wrong')
+            print(form.errors)
     else:
         active_sessions = BotSession.objects.filter(status='active')
         if len(active_sessions):
