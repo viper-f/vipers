@@ -245,11 +245,10 @@ margin-left: 0.5rem
     margin-bottom: 2rem;
 }
 
-#id_templates {
-display: flex;
-    gap: 10px;
-}
-
 #template-wrapper {
   list-style: none
+}
+
+.temp-radio {
+     margin-left: 1rem;
 }
