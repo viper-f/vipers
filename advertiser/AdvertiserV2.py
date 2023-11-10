@@ -44,6 +44,7 @@ class AdvertiserV2:
 
 
     def load_templates(self, ids):
+        print(ids)
         templates = AdTemplate.objects.filter(id__in=ids)
         template_dict = {}
         for template in templates:
@@ -53,6 +54,7 @@ class AdvertiserV2:
             }
         for tid in ids:
             self.templates.append(template_dict[tid])
+        print(self.templates)
 
 
     def get_topic_url(self, url):
