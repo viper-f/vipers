@@ -44,7 +44,6 @@ class AdvertiserV2:
 
 
     def load_templates(self, ids):
-        print(ids)
         templates = AdTemplate.objects.filter(id__in=ids)
         template_dict = {}
         for template in templates:
@@ -54,7 +53,6 @@ class AdvertiserV2:
             }
         for tid in ids:
             self.templates.append(template_dict[tid])
-        print(self.templates)
 
 
     def get_topic_url(self, url):
@@ -376,11 +374,11 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    #self.post(self.driver1, code_partner)
+                    self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    #self.post(self.driver2, full_code_home)
+                    self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
