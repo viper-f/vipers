@@ -16,4 +16,5 @@ urlpatterns = [
     path("history/<int:id>", views.history, name="history"),
     path("history/<int:id>/<int:page>", views.history, name="history"),
     path("stop_session/<str:session_id>", views.stop_session, name="stop_session"),
+    path("schedule/<int:id>", views.schedule, name="schedule"),
 ]

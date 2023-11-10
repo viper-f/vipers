@@ -7,7 +7,7 @@ from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
-from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm
+from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemForm
 from django.urls import reverse
 import subprocess
 
@@ -366,9 +366,32 @@ def history(request, id, page=0):
                       ]
                   })
 
+@login_required
 def stop_session(request, session_id):
     session = BotSession.objects.filter(session_id=session_id).first()
     check_allowed(request, session.home_forum)
     session.stop_signal = True
     session.save()
     return JsonResponse({"result": "success"})
+
+
+@login_required
+def schedule(request, id):
+    check_allowed(request, id)
+
+    if request.method == "POST":
+        form = ScheduleItemForm(request.POST, forum_id=id, user_id=request.user.id)
+    else:
+        form = ScheduleItemForm( forum_id=id, user_id=request.user.id, initial={
+                'forum_id': id,
+        })
+
+    return render(request, "advertiser/schedule.html",
+                  {
+                      'form': form,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/user-index", "name": "Мои форумы"},
+                          {"link": "/advertiser/schedule/" + str(id), "name": "Расписание"}
+                      ]
+                  })

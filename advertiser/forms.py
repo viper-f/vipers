@@ -1,6 +1,6 @@
 from django import forms
 
-from advertiser.models import AdTemplate
+from advertiser.models import AdTemplate, CustomCredentials
 
 
 class AdForm(forms.Form):
@@ -55,3 +55,33 @@ class AdTemplateForm(forms.Form):
     name = forms.CharField(label="Name", widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
     code = forms.CharField(label="Code", widget=forms.Textarea(attrs={"rows": "5", 'class': 'sul-text-field'}))
     priority = forms.CharField(label="priority", widget=forms.HiddenInput())
+
+
+class ScheduleItemForm(forms.Form):
+    forum_id = forms.CharField(label="forum_id", max_length=10, widget=forms.HiddenInput())
+    week_day = forms.MultipleChoiceField(label="Week day", widget=forms.CheckboxSelectMultiple())
+    time_start = forms.TimeField(label="Start time", widget=forms.TimeInput(attrs={'type': 'time', 'class': 'sul-text-field'}))
+    custom_credentials = forms.ChoiceField(label="Custom Credentials", widget=forms.Select(attrs={'class': 'sul-select'}), required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.forum_id = kwargs.pop("forum_id")
+        self.user_id = kwargs.pop("user_id")
+        super(ScheduleItemForm, self).__init__(*args, **kwargs)
+        self.fields['custom_credentials'].choices = self.get_credentials()
+        self.fields['week_day'].choices = [
+        (0, 'Sunday'),
+        (1, 'Monday'),
+        (2, 'Tuesday'),
+        (3, 'Wednesday'),
+        (4, 'Thursday'),
+        (5, 'Friday'),
+        (6, 'Saturday')
+    ]
+
+    def get_credentials(self):
+        credentials = CustomCredentials.objects.filter(home_forum=self.forum_id, user_id=self.user_id)
+        choices = [(None, 'None')]
+        for cred in credentials:
+            choices.append((cred.id, cred.username))
+        return choices
+

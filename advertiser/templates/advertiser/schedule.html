@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2 class="title-section">Расписание</h2>
+
+
+
+<h2 class="title-section">Добавить</h2>
+<div id="schedule-form" class="sul-box-raised-2">
+
+    <form action="/advertiser/schedule/{{ add }}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="sul-btn" value="Add">
+    </form>
+</div>
+
+
+{% endblock %}

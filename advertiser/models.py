@@ -66,3 +66,8 @@ class BotSession(models.Model):
             )
         ]
 
+class ScheduleItem(models.Model):
+    home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
+    week_day = models.IntegerField()
+    time_start = models.TimeField()
+    custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True, on_delete=models.SET_NULL)
