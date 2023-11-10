@@ -44,7 +44,7 @@ class AdvertiserV2:
 
 
     def load_templates(self, ids):
-        templates = AdTemplate.objects.filter(id__in=ids).all()
+        templates = AdTemplate.objects.filter(id__in=ids)
         template_dict = {}
         for template in templates:
             template_dict[template.id] = {
