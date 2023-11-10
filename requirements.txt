@@ -10,3 +10,4 @@ numpy
 requests
 bs4
 tensorflow
+django-crontab

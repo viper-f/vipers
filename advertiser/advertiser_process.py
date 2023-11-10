@@ -1,7 +1,7 @@
 import sys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from datetime import datetime
+from django.utils import timezone
 from AdvertiserV2 import AdvertiserV2
 from optparse import OptionParser
 import json
@@ -32,7 +32,7 @@ templates = [int(i) for i in templates]
 
 user = User.objects.get(pk=int(options.user_id))
 forum = HomeForum.objects.get(pk=int(options.forum_id))
-now = datetime.now()
+now = timezone.now()
 record = BotSession(
     type='advertiser',
     home_forum=forum,
@@ -122,7 +122,7 @@ if len(links):
             cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
 
 
-now = datetime.now()
+now = timezone.now()
 record.time_end = now.isoformat()
 record.visited = visited
 record.success = success

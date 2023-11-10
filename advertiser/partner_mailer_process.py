@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime
+from django.utils import timezone
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -26,7 +26,7 @@ parser.add_option("-q", '--username', dest="user_id")
 
 user = User.objects.get(pk=int(options.user_id))
 forum = HomeForum.objects.get(pk=int(options.forum_id))
-now = datetime.now()
+now = timezone.now()
 record = BotSession(
     type='partner',
     home_forum=forum,
@@ -82,7 +82,7 @@ visited, success = mailer.work(
     custom_login_code=custom_login_code
 )
 
-now = datetime.now()
+now = timezone.now()
 record.time_end = now.isoformat()
 record.visited = visited
 record.success = success
