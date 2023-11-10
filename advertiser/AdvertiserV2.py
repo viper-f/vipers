@@ -114,6 +114,10 @@ class AdvertiserV2:
         return title
 
     def validate_code(self, code):
+        pos = code.find('[url')
+        if pos == -1:
+            return False
+
         counter = 0
         for i in range(0, len(code)):
             if code[i] == '[':
