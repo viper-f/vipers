@@ -342,9 +342,9 @@ class AdvertiserV2:
 
             chosen_code = False
             for template in self.templates:
-                self_present = self.check_self_present(template.sample, self.driver2)
+                self_present = self.check_self_present(template['sample'], self.driver2)
                 if not self_present:
-                    chosen_code = template.code
+                    chosen_code = template['code']
                     break
 
             if not chosen_code:
