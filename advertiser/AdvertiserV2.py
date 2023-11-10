@@ -322,6 +322,7 @@ class AdvertiserV2:
 
             try:
                 self.driver2.get(link)
+                assert self.driver2.current_url == link
             except:
                 skipped += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
