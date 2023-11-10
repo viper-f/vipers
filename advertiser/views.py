@@ -30,7 +30,7 @@ def advertiser_form(request, id):
             request.session['forum_id'] = id
 
             chosen_template = int(form.cleaned_data['templates'])
-            all_templates = list(AdTemplate.objects.values_list('id', flat=True))
+            all_templates = list(AdTemplate.objects.filter(home_forum=id).order_by("priority").values_list('id', flat=True))
             if chosen_template != 0:
                 all_templates.remove(chosen_template)
                 all_templates.insert(0, chosen_template)
