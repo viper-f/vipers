@@ -6,9 +6,8 @@ from advertiser.models import AdTemplate
 class AdForm(forms.Form):
     session_id = forms.CharField(label="sessionid", max_length=10, widget=forms.HiddenInput())
     url = forms.CharField(label="Url", max_length=100, widget=forms.HiddenInput())
-    templates = forms.MultipleChoiceField(label="Chosen Templates",
-                                         widget=forms.CheckboxSelectMultiple(attrs={'checked': 'checked', 'class': ''}),
-                                         required=False)
+    templates = forms.ChoiceField(label="Priority Template",
+                                         widget=forms.RadioSelect(attrs={'class': 'temp-radio'}))
     custom_credentials = forms.BooleanField(label="Custom Credentials",
                                             widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
     custom_username = forms.CharField(label="Custom Username", max_length=100,
@@ -23,7 +22,7 @@ class AdForm(forms.Form):
 
     def get_templates(self):
         templates = AdTemplate.objects.filter(home_forum=self.forum_id).order_by("priority")
-        choices = []
+        choices = [(0, 'Default')]
         for template in templates:
             choices.append((template.id, template.name))
         return choices

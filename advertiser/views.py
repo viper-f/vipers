@@ -23,11 +23,19 @@ def advertiser_form(request, id):
         if form.is_valid():
             request.session['session_id'] = form.cleaned_data['session_id']
             request.session['url'] = form.cleaned_data['url']
-            request.session['templates'] = form.cleaned_data['templates']
+
             request.session['custom_credentials'] = form.cleaned_data['custom_credentials']
             request.session['custom_username'] = form.cleaned_data['custom_username']
             request.session['custom_password'] = form.cleaned_data['custom_password']
             request.session['forum_id'] = id
+
+            chosen_template = int(form.cleaned_data['templates'])
+            all_templates = list(AdTemplate.objects.values_list('id', flat=True))
+            if chosen_template != 0:
+                all_templates.remove(chosen_template)
+                all_templates.insert(0, chosen_template)
+
+            request.session['templates'] = all_templates
             return HttpResponseRedirect(reverse('advertiser:advertiser_process'))
         else:
             print('Something is wrong')
@@ -48,7 +56,8 @@ def advertiser_form(request, id):
             'url': forum.ad_topic_url,
             'custom_credentials': credentials != False,
             'custom_username': credentials.username if credentials != False else '',
-            'custom_password': credentials.password if credentials != False else ''
+            'custom_password': credentials.password if credentials != False else '',
+            'templates': 0
         }, forum_id=id)
         return render(request, "advertiser/advertiser_form.html",
                       {

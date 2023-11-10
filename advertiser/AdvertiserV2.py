@@ -44,12 +44,16 @@ class AdvertiserV2:
 
 
     def load_templates(self, ids):
-        templates = AdTemplate.objects.filter(id__in=ids).order_by("priority")
+        templates = AdTemplate.objects.filter(id__in=ids).all()
+        template_dict = {}
         for template in templates:
-            self.templates.append({
+            template_dict[template.id] = {
                 'code': template.code,
                 'sample': self.sample_template(template.code)
-            })
+            }
+        for tid in ids:
+            self.templates.append(template_dict[tid])
+
 
     def get_topic_url(self, url):
         X, data = analize(url)
