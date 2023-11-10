@@ -3,12 +3,28 @@
 {% block content %}
 <h2 class="title-section">Расписание</h2>
 
+<table id="session-history">
+    <thead>
+    <tr>
+        <th>Дни недели</th><th>Время</th><th>Время последнего запуска</th><th>Логин</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+        <td>{{ item.week_day }}</td>
+        <td>{{ item.time_start }}</td>
+        <td>{{ item.last_run }}</td>
+        <td>{% if item.custom_credentials is not None %}{{ item.custom_credentials.username }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 
 <h2 class="title-section">Добавить</h2>
 <div id="schedule-form" class="sul-box-raised-2">
-
-    <form action="/advertiser/schedule/{{ add }}" method="post">
+    <form action="/advertiser/schedule/{{ id }}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" class="sul-btn" value="Add">

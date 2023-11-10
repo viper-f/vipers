@@ -1,6 +1,7 @@
 import json
 import random
 import string
+from datetime import datetime
 
 from django.contrib import messages
 from django.utils import timezone
@@ -8,11 +9,13 @@ from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
+from django.utils.timezone import make_aware
+
 from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemForm
 from django.urls import reverse
 import subprocess
 
-from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession
+from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession, ScheduleItem
 from .restrictions import check_allowed
 
 
@@ -383,22 +386,42 @@ def schedule(request, id):
     if request.method == "POST":
         form = ScheduleItemForm(request.POST, forum_id=id, user_id=request.user.id)
         if form.is_valid():
-            request.session['forum_id'] = id
+            forum = HomeForum.objects.get(pk=id)
             week_days = form.cleaned_data['week_day']
+            week_days = [str(i) for i in week_days]
+            week_days = ''.join(week_days)
             time_start = form.cleaned_data['time_start']
-            custom_credentials = form.cleaned_data['custom_credentials']
-            return HttpResponseRedirect(reverse('advertiser:partner_process'))
+            custom_credentials_id = form.cleaned_data['custom_credentials']
+            if custom_credentials_id is not '':
+                custom_credentials = CustomCredentials.objects.get(pk=custom_credentials_id)
+            else:
+                custom_credentials = None
+
+            schedule_item = ScheduleItem(
+                home_forum=forum,
+                week_day=week_days,
+                time_start=time_start,
+                custom_credentials=custom_credentials,
+                active=True,
+                last_run=make_aware(datetime.fromtimestamp(0))
+            )
+            schedule_item.save()
+
+            return HttpResponseRedirect(reverse('advertiser:schedule', kwargs={'id': id}))
     else:
+        items = ScheduleItem.objects.filter(home_forum=id)
         form = ScheduleItemForm( forum_id=id, user_id=request.user.id, initial={
                 'forum_id': id,
         })
 
-    return render(request, "advertiser/schedule.html",
-                  {
-                      'form': form,
-                      "breadcrumbs": [
-                          {"link": "/", "name": "Главная"},
-                          {"link": "/user-index", "name": "Мои форумы"},
-                          {"link": "/advertiser/schedule/" + str(id), "name": "Расписание"}
-                      ]
-                  })
+        return render(request, "advertiser/schedule.html",
+                      {
+                          'id': id,
+                          'items': items,
+                          'form': form,
+                          "breadcrumbs": [
+                              {"link": "/", "name": "Главная"},
+                              {"link": "/user-index", "name": "Мои форумы"},
+                              {"link": "/advertiser/schedule/" + str(id), "name": "Расписание"}
+                          ]
+                      })
