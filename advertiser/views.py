@@ -3,6 +3,7 @@ import random
 import string
 
 from django.contrib import messages
+from django.utils import timezone
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -381,6 +382,12 @@ def schedule(request, id):
 
     if request.method == "POST":
         form = ScheduleItemForm(request.POST, forum_id=id, user_id=request.user.id)
+        if form.is_valid():
+            request.session['forum_id'] = id
+            week_days = form.cleaned_data['week_day']
+            time_start = form.cleaned_data['time_start']
+            custom_credentials = form.cleaned_data['custom_credentials']
+            return HttpResponseRedirect(reverse('advertiser:partner_process'))
     else:
         form = ScheduleItemForm( forum_id=id, user_id=request.user.id, initial={
                 'forum_id': id,
