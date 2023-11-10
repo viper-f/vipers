@@ -114,6 +114,10 @@ class AdvertiserV2:
         return title
 
     def validate_code(self, code):
+        pos = code.find('[url')
+        if pos == -1:
+            return False
+
         counter = 0
         for i in range(0, len(code)):
             if code[i] == '[':
@@ -322,6 +326,7 @@ class AdvertiserV2:
 
             try:
                 self.driver2.get(link)
+                assert self.driver2.current_url == link
             except:
                 skipped += 1
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
