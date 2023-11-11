@@ -114,6 +114,9 @@ def scheduled_bot_run():
     record.status = 'finished'
     record.save()
 
+    scheduled_item = now
+    scheduled_item.save()
+
 
 
 
