@@ -27,6 +27,9 @@ def scheduled_bot_run():
         week_day__contains=str(weekday)
     ).first()
 
+    if scheduled_item is None:
+        return False
+
     forum = scheduled_item.home_forum
     cc = scheduled_item.custom_credentials
     if cc is None:
