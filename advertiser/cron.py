@@ -21,6 +21,10 @@ def scheduled_bot_run():
     if weekday == 7:
         weekday = 0
 
+    print(now.time().isoformat())
+    print(midnight.isoformat())
+    print(weekday)
+
     scheduled_item = ScheduleItem.objects.filter(
         active=True,
         time_start__lte=now.time(),
