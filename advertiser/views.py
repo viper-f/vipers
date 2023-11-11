@@ -392,7 +392,7 @@ def schedule(request, id):
             week_days = ''.join(week_days)
             time_start = form.cleaned_data['time_start']
             custom_credentials_id = form.cleaned_data['custom_credentials']
-            if custom_credentials_id is not '':
+            if custom_credentials_id != '':
                 custom_credentials = CustomCredentials.objects.get(pk=custom_credentials_id)
             else:
                 custom_credentials = None
