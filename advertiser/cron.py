@@ -44,15 +44,15 @@ def scheduled_bot_run():
     templates = list(AdTemplate.objects.filter(home_forum=forum.id).order_by("priority").values_list('id', flat=True))
     templates = [str(i) for i in templates]
 
-    # subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
-    #                   "-l", url,
-    #                   "-i", session_id,
-    #                   "-t", ','.join(templates),
-    #                   "-c", custom_credentials,
-    #                   "-u", custom_username,
-    #                   "-p", custom_password,
-    #                   '-f', str(forum_id),
-    #                   '-q', str(autorun_id),
-    #                   "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
+    subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
+                      "-l", url,
+                      "-i", session_id,
+                      "-t", ','.join(templates),
+                      "-c", custom_credentials,
+                      "-u", custom_username,
+                      "-p", custom_password,
+                      '-f', str(forum.id),
+                      '-q', str(autorun_id),
+                      "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))
 
 
