@@ -1,6 +1,4 @@
-import os
 import string
-import subprocess
 import random
 import sys
 
@@ -9,6 +7,9 @@ from django.db import connection
 from advertiser.AdvertiserV2 import AdvertiserV2
 from advertiser.models import ScheduleItem, BotSession, HomeForum, AdTemplate, Forum
 from django.utils import timezone
+
+sys.path.insert(0, './../vipers')
+import vipers
 
 def scheduled_bot_run():
     print('schedule 1')
