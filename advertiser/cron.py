@@ -10,6 +10,8 @@ from django.utils import timezone
 
 sys.path.insert(0, './../vipers')
 import vipers
+sys.path.insert(0, '.')
+import advertiser
 
 def scheduled_bot_run():
     print('schedule 1')
