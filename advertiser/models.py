@@ -31,6 +31,8 @@ class HomeForum(models.Model):
 class PartnerTopic(models.Model):
     url = models.CharField(max_length=200)
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
+    type = models.CharField(max_length=10, default='partner')
+    post_id = models.IntegerField(default=None, blank=True, null=True)
 
 
 class CustomCredentials(models.Model):
@@ -38,6 +40,8 @@ class CustomCredentials(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=200)
+    type = models.CharField(max_length=10, default='home')
+    partner_topic = models.ForeignKey(PartnerTopic, on_delete=models.SET_NULL)
 
 
 class AdTemplate(models.Model):
@@ -68,6 +72,7 @@ class BotSession(models.Model):
 
 class ScheduleItem(models.Model):
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
+    type = models.CharField(max_length=10, default='ad')
     week_day = models.CharField(max_length=7)
     time_start = models.TimeField()
     custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True, on_delete=models.SET_NULL)

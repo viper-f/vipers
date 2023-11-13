@@ -147,7 +147,7 @@ def partner_form(request, id):
         else:
             print('Something is wrong')
     else:
-        partners = PartnerTopic.objects.filter(home_forum=id)
+        partners = PartnerTopic.objects.filter(home_forum=id, type='partner')
         partner_urls = []
         for partner in partners:
             partner_urls.append(partner.url)
@@ -236,7 +236,7 @@ def forum_edit(request, id):
 
             partner_urls = form.cleaned_data['partner_urls']
             new_partner_urls = partner_urls.split("\n")
-            existing_partners = PartnerTopic.objects.filter(home_forum=id)
+            existing_partners = PartnerTopic.objects.filter(home_forum=id, type='partner')
             keep = []
 
             for partner_url in new_partner_urls:
@@ -265,7 +265,7 @@ def forum_edit(request, id):
         except CustomCredentials.DoesNotExist:
             credentials = False
 
-        partners = PartnerTopic.objects.filter(home_forum=id)
+        partners = PartnerTopic.objects.filter(home_forum=id, type='partner')
         partner_urls = []
         for partner in partners:
             partner_urls.append(partner.url)
@@ -425,3 +425,4 @@ def schedule(request, id):
                               {"link": "/advertiser/schedule/" + str(id), "name": "Расписание"}
                           ]
                       })
+

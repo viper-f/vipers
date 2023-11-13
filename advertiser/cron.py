@@ -15,8 +15,8 @@ sys.path.insert(0, '.')
 import advertiser
 
 
-def scheduled_bot_run():
-    print('schedule 1')
+def scheduled_ad_bot_run():
+    print('Scheduled ad bot run')
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
         print('schedule - another session')
@@ -39,7 +39,6 @@ def scheduled_bot_run():
         last_run__lt=midnight,
         week_day__contains=str(weekday)
     ).first()
-    print('schedule 2')
 
     if scheduled_item is None:
         print('schedule - no item')
@@ -116,3 +115,12 @@ def scheduled_bot_run():
 
     scheduled_item = now
     scheduled_item.save()
+
+
+def schedule_partner_update():
+    active_sessions = BotSession.objects.filter(status='active')
+    if len(active_sessions):
+        print('schedule - another session')
+        return False
+
+
