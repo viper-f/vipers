@@ -10,8 +10,10 @@ from django.utils import timezone
 
 sys.path.insert(0, './../vipers')
 import vipers
+
 sys.path.insert(0, '.')
 import advertiser
+
 
 def scheduled_bot_run():
     print('schedule 1')
@@ -74,7 +76,6 @@ def scheduled_bot_run():
         print('This session was already started')
         return False
 
-
     cl_forums = Forum.objects.filter(custom_login__isnull=False)
     custom_login_code = {}
     for cl_forum in cl_forums:
@@ -82,11 +83,10 @@ def scheduled_bot_run():
 
     stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
-    advertiser = AdvertiserV2(log_mode='console',  session_id=session_id)
+    advertiser = AdvertiserV2(log_mode='console', session_id=session_id)
 
-
-    if custom_credentials == 'true':
-        advertiser.custom_login(url=forum.ad_topic_url, username=custom_username,  password=custom_password)
+    if custom_credentials:
+        advertiser.custom_login(url=forum.ad_topic_url, username=custom_username, password=custom_password)
 
     visited, success, links = advertiser.work(
         url=forum.ad_topic_url,
@@ -116,7 +116,3 @@ def scheduled_bot_run():
 
     scheduled_item = now
     scheduled_item.save()
-
-
-
-
