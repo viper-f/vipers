@@ -5,7 +5,8 @@ import sys
 from django.contrib.auth.models import User
 from django.db import connection
 from advertiser.AdvertiserV2 import AdvertiserV2
-from advertiser.models import ScheduleItem, BotSession, HomeForum, AdTemplate, Forum
+from advertiser.WantedUpdater import WantedUpdater
+from advertiser.models import ScheduleItem, BotSession, HomeForum, AdTemplate, Forum, WantedUpdate
 from django.utils import timezone
 
 sys.path.insert(0, './../vipers')
@@ -29,12 +30,9 @@ def scheduled_ad_bot_run():
     if weekday == 7:
         weekday = 0
 
-    print(now.time().isoformat())
-    print(midnight.isoformat())
-    print(weekday)
-
     scheduled_item = ScheduleItem.objects.filter(
         active=True,
+        type='ad',
         time_start__lte=now.time(),
         last_run__lt=midnight,
         week_day__contains=str(weekday)
@@ -123,4 +121,41 @@ def schedule_partner_update():
         print('schedule - another session')
         return False
 
+    now = timezone.now()
+    midnight = now.replace(hour=0, minute=0, second=0)
+
+    weekday = now.isoweekday()
+    if weekday == 7:
+        weekday = 0
+
+    scheduled_items = ScheduleItem.objects.filter(
+        active=True,
+        type='wu',
+        time_start__lte=now.time(),
+        last_run__lt=midnight,
+        week_day__contains=str(weekday)
+    )
+
+    if not scheduled_items.len:
+        print('schedule - no items')
+        return False
+
+    for scheduled_item in scheduled_items:
+
+        forum = scheduled_item.home_forum
+        updates = WantedUpdate.objects.filter(home_forum=forum)
+
+        for update in updates:
+            cc = update.custom_credentials
+            custom_username = cc.username
+            custom_password = cc.password
+
+            updater = WantedUpdater()
+            updater.work(
+                donor_url=update['donor_url'],
+                receiver_url_base=update['target_url'],
+                receiver_post_id=update['post_id'],
+                login=custom_username,
+                password=custom_password
+            )
 

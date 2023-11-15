@@ -32,7 +32,6 @@ class PartnerTopic(models.Model):
     url = models.CharField(max_length=200)
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, default='partner')
-    post_id = models.IntegerField(default=None, blank=True, null=True)
 
 
 class CustomCredentials(models.Model):
@@ -78,3 +77,11 @@ class ScheduleItem(models.Model):
     custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True, on_delete=models.SET_NULL)
     active = models.BooleanField(default=True)
     last_run = models.DateTimeField()
+
+
+class WantedUpdate(models.Model):
+    donor_url = models.CharField(max_length=200)
+    target_url = models.CharField(max_length=200)
+    home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
+    target_post_id = models.IntegerField(default=None, blank=True, null=True)
+    custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True, on_delete=models.SET_NULL)
