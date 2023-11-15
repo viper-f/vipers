@@ -137,7 +137,7 @@ def schedule_partner_update():
         week_day__contains=str(weekday)
     )
 
-    if not scheduled_items.len:
+    if not len(scheduled_items):
         print('schedule partner - no items')
         return False
 
