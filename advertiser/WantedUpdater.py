@@ -77,6 +77,7 @@ class WantedUpdater:
         print('Wanted updater: starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         code = self.parse_list(donor_url)
         self.custom_login(receiver_url_base, login, password)
+        print(receiver_url_base + '/edit.php?id='+str(receiver_post_id)+'&action=edit')
         self.driver.get(receiver_url_base + '/edit.php?id='+str(receiver_post_id)+'&action=edit')
         self.post(self.driver, code)
         sleep(2)
