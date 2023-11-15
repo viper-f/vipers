@@ -20,7 +20,7 @@ def scheduled_ad_bot_run():
     print('Scheduled ad bot run')
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
-        print('schedule - another session')
+        print('schedule ad - another session')
         return False
 
     now = timezone.now()
@@ -39,7 +39,7 @@ def scheduled_ad_bot_run():
     ).first()
 
     if scheduled_item is None:
-        print('schedule - no item')
+        print('schedule ad - no item')
         return False
 
     forum = scheduled_item.home_forum
@@ -53,7 +53,7 @@ def scheduled_ad_bot_run():
         custom_username = cc.username
         custom_password = cc.password
 
-    autorun_id = 7
+    autorun_id = 8
     session_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     templates = list(AdTemplate.objects.filter(home_forum=forum.id).order_by("priority").values_list('id', flat=True))
 
@@ -111,14 +111,14 @@ def scheduled_ad_bot_run():
     record.status = 'finished'
     record.save()
 
-    scheduled_item = now
+    scheduled_item.last_run = now
     scheduled_item.save()
 
 
 def schedule_partner_update():
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
-        print('schedule - another session')
+        print('schedule partner - another session')
         return False
 
     now = timezone.now()
@@ -137,8 +137,28 @@ def schedule_partner_update():
     )
 
     if not scheduled_items.len:
-        print('schedule - no items')
+        print('schedule partner - no items')
         return False
+
+    autorun_id = 8
+    user = User.objects.get(pk=autorun_id)
+    now = timezone.now()
+    record = BotSession(
+        type='advertiser',
+        home_forum=scheduled_items[0].home_forum,
+        user=user,
+        session_id='none',
+        status='active',
+        time_start=now.isoformat()
+    )
+    try:
+        record.save()
+    except:
+        print('This session was already started')
+        return False
+
+    visited = 0
+    success = 0
 
     for scheduled_item in scheduled_items:
 
@@ -150,12 +170,29 @@ def schedule_partner_update():
             custom_username = cc.username
             custom_password = cc.password
 
-            updater = WantedUpdater()
-            updater.work(
-                donor_url=update['donor_url'],
-                receiver_url_base=update['target_url'],
-                receiver_post_id=update['post_id'],
-                login=custom_username,
-                password=custom_password
-            )
+            try:
+                updater = WantedUpdater()
+                updater.work(
+                    donor_url=update.donor_url,
+                    receiver_url_base=update.target_url,
+                    receiver_post_id=update.post_id,
+                    login=custom_username,
+                    password=custom_password
+                )
+                success += 1
+            except:
+                pass
+            visited += 1
+
+
+        now = timezone.now()
+
+        record.time_end = now.isoformat()
+        record.visited = visited
+        record.success = success
+        record.status = 'finished'
+        record.save()
+
+        scheduled_item.last_run = now
+        scheduled_item.save()
 
