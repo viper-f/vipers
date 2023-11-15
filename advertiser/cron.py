@@ -116,6 +116,7 @@ def scheduled_ad_bot_run():
 
 
 def schedule_partner_update():
+    print('!!!!')
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
         print('schedule partner - another session')
