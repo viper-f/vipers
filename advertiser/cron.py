@@ -141,6 +141,7 @@ def schedule_partner_update():
         print('schedule partner - no items')
         return False
 
+    session_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     autorun_id = 8
     user = User.objects.get(pk=autorun_id)
     now = timezone.now()
@@ -148,7 +149,7 @@ def schedule_partner_update():
         type='advertiser',
         home_forum=scheduled_items[0].home_forum,
         user=user,
-        session_id='none',
+        session_id=session_id,
         status='active',
         time_start=now.isoformat()
     )
