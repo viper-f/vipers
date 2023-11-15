@@ -176,7 +176,7 @@ def schedule_partner_update():
             updater.work(
                 donor_url=update.donor_url,
                 receiver_url_base=update.target_url,
-                receiver_post_id=update.post_id,
+                receiver_post_id=update.target_post_id,
                 login=custom_username,
                 password=custom_password
             )
