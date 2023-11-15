@@ -40,7 +40,6 @@ class CustomCredentials(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=200)
     type = models.CharField(max_length=10, default='home')
-    partner_topic = models.ForeignKey(PartnerTopic, on_delete=models.SET_NULL)
 
 
 class AdTemplate(models.Model):
