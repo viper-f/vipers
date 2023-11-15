@@ -172,18 +172,16 @@ def schedule_partner_update():
             custom_username = cc.username
             custom_password = cc.password
 
-            try:
-                updater = WantedUpdater()
-                updater.work(
-                    donor_url=update.donor_url,
-                    receiver_url_base=update.target_url,
-                    receiver_post_id=update.post_id,
-                    login=custom_username,
-                    password=custom_password
-                )
-                success += 1
-            except:
-                pass
+            updater = WantedUpdater()
+            updater.work(
+                donor_url=update.donor_url,
+                receiver_url_base=update.target_url,
+                receiver_post_id=update.post_id,
+                login=custom_username,
+                password=custom_password
+            )
+            success += 1
+
             visited += 1
 
 
