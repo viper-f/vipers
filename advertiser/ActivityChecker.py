@@ -32,7 +32,6 @@ class ActivityChecker:
         values = []
         for forum in self.forums:
             number = self.check_activity_24(forum[1])
-            print(forum + ' - ' + number)
             values.append('(' + number + ',' + str(forum[0]) + ')')
         values = ','.join(values)
         with connection.cursor() as cursor:
