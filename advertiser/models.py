@@ -13,6 +13,7 @@ class Forum(models.Model):
     verified_forum_id = models.IntegerField(default=None, blank=True, null=True)
     verified_topic_name = models.CharField(max_length=200, default=None, blank=True, null=True)
     verification_date = models.DateTimeField(default=None, blank=True, null=True)
+    activity = models.IntegerField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.domain
