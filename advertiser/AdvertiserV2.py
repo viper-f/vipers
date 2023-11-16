@@ -78,7 +78,7 @@ class AdvertiserV2:
     def load_from_db(self, home_forum_id):
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Loading known data')
-        forums = Forum.objects.filter(stop=False)
+        forums = Forum.objects.filter(stop=False).order_by("-activity")
         for forum in forums:
             if forum.id != home_forum_id:
                 self.links.append([forum.domain, forum.verified_forum_id, 'old'])

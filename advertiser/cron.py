@@ -4,6 +4,8 @@ import sys
 
 from django.contrib.auth.models import User
 from django.db import connection
+
+from advertiser.ActivityChecker import ActivityChecker
 from advertiser.AdvertiserV2 import AdvertiserV2
 from advertiser.WantedUpdater import WantedUpdater
 from advertiser.models import ScheduleItem, BotSession, HomeForum, AdTemplate, Forum, WantedUpdate
@@ -116,7 +118,6 @@ def scheduled_ad_bot_run():
 
 
 def schedule_partner_update():
-    print('!!!!')
     active_sessions = BotSession.objects.filter(status='active')
     if len(active_sessions):
         print('schedule partner - another session')
@@ -184,7 +185,6 @@ def schedule_partner_update():
 
             visited += 1
 
-
         now = timezone.now()
 
         record.time_end = now.isoformat()
@@ -196,3 +196,7 @@ def schedule_partner_update():
         scheduled_item.last_run = now
         scheduled_item.save()
 
+
+def schedule_activity_update():
+    checker = ActivityChecker()
+    checker.work()
