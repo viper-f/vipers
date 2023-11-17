@@ -26,7 +26,7 @@ class ActivityChecker:
             number = block.css.select('strong')[0].text
             return number
         except:
-            return 'null'
+            return '0'
 
     def work(self):
         values = []
