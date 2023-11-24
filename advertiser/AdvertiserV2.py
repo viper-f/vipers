@@ -58,7 +58,10 @@ class AdvertiserV2:
 
 
     def get_topic_url(self, url):
-        X, data = self.analize(url)
+        try:
+            X, data = self.analize(url)
+        except:
+            return False
         prediction = self.model.predict(np.array([X]), verbose=0)
         topic_url = False
 
@@ -424,7 +427,7 @@ class AdvertiserV2:
                 if not link:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message='Could not find ad topic: ' + self.links[n][0])
+                             message='Could not find ad topic or load page: ' + self.links[n][0])
                     continue
 
             try:
