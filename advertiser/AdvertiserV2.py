@@ -1,3 +1,4 @@
+from requests.exceptions import SSLError
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -272,7 +273,11 @@ class AdvertiserV2:
         return driver.current_url
 
     def analize(self, url):
-        html_text = requests.get(url).text
+        try:
+            html_text = requests.get(url).text
+        except SSLError as e:
+            url = url.replace('https://', 'http://')
+            html_text = requests.get(url).text
         soup = BeautifulSoup(html_text, 'html.parser')
         topics = []
         topic_n = 0
