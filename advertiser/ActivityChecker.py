@@ -38,6 +38,3 @@ class ActivityChecker:
             cursor.execute(
                 "update advertiser_forum as forum set activity = c.column_a from (values " + values + ") as c(column_a, column_b) where c.column_b = forum.id;")
 
-
-a = ActivityChecker()
-a.work()
