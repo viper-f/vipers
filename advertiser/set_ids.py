@@ -30,18 +30,18 @@ class AddId:
             url = url.replace('https://', 'http://')
             text = requests.get(url).text
         data = json.loads(text)
-        return data['response']['board_id']
+        return data['response']['board_id'], data['response']['found']
 
 
     def work(self):
         values = []
         for forum in self.forums:
-            board_id = self.get_id(forum[1])
-            values.append('(' + board_id + ',' + str(forum[0]) + ')')
+            board_id, found = self.get_id(forum[1])
+            values.append("('" + board_id + "'," + found + "," + str(forum[0]) + ')')
         values = ','.join(values)
         with connection.cursor() as cursor:
             cursor.execute(
-                "update advertiser_forum as forum set board_id = c.board_id from (values " + values + ") as c(board_id, id) where c.id = forum.id;")
+                "update advertiser_forum as forum set board_id = c.board_id, board_found = c.found from (values " + values + ") as c(board_id, found, id) where c.id = forum.id;")
 
 a = AddId()
 a.work()

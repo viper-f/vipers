@@ -115,7 +115,7 @@ sql_links = []
 if len(links):
     for link in links:
         if link[2] == 'new' and link[1] != 0:
-            sql_links.append("('"+link[0]+"',"+str(link[1])+"', '"+link[3]+"',"+link[4]+")")
+            sql_links.append("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+")")
     sql_links = ', '.join(sql_links)
     if len(sql_links):
         with connection.cursor() as cursor:
