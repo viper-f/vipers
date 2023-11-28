@@ -116,11 +116,11 @@ if len(links):
     for link in links:
         if link[2] == 'new' and link[1] != 0:
             print("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+")")
-            sql_links.append("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+")")
+            sql_links.append("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+",0)")
     sql_links = ', '.join(sql_links)
     if len(sql_links):
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
+            cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
 
 
 now = timezone.now()
