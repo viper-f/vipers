@@ -30,7 +30,7 @@ class AddId:
             url = url.replace('https://', 'http://')
             text = requests.get(url).text
         data = json.loads(text)
-        return data['response']['board_id'], data['response']['found']
+        return data['response']['board_id'], data['response']['founded']
 
 
     def work(self):

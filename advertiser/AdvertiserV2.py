@@ -160,7 +160,7 @@ class AdvertiserV2:
             url = url.replace('https://', 'http://')
             text = requests.get(url).text
         data = json.loads(text)
-        return ['response']['board_id'], data['response']['found']
+        return ['response']['board_id'], data['response']['founded']
 
     def scrape_links(self, driver):
         posts = driver.find_elements(By.CLASS_NAME, "post-content")
