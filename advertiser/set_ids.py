@@ -23,7 +23,6 @@ class AddId:
         return list(Forum.objects.all().values_list('id', 'domain'))
 
     def get_id(self, url):
-        now = time.time()
         url += '/api.php?method=board.get'
         try:
             text = requests.get(url).text

@@ -35,6 +35,7 @@ class AdvertiserV2:
         self.driver2 = webdriver.Chrome(options=options)
         self.links = []
         self.tracked = []
+        self.tracked_id = []
         self.log_mode = log_mode
         self.session_id = session_id
         self.channel = channel
@@ -85,8 +86,9 @@ class AdvertiserV2:
         forums = Forum.objects.filter(stop=False).order_by("-activity")
         for forum in forums:
             if forum.id != home_forum_id:
-                self.links.append([forum.domain, forum.verified_forum_id, 'old'])
+                self.links.append([forum.domain, forum.verified_forum_id, 'old', forum.board_id])
             self.tracked.append(forum.domain)
+            self.tracked.append(forum.board_id)
 
     def check_stop_signal(self):
         session = BotSession.objects.filter(session_id=self.session_id).first()
@@ -150,6 +152,16 @@ class AdvertiserV2:
                 return False
         return True
 
+    def get_board_id(self, url):
+        url += '/api.php?method=board.get'
+        try:
+            text = requests.get(url).text
+        except SSLError as e:
+            url = url.replace('https://', 'http://')
+            text = requests.get(url).text
+        data = json.loads(text)
+        return ['response']['board_id'], data['response']['found']
+
     def scrape_links(self, driver):
         posts = driver.find_elements(By.CLASS_NAME, "post-content")
         for post in posts:
@@ -164,8 +176,11 @@ class AdvertiserV2:
                     track = l.split('/viewtopic')[0]
                     if track not in self.tracked:
                         parts = l.split('#')
-                        self.links.append([parts[0], 0, 'new'])
                         self.tracked.append(track)
+                        id, found = self.get_board_id(track)
+                        if id not in self.tracked_id:
+                            self.links.append([parts[0], 0, 'new', id, found])
+
 
     def login(self, driver, url):
         try:

@@ -16,6 +16,7 @@ class Forum(models.Model):
     activity = models.IntegerField(default=None, blank=True, null=True)
     inactive_days = models.IntegerField(default=0)
     board_id = models.CharField(max_length=10, unique=True, default=None, blank=True, null=True)
+    board_found = models.IntegerField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.domain
