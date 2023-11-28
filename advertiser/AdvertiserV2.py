@@ -507,10 +507,11 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    cur_link_popup = self.post(self.driver1, code_partner)
+                    cur_link = self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
-                    if not isinstance(cur_link_popup, str):
+                    if not isinstance(cur_link, str):
                         cur_link = self.find_current_link(self.driver1)
+
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
                     self.post(self.driver2, full_code_home)
                     success += 1
