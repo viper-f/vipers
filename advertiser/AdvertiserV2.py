@@ -272,6 +272,13 @@ class AdvertiserV2:
         driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
         #tarea.send_keys(message)
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
+        try:
+            link = WebDriverWait(driver, 2).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '.jGrowl-message a'))
+            ).get_attribute('href')
+            return link
+        except:
+            pass
         return True
 
     def go_to_last_page(self, driver):
@@ -500,9 +507,10 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    cur_link_popup = self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
-                    cur_link = self.find_current_link(self.driver1)
+                    if not isinstance(cur_link_popup, str):
+                        cur_link = self.find_current_link(self.driver1)
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
                     self.post(self.driver2, full_code_home)
                     success += 1
