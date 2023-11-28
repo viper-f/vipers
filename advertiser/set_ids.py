@@ -44,3 +44,5 @@ class AddId:
             cursor.execute(
                 "update advertiser_forum as forum set board_id = c.board_id from (values " + values + ") as c(board_id, id) where c.id = forum.id;")
 
+a = AddId()
+a.work()
