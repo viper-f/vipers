@@ -199,11 +199,12 @@ a:hover {
     display: flex;
     gap: 10px;
     row-gap: 10px;
+    flex-wrap: wrap;
 }
 
 .forum-box {
     padding: 1rem 2rem 1rem;
-    width: 40%
+    width: 48%
 }
 
 .forum-box ul {
