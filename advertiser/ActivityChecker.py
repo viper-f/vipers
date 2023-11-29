@@ -20,7 +20,7 @@ class ActivityChecker:
         self.forums = self.load_forums()
 
     def load_forums(self):
-        return list(Forum.objects.filter(stop=False).values_list('id', 'domain', 'inactive_days'))
+        return list(Forum.objects.filter(stop=False).values_list('id', 'domain', 'inactive_days', 'founded'))
 
     def check_activity_24(self, url):
         try:
@@ -36,16 +36,9 @@ class ActivityChecker:
         except:
             return 0
 
-    def is_forum_dead(self, url, inactive_days):
+    def is_forum_dead(self, inactive_days, founded):
         now = time.time()
-        url += '/api.php?method=board.get'
-        try:
-            text = requests.get(url).text
-        except SSLError as e:
-            url = url.replace('https://', 'http://')
-            text = requests.get(url).text
-        data = json.loads(text)
-        if now - int(data['response']['founded']) > 2628000:  # 1 month
+        if now - founded > 2628000:  # 1 month
             if inactive_days >= 5:
                 return 'true'
             else:
@@ -64,7 +57,7 @@ class ActivityChecker:
                 days = forum[2] + 1
             else:
                 days = 0
-            is_dead = self.is_forum_dead(forum[1], days)
+            is_dead = self.is_forum_dead(days, forum[3])
             values.append('(' + str(number) + ',' + str(days) + ',' + is_dead + ',' + str(forum[0]) + ')')
         values = ','.join(values)
         with connection.cursor() as cursor:
