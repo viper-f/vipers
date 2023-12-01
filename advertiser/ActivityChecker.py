@@ -20,7 +20,7 @@ class ActivityChecker:
         self.forums = self.load_forums()
 
     def load_forums(self):
-        return list(Forum.objects.filter(stop=False).values_list('id', 'domain', 'inactive_days', 'founded'))
+        return list(Forum.objects.filter(stop=False).values_list('id', 'domain', 'inactive_days', 'board_found'))
 
     def check_activity_24(self, url):
         try:
