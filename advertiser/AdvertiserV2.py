@@ -159,7 +159,10 @@ class AdvertiserV2:
         except SSLError as e:
             url = url.replace('https://', 'http://')
             text = requests.get(url).text
-        data = json.loads(text)
+        try:
+            data = json.loads(text)
+        except:
+            return False, False
         return data['response']['board_id'], data['response']['founded']
 
     def scrape_links(self, driver):
@@ -178,7 +181,7 @@ class AdvertiserV2:
                         parts = l.split('#')
                         self.tracked.append(track)
                         id, found = self.get_board_id(track)
-                        if id not in self.tracked_id:
+                        if id is not False and id not in self.tracked_id:
                             self.links.append([parts[0], 0, 'new', id, found])
 
 
