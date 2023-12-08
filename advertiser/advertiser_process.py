@@ -74,64 +74,62 @@ for cl_forum in cl_forums:
 stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
 if forum.is_rusff:
-    print('rusff')
-    #advertiser = AdvertiserRusff(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+    advertiser = AdvertiserRusff(log_mode='channel', channel=channel_layer, session_id=options.session_id)
 else:
-    print('not')
-    #advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+    advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
 
-# async_to_sync(channel_layer.group_send)(
-#     grop_name,
-#     {
-#         'type': 'log_message',
-#         'message': json.dumps({
-#             "total": 0,
-#             "visited": 0,
-#             "success": 0,
-#             "skipped": 0,
-#             "message": "Instance created"
-#         }),
-#     })
-#
-# if options.custom_credentials == 'true':
-#     async_to_sync(channel_layer.group_send)(
-#         grop_name,
-#         {
-#             'type': 'log_message',
-#             'message': json.dumps({
-#                 "total": 0,
-#                 "visited": 0,
-#                 "success": 0,
-#                 "skipped": 0,
-#                 "message": "Attempting custom login"
-#             }),
-#         })
-#     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
-#
-# visited, success, links = advertiser.work(
-#     url=options.base_url,
-#     home_forum_id=forum.forum.id,
-#     templates=templates,
-#     custom_login_code=custom_login_code,
-#     stop_list=stop_list
-# )
-#
-# sql_links = []
-# if len(links):
-#     for link in links:
-#         if link[2] == 'new' and link[1] != 0:
-#             print("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+")")
-#             sql_links.append("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+",0)")
-#     sql_links = ', '.join(sql_links)
-#     if len(sql_links):
-#         with connection.cursor() as cursor:
-#             cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
+async_to_sync(channel_layer.group_send)(
+    grop_name,
+    {
+        'type': 'log_message',
+        'message': json.dumps({
+            "total": 0,
+            "visited": 0,
+            "success": 0,
+            "skipped": 0,
+            "message": "Instance created"
+        }),
+    })
+
+if options.custom_credentials == 'true':
+    async_to_sync(channel_layer.group_send)(
+        grop_name,
+        {
+            'type': 'log_message',
+            'message': json.dumps({
+                "total": 0,
+                "visited": 0,
+                "success": 0,
+                "skipped": 0,
+                "message": "Attempting custom login"
+            }),
+        })
+    advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
+
+visited, success, links = advertiser.work(
+    url=options.base_url,
+    home_forum_id=forum.forum.id,
+    templates=templates,
+    custom_login_code=custom_login_code,
+    stop_list=stop_list
+)
+
+sql_links = []
+if len(links):
+    for link in links:
+        if link[2] == 'new' and link[1] != 0:
+            print("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+")")
+            sql_links.append("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+",0)")
+    sql_links = ', '.join(sql_links)
+    if len(sql_links):
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
 
 
 now = timezone.now()
 record.time_end = now.isoformat()
-record.visited = 0#visited
-record.success = 0#success
+record.visited = visited
+record.success = success
 record.status = 'finished'
 record.save()
 

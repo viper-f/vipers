@@ -273,6 +273,7 @@ class AdvertiserRusff:
             return False
         tarea.clear()
         driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
+        driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         try:
             WebDriverWait(driver, 2).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, '.jGrowl-message a'))
