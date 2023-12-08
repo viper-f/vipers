@@ -273,6 +273,12 @@ class AdvertiserRusff:
             return False
         tarea.clear()
         driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
+        try:
+            WebDriverWait(driver, 2).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '.jGrowl-message a'))
+            ).get_attribute('href')
+        except:
+            pass
         #tarea.send_keys(message)
         return True
 
