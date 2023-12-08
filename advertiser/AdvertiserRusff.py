@@ -22,7 +22,7 @@ django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate
 
 
-class AdvertiserV2:
+class AdvertiserRusff:
     def __init__(self, log_mode='console', channel=None, session_id=None):
         options = Options()
         options.add_argument('--headless')
@@ -274,7 +274,6 @@ class AdvertiserV2:
         tarea.clear()
         driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
         #tarea.send_keys(message)
-        driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 
     def go_to_last_page(self, driver):
@@ -505,7 +504,8 @@ class AdvertiserV2:
                 if form:
                     self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
-                    cur_link = self.find_current_link(self.driver1)
+                    self.go_to_last_page(self.driver1)
+                    cur_link = self.find_last_post_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
                     self.post(self.driver2, full_code_home)

@@ -3,6 +3,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils import timezone
 from AdvertiserV2 import AdvertiserV2
+from AdvertiserRusff import AdvertiserRusff
 from optparse import OptionParser
 import json
 
@@ -72,8 +73,10 @@ for cl_forum in cl_forums:
 
 stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
-
-advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+if forum.is_rusff:
+    advertiser = AdvertiserRusff(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+else:
+    advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
 
 async_to_sync(channel_layer.group_send)(
     grop_name,

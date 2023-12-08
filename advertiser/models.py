@@ -27,6 +27,7 @@ class HomeForum(models.Model):
     ad_topic_url = models.CharField(max_length=200)
     users = models.ManyToManyField(User, related_name="manager")
     forum = models.ForeignKey(Forum, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
+    is_rusff = models.BooleanField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.name
