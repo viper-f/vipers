@@ -13,6 +13,7 @@ import tensorflow as tf
 import numpy as np
 import requests
 from bs4 import BeautifulSoup
+from django.conf import settings
 
 
 sys.path.insert(0, './../vipers')
@@ -43,7 +44,7 @@ class AdvertiserRusff:
         self.group_name = 'comm_' + session_id
         self.home_base = ''
         self.logged_in = False
-        self.model = tf.keras.models.load_model('/home/ubuntu/vipers/topic_model')
+        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
         self.templates = []
 
 
