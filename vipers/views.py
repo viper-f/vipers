@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -16,12 +17,18 @@ def index(request):
 
 @login_required
 def user_index(request):
-    active_session = BotSession.objects.filter(status='active').first()
+    active_sessions = BotSession.objects.filter(status='active')
+    active_session = active_sessions[0]
     session_id = False
     forum_id = False
     lock = False
 
-    if active_session is not None:
+    print(settings.MAX_CONCURRENT)
+    if not settings.MAX_CONCURRENT:
+        max_concurrent = 1
+    else:
+        max_concurrent = settings.MAX_CONCURRENT
+    if len(active_sessions) >= max_concurrent:
         lock = True
         home_forum = active_session.home_forum
         if request.user in home_forum.users.all():

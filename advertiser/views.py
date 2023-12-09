@@ -47,7 +47,11 @@ def advertiser_form(request, id):
             print(form.errors)
     else:
         active_sessions = BotSession.objects.filter(status='active')
-        if len(active_sessions):
+        if not settings.MAX_CONCURRENT:
+            max_concurrent = 1
+        else:
+            max_concurrent = settings.MAX_CONCURRENT
+        if len(active_sessions) >= max_concurrent:
             return render(request, "advertiser/stop.html")
 
         forum = HomeForum.objects.get(pk=id)
