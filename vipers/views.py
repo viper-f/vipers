@@ -18,7 +18,6 @@ def index(request):
 @login_required
 def user_index(request):
     active_sessions = BotSession.objects.filter(status='active')
-    active_session = active_sessions[0]
     session_id = False
     forum_id = False
     lock = False
@@ -29,6 +28,7 @@ def user_index(request):
     else:
         max_concurrent = settings.MAX_CONCURRENT
     if len(active_sessions) >= max_concurrent:
+        active_session = active_sessions[0]
         lock = True
         home_forum = active_session.home_forum
         if request.user in home_forum.users.all():
