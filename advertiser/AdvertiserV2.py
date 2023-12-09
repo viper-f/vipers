@@ -20,6 +20,7 @@ import vipers
 import django
 django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate
+from django.conf import settings
 
 
 class AdvertiserV2:
@@ -43,7 +44,7 @@ class AdvertiserV2:
         self.group_name = 'comm_' + session_id
         self.home_base = ''
         self.logged_in = False
-        self.model = tf.keras.models.load_model('/home/ubuntu/vipers/topic_model')
+        self.model = tf.keras.models.load_model(settings.BASE_DIR+'/topic_model')
         self.templates = []
 
 
