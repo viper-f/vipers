@@ -80,6 +80,7 @@ def advertiser_process(request):
     forum_id = request.session['forum_id']
     check_allowed(request, forum_id)
     active_sessions = BotSession.objects.filter(status='active')
+    print(settings.MAX_CONCURRENT)
     if not settings.MAX_CONCURRENT:
         max_concurrent = 1
     else:
