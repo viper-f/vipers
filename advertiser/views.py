@@ -17,6 +17,7 @@ import subprocess
 
 from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession, ScheduleItem
 from .restrictions import check_allowed
+from django.conf import settings
 
 
 @login_required
@@ -79,7 +80,11 @@ def advertiser_process(request):
     forum_id = request.session['forum_id']
     check_allowed(request, forum_id)
     active_sessions = BotSession.objects.filter(status='active')
-    if len(active_sessions):
+    if not settings.MAX_CONCURRENT:
+        max_concurrent = 1
+    else:
+        max_concurrent = settings.MAX_CONCURRENT
+    if len(active_sessions) >= max_concurrent:
         return render(request, "advertiser/stop.html")
 
     session_id = request.session['session_id']
