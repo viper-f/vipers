@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title-section">Episode Mover</h2>
+<p>
+        Бот предназначен для переноса постов с одного форума на другой.
+    </p>
+    <p>
+        Создайте тему с эпизодом на новом форуме, затем скопируйте в форму ниже ссылку на старый эпизод и на новый,
+        укажите логины и пароли всех участников эпизода (все они предварительно должгны быть зарегестрированы на новом форуме).
+        Бот зайдет в старый эпизод, скопирует все ваши посты с оригинальной bb разметкой, затем зайдет на новый форум и
+        будет выкладывать их от нужных профилей, перелогиниваясь по необходимости.
+    </p>
+    <p>Процесс такого автоматического копирования занимает какое-то время, зато спасает от рутины.</p>
+    <p>
+        Данный бот использует ваши логины и пароли, чтобы перенести посты с одного форума на другой.
+        Хотя мы не сохраняем никакие данные, для личного душевного спокойствия рекомендуем предварительно поменять
+        пароли на временные и сразу поменять их снова после использования бота.
+    </p>
+
+<form action="/process" method="post" id="move-episode">
+        <input type="text" class="sul-text-field" name="episode_old" placeholder="Старый эпизод"/>
+        <input type="text" class="sul-text-field" name="episode_new" placeholder="Новый эпизод"/>
+        <div id="user-block">
+            <h3 class="title-section">Пользователь 1</h3>
+            <div class="user">
+                <input type="text" class="sul-text-field" name="user[1][nameOld]" placeholder="Логин на старом форуме"/>
+                <input type="text" class="sul-text-field" name="user[1][passOld]" placeholder="Пароль на старом форуме"/>
+                <input type="text" class="sul-text-field" name="user[1][nameNew]" placeholder="Логин на новом форуме"/>
+                <input type="text" class="sul-text-field" name="user[1][passNew]" placeholder="Пароль на новом форуме"/>
+            </div>
+        </div>
+        <input id="add-user" class="sul-btn" onclick="addUser()" value="Добавить пользователя"/>
+        <input class="sul-btn btn-primary" type="submit" value="Перенести"/>
+    </form>
+
+ <div style="float: right; margin-top: -30px;">
+        <a style="margin-right: 30px;" onclick="saveToStorage()">Сохранить в LocalStorage</a>
+        <a onclick="loadFromStorage()">Загрузить из LocalStorage</a>
+    </div>
+
+<div>
+    <p>* LocalStorage - это хранилище в вашем браузере. Вы можете сохраниить логины и пароли локально в своем раузере,
+        чтобы не вводить их вручную каждый раз.</p>
+</div>
+
+<script>
+    let n = 1;
+    function addUser()
+    {
+        n += 1;
+        document.getElementById('user-block').innerHTML +=
+            "<h3 class=\"title-section\">Пользователь "+n+"</h3>\n" +
+            "            <div class=\"user\">\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][nameOld]\" placeholder=\"Логин на старом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][passOld]\" placeholder=\"Пароль на старом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][nameNew]\" placeholder=\"Логин на новом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][passNew]\" placeholder=\"Пароль на новом форуме\"/>\n" +
+            "            </div>";
+    }
+
+    function loadFromStorage()
+    {
+        const data = JSON.parse(localStorage.getItem('creds'));
+        let t = 1;
+        data.forEach(function(user) {
+            document.getElementsByName("user["+t+"][nameOld]")[0].value = user.nameOld;
+            document.getElementsByName("user["+t+"][passOld]")[0].value = user.passOld;
+            document.getElementsByName("user["+t+"][nameNew]")[0].value = user.nameNew;
+            document.getElementsByName("user["+t+"][passNew]")[0].value = user.passNew;
+            t += 1;
+        })
+    }
+    function saveToStorage()
+    {
+        const data = [];
+        let t = 1;
+        while(document.getElementsByName("user["+t+"][nameOld]").length) {
+            const user = {
+                nameOld: document.getElementsByName("user[" + t + "][nameOld]")[0].value,
+                passOld: document.getElementsByName("user[" + t + "][passOld]")[0].value,
+                nameNew: document.getElementsByName("user[" + t + "][nameNew]")[0].value,
+                passNew: document.getElementsByName("user[" + t + "][passNew]")[0].value
+            }
+            data.push(user);
+            t += 1;
+        }
+        localStorage.setItem('creds', JSON.stringify(data));
+    }
+</script>
+{% endblock %}

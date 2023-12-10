@@ -25,6 +25,7 @@ urlpatterns = [
     path("user-index", views.user_index, name="user_index"),
     path("user-settings", views.user_settings, name="user_settings"),
     path("episodelist/", include("episodelist.urls")),
+    path("episodemover/", include("episodemover.urls")),
     path("advertiser/", include("advertiser.urls")),
     path('admin/', admin.site.urls),
 ]
