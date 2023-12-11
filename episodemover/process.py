@@ -20,8 +20,7 @@ parser.add_option("-j", '--json', dest="json")
 j = options.json
 
 print('Moving episode')
-print(j)
-data = json.dumps(j)
+data = json.loads(j)
 
 now = timezone.now()
 

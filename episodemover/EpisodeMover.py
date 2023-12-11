@@ -5,19 +5,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
-import re
 from asgiref.sync import async_to_sync
 import json
-from datetime import datetime
 import sys
-import tensorflow as tf
-from django.conf import settings
 
 
-# sys.path.insert(0, './../vipers')
-# import vipers
-# import django
-# django.setup()
+sys.path.insert(0, './../vipers')
+import vipers
+import django
+django.setup()
 
 
 class EpisodeMover:
@@ -29,7 +25,7 @@ class EpisodeMover:
 
     def initBrowser(self):
         options = Options()
-       # options.add_argument('--headless')
+        options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -162,31 +158,3 @@ class EpisodeMover:
         for browser in browsers:
             browser.quit()
 
-
-
-
-# m = EpisodeMover(channel="0", session_id="0")
-# m.work('https://kingscross.f-rpg.me/viewtopic.php?id=6750#p846032',
-#        'https://forum.viper-frpg.ovh/viewtopic.php?id=10#p250',
-#        [
-#            {
-#                "old": {
-#                    "name": "Assistant",
-#                    "password": "12345"
-#                },
-#                "new": {
-#                    "name": "PR",
-#                    "password": "1111"
-#                }
-#            },
-# {
-#                "old": {
-#                    "name": "Raphael",
-#                    "password": "mvpEsi5l"
-#                },
-#                "new": {
-#                    "name": "viper",
-#                    "password": "zyzVNtjc"
-#                }
-#            }
-#        ])

@@ -64,10 +64,10 @@
         const data = JSON.parse(localStorage.getItem('creds'));
         let t = 1;
         data.forEach(function(user) {
-            document.getElementsByName("user["+t+"][nameOld]")[0].value = user.nameOld;
-            document.getElementsByName("user["+t+"][passOld]")[0].value = user.passOld;
-            document.getElementsByName("user["+t+"][nameNew]")[0].value = user.nameNew;
-            document.getElementsByName("user["+t+"][passNew]")[0].value = user.passNew;
+            document.getElementsByName("user|"+t+"|nameOld")[0].value = user.nameOld;
+            document.getElementsByName("user|"+t+"|passOld")[0].value = user.passOld;
+            document.getElementsByName("user|"+t+"|nameNew")[0].value = user.nameNew;
+            document.getElementsByName("user|"+t+"|passNew")[0].value = user.passNew;
             t += 1;
         })
     }
@@ -75,12 +75,12 @@
     {
         const data = [];
         let t = 1;
-        while(document.getElementsByName("user["+t+"][nameOld]").length) {
+        while(document.getElementsByName("user|"+t+"|nameOld").length) {
             const user = {
-                nameOld: document.getElementsByName("user[" + t + "][nameOld]")[0].value,
-                passOld: document.getElementsByName("user[" + t + "][passOld]")[0].value,
-                nameNew: document.getElementsByName("user[" + t + "][nameNew]")[0].value,
-                passNew: document.getElementsByName("user[" + t + "][passNew]")[0].value
+                nameOld: document.getElementsByName("user|" + t + "|nameOld")[0].value,
+                passOld: document.getElementsByName("user|" + t + "|passOld")[0].value,
+                nameNew: document.getElementsByName("user|" + t + "|nameNew")[0].value,
+                passNew: document.getElementsByName("user|" + t + "|passNew")[0].value
             }
             data.push(user);
             t += 1;
