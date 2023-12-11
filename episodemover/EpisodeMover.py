@@ -141,12 +141,14 @@ class EpisodeMover:
             browsers['new_' + character['new']['name']].get(new_episode)
             mapping['old_'+character['old']['name']] = 'new_'+character['new']['name']
 
+        self.log(0, 0, 'Loading episode data')
         required_usernames, old_posts = self.get_topic_map(browsers['old_'+characters[0]['old']['name']], old_episode)
         if len(set(required_usernames) - set(provided_usernames)):
             self.log(0, 0, 'Mismatch in usernames provided for old forum. Aborting...')
             return 0
 
         total = len(old_posts)
+        self.log(0, 0, 'Found posts to publish: '+str(total))
         success = 0
         for old_post in old_posts:
             browsers['old_'+old_post['username']].get(base_url_old + '/edit.php?id=' + str(old_post['id']) + '&action=edit')
@@ -155,31 +157,36 @@ class EpisodeMover:
             success += 1
             self.log(total, success, 'Post ' + str(old_post['id']) + ' from ' + old_post['username'] + ' was published')
 
+        self.log(total, success, 'All done!')
+
+        for browser in browsers:
+            browser.quit()
 
 
 
-m = EpisodeMover(channel="0", session_id="0")
-m.work('https://kingscross.f-rpg.me/viewtopic.php?id=6750#p846032',
-       'https://forum.viper-frpg.ovh/viewtopic.php?id=10#p250',
-       [
-           {
-               "old": {
-                   "name": "Assistant",
-                   "password": "12345"
-               },
-               "new": {
-                   "name": "PR",
-                   "password": "1111"
-               }
-           },
-{
-               "old": {
-                   "name": "Raphael",
-                   "password": "mvpEsi5l"
-               },
-               "new": {
-                   "name": "viper",
-                   "password": "zyzVNtjc"
-               }
-           }
-       ])
+
+# m = EpisodeMover(channel="0", session_id="0")
+# m.work('https://kingscross.f-rpg.me/viewtopic.php?id=6750#p846032',
+#        'https://forum.viper-frpg.ovh/viewtopic.php?id=10#p250',
+#        [
+#            {
+#                "old": {
+#                    "name": "Assistant",
+#                    "password": "12345"
+#                },
+#                "new": {
+#                    "name": "PR",
+#                    "password": "1111"
+#                }
+#            },
+# {
+#                "old": {
+#                    "name": "Raphael",
+#                    "password": "mvpEsi5l"
+#                },
+#                "new": {
+#                    "name": "viper",
+#                    "password": "zyzVNtjc"
+#                }
+#            }
+#        ])

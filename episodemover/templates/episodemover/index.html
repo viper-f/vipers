@@ -17,16 +17,17 @@
         пароли на временные и сразу поменять их снова после использования бота.
     </p>
 
-<form action="/process" method="post" id="move-episode">
+<form action="/episodemover/index" method="post" id="move-episode">
+     {% csrf_token %}
         <input type="text" class="sul-text-field" name="episode_old" placeholder="Старый эпизод"/>
         <input type="text" class="sul-text-field" name="episode_new" placeholder="Новый эпизод"/>
         <div id="user-block">
             <h3 class="title-section">Пользователь 1</h3>
             <div class="user">
-                <input type="text" class="sul-text-field" name="user[1][nameOld]" placeholder="Логин на старом форуме"/>
-                <input type="text" class="sul-text-field" name="user[1][passOld]" placeholder="Пароль на старом форуме"/>
-                <input type="text" class="sul-text-field" name="user[1][nameNew]" placeholder="Логин на новом форуме"/>
-                <input type="text" class="sul-text-field" name="user[1][passNew]" placeholder="Пароль на новом форуме"/>
+                <input type="text" class="sul-text-field" name="user|1|nameOld" placeholder="Логин на старом форуме"/>
+                <input type="text" class="sul-text-field" name="user|1|passOld" placeholder="Пароль на старом форуме"/>
+                <input type="text" class="sul-text-field" name="user|1|nameNew" placeholder="Логин на новом форуме"/>
+                <input type="text" class="sul-text-field" name="user|1|passNew" placeholder="Пароль на новом форуме"/>
             </div>
         </div>
         <input id="add-user" class="sul-btn" onclick="addUser()" value="Добавить пользователя"/>
@@ -51,10 +52,10 @@
         document.getElementById('user-block').innerHTML +=
             "<h3 class=\"title-section\">Пользователь "+n+"</h3>\n" +
             "            <div class=\"user\">\n" +
-            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][nameOld]\" placeholder=\"Логин на старом форуме\"/>\n" +
-            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][passOld]\" placeholder=\"Пароль на старом форуме\"/>\n" +
-            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][nameNew]\" placeholder=\"Логин на новом форуме\"/>\n" +
-            "                <input type=\"text\" class=\"sul-text-field\" name=\"user["+n+"][passNew]\" placeholder=\"Пароль на новом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user|"+n+"|nameOld\" placeholder=\"Логин на старом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user|"+n+"|passOld\" placeholder=\"Пароль на старом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user|"+n+"|nameNew\" placeholder=\"Логин на новом форуме\"/>\n" +
+            "                <input type=\"text\" class=\"sul-text-field\" name=\"user|"+n+"|passNew\" placeholder=\"Пароль на новом форуме\"/>\n" +
             "            </div>";
     }
 
