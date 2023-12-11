@@ -27,18 +27,17 @@
                     {% else %}
                     <li><a href="/login">Вход</a></li>
                     {% endif %}
-                    <li><a href="#0">Перенос эпизодов</a></li>
+                    <li><a href="/episodemover/index">Перенос эпизодов</a></li>
                      {% if is_auth %}
                       <li><a href="/logout">Выход</a></li>
                     {% endif %}
-                     <li class="small"><a href="https://forum.viper-frpg.ovh">Форум</a> <a href="https://github.com/viper-f/vipers">github</a></li>
                     <li class="small">by Viper, 2023</li>
                 </ul>
             </div>
         </div>
 
 
-        <h2 id="brand-text">🐍 Viper's Vault</h2>
+        <h2 id="brand-text"><a href="/" style="border-bottom: none"><img style="height: 50px;" src="{% static 'img/logo.png' %}"></a></h2>
     </div>
 </header>
 

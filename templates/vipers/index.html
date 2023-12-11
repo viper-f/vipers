@@ -1,5 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2 class="title-section">Змеиная кладовка</h2>
-<p style="margin-bottom: 2rem">Здесь у меня залежи всяких скриптов и полезных инструментов</p>
+{% load static %}
+
+<div style="display: grid; grid-template-columns: 47% 47%; justify-content: space-between; justify-items: center;">
+<div class="sul-box-raised-1 with-hover">
+    <a style="border-bottom: none;" href="/user-index">
+      <img style="object-fit: cover; width: 100%;" src="{% static 'img/full.jpg' %}">
+    <div style="padding: 10px 2px; font-size: 2em; text-align: center">АВТОМАТИЗАЦИЯ</div>
+        </a>
+    </div>
+
+    <div class="sul-box-raised-1 with-hover">
+        <a style="border-bottom: none;" href="/episodemover/index">
+      <img style="object-fit: cover; width: 100%;" src="{% static 'img/move.jpg' %}">
+        <div style="padding: 10px 2px; font-size: 2em; text-align: center">ПЕРЕНОС ЭПИЗОДОВ</div>
+        </a>
+    </div>
+    </div>
+
 {% endblock %}
