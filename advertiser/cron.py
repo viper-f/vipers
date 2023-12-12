@@ -55,7 +55,7 @@ def scheduled_ad_bot_run():
         custom_username = cc.username
         custom_password = cc.password
 
-    autorun_id = 8
+    autorun_id = 3
     session_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     templates = list(AdTemplate.objects.filter(home_forum=forum.id).order_by("priority").values_list('id', flat=True))
 

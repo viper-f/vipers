@@ -22,28 +22,38 @@ def user_index(request):
     forum_id = False
     lock = False
 
-    print(settings.MAX_CONCURRENT)
     if not settings.MAX_CONCURRENT:
         max_concurrent = 1
     else:
         max_concurrent = settings.MAX_CONCURRENT
+
+    sessions = {}
     if len(active_sessions) >= max_concurrent:
         active_session = active_sessions[0]
         lock = True
         home_forum = active_session.home_forum
         if request.user in home_forum.users.all():
-            session_id = active_session.session_id
-            forum_id = active_session.home_forum.id
+            sessions[active_session.home_forum.id][active_session.type] = active_session.session_id
 
     forums = HomeForum.objects.filter(users=request.user)
+    for forum in forums:
+        if forum.id in sessions:
+            if 'advertiser' in sessions[forum.id]:
+                forum.session_advertiser = sessions[forum.id]['advertiser']
+            else:
+                forum.session_advertiser= False
+
+            if 'advertiser' in sessions[forum.id]:
+                forum.session_partner = sessions[forum.id]['partner']
+            else:
+                forum.session_partner = False
+
+    forums[0].session_partner = 'gfhkgh'
+
     return render(request, "vipers/user_index.html", {
         "username": request.user.username,
         "forums": forums,
         "lock": lock,
-        "session": {
-            "id": session_id,
-            "forum_id": forum_id
-        },
         "breadcrumbs": [{"link": "/", "name": "Главная"}, {"link": "/user-index", "name": "Мои форумы"}]
     })
 

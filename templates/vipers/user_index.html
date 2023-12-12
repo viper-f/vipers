@@ -2,8 +2,7 @@
 {% block content %}
 <h2 class="title-section">{{ username }}'s Tools</h2>
 {% if lock %}
-<div class="warning-box sul-box-raised-1">⚠️ Если вы видите значок замка напротив "Запустить рекламу" и "Запустить партнерство", это значит, что кто-то другой уже использует бота.
-Подождите, пока они закончат. В силу ограничений ресурсов сервера только один бот за раз может работать.</div>
+<div class="warning-box sul-box-raised-1">⚠️ Сервис достиг лимита на одновременное количество процессов. Подождите пока кто-то закончит работу.</div>
 {% endif %}
 <div id="forum-wrapper">
 {% for forum in forums %}
@@ -12,14 +11,20 @@
     <ul>
         <li><a href="advertiser/forum-edit/{{ forum.id }}">Редактировать</a></li>
         <li><a href="advertiser/templates/{{ forum.id }}">Рекламные шаблоны</a></li>
-        {% if lock %}
+        {% if lock or forum.session_advertiser %}
         <li>Запустить рекламу 🔒
-            {% if session.id and session.forum_id == forum.id %}
-            <a href="advertiser/observe-advertiser-process/{{ session.id }}">Текущая сессия</a>
-        {% endif %} </li>
-        <li>Запустить партнерство 🔒</li>
+            {% if forum.session_advertiser %}
+                <a href="advertiser/observe-advertiser-process/{{ forum.session_advertiser }}">Текущая сессия</a>
+            {% endif %} </li>
         {% else %}
         <li><a href="advertiser/advertiser/{{ forum.id }}">Запустить рекламу</a></li>
+        {% endif %}
+        {% if lock or forum.session_partner %}
+        <li>Запустить партнерство 🔒
+            {% if forum.session_partner %}
+                <a href="advertiser/observe-advertiser-process/{{ forum.session_partner }}">Текущая сессия</a>
+            {% endif %} </li>
+        {% else %}
         <li><a href="advertiser/partner/{{ forum.id }}">Запустить партнерство</a></li>
         {% endif %}
         <li><a href="advertiser/history/{{ forum.id }}">История работы</a></li>
