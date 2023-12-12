@@ -29,10 +29,10 @@ def user_index(request):
 
     sessions = {}
     if len(active_sessions) >= max_concurrent:
-        active_session = active_sessions[0]
         lock = True
-        home_forum = active_session.home_forum
-        if request.user in home_forum.users.all():
+        
+    for active_session in active_sessions:
+        if request.user in active_session.home_forum.users.all():
             sessions[active_session.home_forum.id][active_session.type] = active_session.session_id
 
     forums = HomeForum.objects.filter(users=request.user)
