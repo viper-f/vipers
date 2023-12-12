@@ -48,8 +48,6 @@ def user_index(request):
             else:
                 forum.session_partner = False
 
-    forums[0].session_partner = 'gfhkgh'
-
     return render(request, "vipers/user_index.html", {
         "username": request.user.username,
         "forums": forums,
