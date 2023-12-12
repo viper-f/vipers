@@ -37,7 +37,12 @@ def index(request):
         return HttpResponseRedirect(reverse('episodemover:process'))
 
     else:
-        return render(request, "episodemover/index.html")
+        return render(request, "episodemover/index.html", {
+            "breadcrumbs": [
+                {"link": "/", "name": "Главная"},
+                {"link": "/episodemover/index", "name": "Перенос эпизода"}
+            ]
+        })
 
 def process(request):
     p = subprocess.Popen(["venv/bin/python",

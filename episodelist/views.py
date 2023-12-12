@@ -54,7 +54,12 @@ def index(request, forum_id, ids):
 
 def about(request):
     code = '<div id="list"></div>\n<script>\nlet url = "https://viper-frpg.ovh/episodelist/2202,2180,2196,2189,2184,2224,2209,2190,2186,2234,2195,2201,2188,2181";\nfetch(url, {\n    method: "GET" \n})\n    .then((response) => {\n        if (!response.ok) {\n            throw Error(response.statusText);\n        }\n        return response.text();\n    })\n    .then((html) => {\n        document.getElementById("list").innerHTML = html;\n    })\n.catch((error) => {\n    console.error(error);\n});\n</script>'
-    return render(request, "episodelist/about.html", {"code": code})
+    return render(request, "episodelist/about.html", {"code": code,
+                                                      "breadcrumbs": [
+                                                          {"link": "/", "name": "Главная"},
+                                                          {"link": "/episodelist/about", "name": "Список эпизодов"}
+                                                      ]
+                                                      })
 
 def post_count(request, forum_id, user_id, time, before):
     time = int(time / 1000)
