@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, update_session_auth_hash
@@ -12,20 +13,17 @@ from .forms import LoginForm, UserSettingsForm
 
 
 def index(request):
-    return render(request, "vipers/index.html", {
-    })
+    return render(request, "vipers/index.html", {"breadcrumbs": False})
 
 @login_required
 def user_index(request):
     active_sessions = BotSession.objects.filter(status='active')
-    session_id = False
-    forum_id = False
     lock = False
 
-    if not settings.MAX_CONCURRENT:
-        max_concurrent = 1
-    else:
+    try:
         max_concurrent = settings.MAX_CONCURRENT
+    except:
+        max_concurrent = 1
 
     sessions = {}
     if len(active_sessions) >= max_concurrent:
@@ -33,6 +31,8 @@ def user_index(request):
         
     for active_session in active_sessions:
         if request.user in active_session.home_forum.users.all():
+            if active_session.home_forum.id not in sessions:
+                sessions[active_session.home_forum.id] = {}
             sessions[active_session.home_forum.id][active_session.type] = active_session.session_id
 
     forums = HomeForum.objects.filter(users=request.user)
@@ -43,7 +43,7 @@ def user_index(request):
             else:
                 forum.session_advertiser= False
 
-            if 'advertiser' in sessions[forum.id]:
+            if 'partner' in sessions[forum.id]:
                 forum.session_partner = sessions[forum.id]['partner']
             else:
                 forum.session_partner = False
