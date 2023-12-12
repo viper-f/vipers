@@ -138,7 +138,7 @@ def schedule_partner_update():
         return False
 
     session_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-    autorun_id = 8
+    autorun_id = 4
     user = User.objects.get(pk=autorun_id)
     now = timezone.now()
     record = BotSession(
