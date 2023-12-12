@@ -118,11 +118,6 @@ def scheduled_ad_bot_run():
 
 
 def schedule_partner_update():
-    active_sessions = BotSession.objects.filter(status='active')
-    if len(active_sessions):
-        print('schedule partner - another session')
-        return False
-
     now = timezone.now()
     midnight = now.replace(hour=0, minute=0, second=0)
 
