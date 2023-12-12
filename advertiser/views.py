@@ -56,7 +56,7 @@ def advertiser_form(request, id):
 
         forum = HomeForum.objects.get(pk=id)
         try:
-            credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id)
+            credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id, type="home")
         except CustomCredentials.DoesNotExist:
             credentials = False
 
@@ -225,7 +225,7 @@ def forum_edit(request, id):
 
             if form.cleaned_data['custom_credentials']:
                 try:
-                    credentials = CustomCredentials.objects.get(home_forum=forum, user=request.user)
+                    credentials = CustomCredentials.objects.get(home_forum=forum, user=request.user, type="home")
                     credentials.username = form.cleaned_data['custom_username']
                     credentials.password = form.cleaned_data['custom_password']
                     credentials.save()
@@ -239,7 +239,7 @@ def forum_edit(request, id):
                     credentials.save()
             else:
                 try:
-                    credentials = CustomCredentials.objects.get(home_forum=forum, user=request.user)
+                    credentials = CustomCredentials.objects.get(home_forum=forum, user=request.user, type="home")
                     credentials.delete()
                 except CustomCredentials.DoesNotExist:
                     pass
@@ -271,7 +271,7 @@ def forum_edit(request, id):
     else:
         forum = HomeForum.objects.get(pk=id)
         try:
-            credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id)
+            credentials = CustomCredentials.objects.get(home_forum=id, user=request.user.id, type="home")
         except CustomCredentials.DoesNotExist:
             credentials = False
 
