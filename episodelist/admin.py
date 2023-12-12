@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from episodelist.models import EpisodeListSettings
+
+admin.site.register(EpisodeListSettings)
