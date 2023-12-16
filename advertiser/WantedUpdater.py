@@ -49,8 +49,8 @@ class WantedUpdater:
         try:
             self.driver.find_element(By.ID, "navlogout")
         except NoSuchElementException:
-            return True
-        return False
+            return False
+        return True
 
     def custom_login(self, base_url, username, password):
         if self.check_cache_login():

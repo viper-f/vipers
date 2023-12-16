@@ -45,8 +45,8 @@ class PartnerMailer:
         try:
             driver.find_element(By.ID, "navlogout")
         except NoSuchElementException:
-            return True
-        return False
+            return False
+        return True
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
