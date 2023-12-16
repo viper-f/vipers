@@ -4,7 +4,7 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.common import NoSuchDriverException
+from selenium.common import NoSuchDriverException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -45,7 +45,17 @@ class WantedUpdater:
         text = text.replace('</a>', '[/url]')
         return text
 
+    def check_cache_login(self):
+        try:
+            self.driver.find_element(By.ID, "navlogout")
+        except NoSuchElementException:
+            return True
+        return False
+
     def custom_login(self, base_url, username, password):
+        if self.check_cache_login():
+            return True
+
         try:
             self.driver.get(base_url + '/login.php')
             WebDriverWait(self.driver, 5).until(

@@ -1,6 +1,6 @@
 from requests.exceptions import SSLError
 from selenium import webdriver
-from selenium.common import NoSuchDriverException
+from selenium.common import NoSuchDriverException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -30,6 +30,7 @@ class AdvertiserV2:
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
+        options.add_argument("user-data-dir=/home/root/vipers/profile")
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
@@ -106,6 +107,14 @@ class AdvertiserV2:
             return True
         else:
             return False
+
+
+    def check_cache_login(self, driver):
+        try:
+            driver.find_element(By.ID, "navlogout")
+        except NoSuchElementException:
+            return True
+        return False
 
 
     def log(self, total, success, skipped, visited, message):
@@ -196,6 +205,9 @@ class AdvertiserV2:
 
 
     def login(self, driver, url):
+        if self.check_cache_login(driver):
+            self.logged_in = True
+            return True
         try:
             driver.execute_script("return PR['in_1']();")
             WebDriverWait(driver, 5).until(
@@ -216,6 +228,9 @@ class AdvertiserV2:
                 return False
 
     def custom_login_code(self, driver, url, code):
+        if self.check_cache_login(driver):
+            self.logged_in = True
+            return True
         try:
             driver.execute_script(code)
             WebDriverWait(driver, 5).until(
@@ -228,6 +243,9 @@ class AdvertiserV2:
             return False
 
     def custom_login(self, url, username, password):
+        if self.check_cache_login(self.driver1):
+            self.logged_in = True
+            return True
         try:
             base_url = url.split('/viewtopic')[0]
             self.driver1.get(base_url + '/login.php')

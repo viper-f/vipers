@@ -1,6 +1,6 @@
 from requests.exceptions import SSLError
 from selenium import webdriver
-from selenium.common import NoSuchDriverException
+from selenium.common import NoSuchDriverException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -107,6 +107,13 @@ class AdvertiserRusff:
         else:
             return False
 
+    def check_cache_login(self, driver):
+        try:
+            driver.find_element(By.ID, "navlogout")
+        except NoSuchElementException:
+            return True
+        return False
+
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
@@ -196,6 +203,9 @@ class AdvertiserRusff:
 
 
     def login(self, driver, url):
+        if self.check_cache_login(driver):
+            self.logged_in = True
+            return True
         try:
             driver.execute_script("return PR['in_1']();")
             WebDriverWait(driver, 5).until(
@@ -216,6 +226,9 @@ class AdvertiserRusff:
                 return False
 
     def custom_login_code(self, driver, url, code):
+        if self.check_cache_login(driver):
+            self.logged_in = True
+            return True
         try:
             driver.execute_script(code)
             WebDriverWait(driver, 5).until(
@@ -228,6 +241,9 @@ class AdvertiserRusff:
             return False
 
     def custom_login(self, url, username, password):
+        if self.check_cache_login(self.driver1):
+            self.logged_in = True
+            return True
         try:
             base_url = url.split('/viewtopic')[0]
             self.driver1.get(base_url + '/login.php')
