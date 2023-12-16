@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common import NoSuchDriverException
+from selenium.common import NoSuchDriverException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,6 +20,7 @@ class PartnerMailer:
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
+        options.add_argument("user-data-dir=/home/root/vipers/profile")
 
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         prefs = {
@@ -40,6 +41,13 @@ class PartnerMailer:
         except NoSuchDriverException:
             exit(code=500)
 
+    def check_cache_login(self, driver):
+        try:
+            driver.find_element(By.ID, "navlogout")
+        except NoSuchElementException:
+            return True
+        return False
+
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
             print('Total: ' + total + '; Success: ' + success + '; Message: ' + message)
@@ -58,6 +66,9 @@ class PartnerMailer:
                 })
 
     def login(self, driver, url):
+        if self.check_cache_login(driver):
+            self.logged_in = True
+            return True
         try:
             driver.execute_script("return PR['in_1']();")
             WebDriverWait(driver, 5).until(
@@ -78,7 +89,9 @@ class PartnerMailer:
                 return False
 
     def custom_login_code(self, driver, url, code):
-        print("here1" + code) 
+        if self.check_cache_login(driver):
+            self.logged_in = True
+            return True
         try:
             driver.execute_script(code)
             WebDriverWait(driver, 10).until(
@@ -88,7 +101,6 @@ class PartnerMailer:
             self.logged_in = True
             return True
         except:
-            print("here2" + code) 
             return False
 
 
