@@ -48,14 +48,9 @@ class AdvertiserV2:
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
         self.templates = []
 
-        try:
-            self.driver1 = webdriver.Chrome(options=options)
-        except NoSuchDriverException:
-            exit(code=500)
-        try:
-            self.driver2 = webdriver.Chrome(options=options)
-        except NoSuchDriverException:
-            exit(code=500)
+        self.driver1 = webdriver.Chrome(options=options)
+        self.driver2 = webdriver.Chrome(options=options)
+
 
 
     def load_templates(self, ids):

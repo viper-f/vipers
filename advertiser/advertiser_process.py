@@ -2,6 +2,8 @@ import sys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils import timezone
+from selenium.common import NoSuchDriverException
+
 from AdvertiserV2 import AdvertiserV2
 from AdvertiserRusff import AdvertiserRusff
 from optparse import OptionParser
@@ -73,10 +75,31 @@ for cl_forum in cl_forums:
 
 stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
-if forum.is_rusff:
-    advertiser = AdvertiserRusff(log_mode='channel', channel=channel_layer, session_id=options.session_id)
-else:
-    advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+try:
+    if forum.is_rusff:
+        advertiser = AdvertiserRusff(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+    else:
+        advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+except NoSuchDriverException:
+    now = timezone.now()
+    record.time_end = now.isoformat()
+    record.visited = 0
+    record.success = 0
+    record.status = 'finished'
+    record.save()
+    async_to_sync(channel_layer.group_send)(
+        grop_name,
+        {
+            'type': 'log_message',
+            'message': json.dumps({
+                "total": 0,
+                "visited": 0,
+                "success": 0,
+                "skipped": 0,
+                "message": "Browser could not start. Shutting down. Please retry"
+            }),
+        })
+    exit(0)
 
 async_to_sync(channel_layer.group_send)(
     grop_name,
@@ -105,6 +128,8 @@ if options.custom_credentials == 'true':
             }),
         })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
+
+
 
 visited, success, links = advertiser.work(
     url=options.base_url,
