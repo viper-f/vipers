@@ -44,6 +44,7 @@ class AdvertiserV2:
         self.group_name = 'comm_' + session_id
         self.home_base = ''
         self.logged_in = False
+        self.custom_l = False
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
         self.templates = []
 
@@ -115,6 +116,11 @@ class AdvertiserV2:
         except NoSuchElementException:
             return False
         return True
+
+    def log_out(self, driver):
+        link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
+        user_id = link.split('=')[1]
+        driver.get('https://kingscross.f-rpg.me/login.php?action=out&id=' + user_id)
 
 
     def log(self, total, success, skipped, visited, message):
@@ -243,9 +249,9 @@ class AdvertiserV2:
             return False
 
     def custom_login(self, url, username, password):
+        self.custom_l = True
         if self.check_cache_login(self.driver1):
-            self.logged_in = True
-            return True
+            self.log_out(self.driver1)
         try:
             base_url = url.split('/viewtopic')[0]
             self.driver1.get(base_url + '/login.php')
@@ -555,6 +561,8 @@ class AdvertiserV2:
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Not logged in: ' + link)
                 continue
+        if self.custom_l:
+            self.log_out(self.driver1)
         self.driver2.quit()
         self.driver1.quit()
 

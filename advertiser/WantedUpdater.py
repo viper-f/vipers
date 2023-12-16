@@ -27,6 +27,13 @@ class WantedUpdater:
         except NoSuchDriverException:
             exit(code=500)
 
+
+    def log_out(self):
+        link = self.driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
+        user_id = link.split('=')[1]
+        self.driver.get('https://kingscross.f-rpg.me/login.php?action=out&id=' + user_id)
+
+
     def parse_list(self, url):
         html_text = requests.get(url).text
         soup = BeautifulSoup(html_text, 'html.parser')
@@ -54,7 +61,7 @@ class WantedUpdater:
 
     def custom_login(self, base_url, username, password):
         if self.check_cache_login():
-            return True
+            self.log_out()
 
         try:
             self.driver.get(base_url + '/login.php')
@@ -96,6 +103,7 @@ class WantedUpdater:
         self.driver.get(receiver_url_base + '/edit.php?id='+str(receiver_post_id)+'&action=edit')
         self.post(self.driver, code)
         sleep(2)
+        self.log_out()
         self.driver.close()
 
 
