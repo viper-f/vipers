@@ -1,5 +1,6 @@
 from requests.exceptions import SSLError
 from selenium import webdriver
+from selenium.common import NoSuchDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -33,8 +34,6 @@ class AdvertiserV2:
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
         options.page_load_strategy = 'eager'
-        self.driver1 = webdriver.Chrome(options=options)
-        self.driver2 = webdriver.Chrome(options=options)
         self.links = []
         self.tracked = []
         self.tracked_id = []
@@ -46,6 +45,15 @@ class AdvertiserV2:
         self.logged_in = False
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
         self.templates = []
+
+        try:
+            self.driver1 = webdriver.Chrome(options=options)
+        except NoSuchDriverException:
+            exit(code=500)
+        try:
+            self.driver2 = webdriver.Chrome(options=options)
+        except NoSuchDriverException:
+            exit(code=500)
 
 
     def load_templates(self, ids):

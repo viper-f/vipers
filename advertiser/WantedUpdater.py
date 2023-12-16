@@ -4,6 +4,7 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.common import NoSuchDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,7 +21,11 @@ class WantedUpdater:
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
         options.page_load_strategy = 'eager'
-        self.driver = webdriver.Chrome(options=options)
+
+        try:
+            self.driver = webdriver.Chrome(options=options)
+        except NoSuchDriverException:
+            exit(code=500)
 
     def parse_list(self, url):
         html_text = requests.get(url).text

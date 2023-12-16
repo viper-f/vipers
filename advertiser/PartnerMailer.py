@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common import NoSuchDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -25,7 +26,7 @@ class PartnerMailer:
             "profile.managed_default_content_settings.images": 2,
                  }
         options.add_experimental_option("prefs", prefs)
-        self.driver2 = webdriver.Chrome(options=options)
+
         self.links = []
         self.tracked = []
         self.log_mode = log_mode
@@ -33,6 +34,11 @@ class PartnerMailer:
         self.group_name = group_name
         self.home_base = ''
         self.logged_in = False
+
+        try:
+            self.driver2 = webdriver.Chrome(options=options)
+        except NoSuchDriverException:
+            exit(code=500)
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
