@@ -73,6 +73,10 @@ class BotSession(models.Model):
             )
         ]
 
+    def __str__(self):
+        return '[' + self.status + '] ' + self.home_forum.name + ' - ' + self.type + ' - ' + str(self.time_start)
+
+
 class ScheduleItem(models.Model):
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, default='ad')
