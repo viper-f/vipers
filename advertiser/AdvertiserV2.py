@@ -534,12 +534,12 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
@@ -560,7 +560,7 @@ class AdvertiserV2:
                 continue
         if self.custom_l:
             print('Custom login')
-            self.log_out(self.driver1, url)
+            self.log_out(self.driver1,  self.home_base)
         else:
             print('No custom login')
         self.driver2.quit()
