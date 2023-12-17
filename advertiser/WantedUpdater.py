@@ -103,7 +103,7 @@ class WantedUpdater:
         self.driver.get(receiver_url_base + '/edit.php?id='+str(receiver_post_id)+'&action=edit')
         self.post(self.driver, code)
         sleep(2)
-        self.log_out()
+        self.log_out(self.driver, receiver_url_base)
         self.driver.close()
 
 

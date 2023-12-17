@@ -13,11 +13,11 @@ sys.path.insert(0, './../vipers')
 import vipers
 
 import django
+
 django.setup()
 from django.db import connection
 from django.contrib.auth.models import User
 from advertiser.models import HomeForum, BotSession, Forum
-
 
 parser = OptionParser()
 parser.add_option("-l", '--url', dest="base_url")
@@ -66,7 +66,6 @@ async_to_sync(channel_layer.group_send)(
             "message": "Bot is starting"
         }),
     })
-
 
 cl_forums = Forum.objects.filter(custom_login__isnull=False)
 custom_login_code = {}
@@ -129,8 +128,6 @@ if options.custom_credentials == 'true':
         })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
 
-
-
 visited, success, links = advertiser.work(
     url=options.base_url,
     home_forum_id=forum.forum.id,
@@ -150,11 +147,10 @@ sql_links = []
 if len(links):
     for link in links:
         if link[2] == 'new' and link[1] != 0:
-            print("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+")")
-            sql_links.append("('"+link[0]+"',"+str(link[1])+",'"+link[3]+"',"+link[4]+",0)")
+            print("('" + link[0] + "'," + str(link[1]) + ",'" + link[3] + "'," + link[4] + ")")
+            sql_links.append("('" + link[0] + "'," + str(link[1]) + ",'" + link[3] + "'," + link[4] + ",0)")
     sql_links = ', '.join(sql_links)
     if len(sql_links):
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
-
-
+            cursor.execute(
+                "INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES " + sql_links + " ON CONFLICT DO NOTHING")
