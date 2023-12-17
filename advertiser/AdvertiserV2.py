@@ -115,8 +115,6 @@ class AdvertiserV2:
     def log_out(self, driver, base_url):
         link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
-        print(user_id)
-        print(base_url+'/login.php?action=out&id=' + user_id)
         driver.get(base_url+'/login.php?action=out&id=' + user_id)
 
 
@@ -534,12 +532,12 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    #self.post(self.driver1, code_partner)
+                    self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    #self.post(self.driver2, full_code_home)
+                    self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
@@ -559,10 +557,7 @@ class AdvertiserV2:
                          message='Not logged in: ' + link)
                 continue
         if self.custom_l:
-            print('Custom login')
             self.log_out(self.driver1,  self.home_base)
-        else:
-            print('No custom login')
         self.driver2.quit()
         self.driver1.quit()
 
