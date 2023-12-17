@@ -161,7 +161,6 @@ class AdvertiserRusff:
     def log_out(self, driver, base_url):
         link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
-        print(user_id)
         driver.get(base_url+'/login.php?action=out&id=' + user_id)
 
     def check_self_present(self, sample, driver):
@@ -564,7 +563,6 @@ class AdvertiserRusff:
                          message='Not logged in: ' + link)
                 continue
         if self.custom_l:
-            print('Trying to log out')
             self.log_out(self.driver1, url)
         self.driver2.quit()
         self.driver1.quit()

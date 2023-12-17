@@ -115,6 +115,8 @@ class AdvertiserV2:
     def log_out(self, driver, base_url):
         link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
+        print(user_id)
+        print(base_url+'/login.php?action=out&id=' + user_id)
         driver.get(base_url+'/login.php?action=out&id=' + user_id)
 
 
@@ -557,7 +559,10 @@ class AdvertiserV2:
                          message='Not logged in: ' + link)
                 continue
         if self.custom_l:
+            print('Custom login')
             self.log_out(self.driver1, url)
+        else:
+            print('No custom login')
         self.driver2.quit()
         self.driver1.quit()
 
