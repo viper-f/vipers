@@ -28,10 +28,10 @@ class WantedUpdater:
             exit(code=500)
 
 
-    def log_out(self):
-        link = self.driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
+    def log_out(self, driver, base_url):
+        link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
-        self.driver.get('https://kingscross.f-rpg.me/login.php?action=out&id=' + user_id)
+        driver.get(base_url+'/login.php?action=out&id=' + user_id)
 
 
     def parse_list(self, url):
@@ -61,7 +61,7 @@ class WantedUpdater:
 
     def custom_login(self, base_url, username, password):
         if self.check_cache_login():
-            self.log_out()
+            self.log_out(base_url)
 
         try:
             self.driver.get(base_url + '/login.php')

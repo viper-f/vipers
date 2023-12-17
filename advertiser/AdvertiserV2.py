@@ -112,10 +112,10 @@ class AdvertiserV2:
             return False
         return True
 
-    def log_out(self, driver):
+    def log_out(self, driver, base_url):
         link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
-        driver.get('https://kingscross.f-rpg.me/login.php?action=out&id=' + user_id)
+        driver.get(base_url+'/login.php?action=out&id=' + user_id)
 
 
     def log(self, total, success, skipped, visited, message):
@@ -245,10 +245,10 @@ class AdvertiserV2:
 
     def custom_login(self, url, username, password):
         self.custom_l = True
+        base_url = url.split('/viewtopic')[0]
         if self.check_cache_login(self.driver1):
-            self.log_out(self.driver1)
+            self.log_out(self.driver1, base_url)
         try:
-            base_url = url.split('/viewtopic')[0]
             self.driver1.get(base_url + '/login.php')
             WebDriverWait(self.driver1, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "#pun-main .formal>#login"))
@@ -557,7 +557,7 @@ class AdvertiserV2:
                          message='Not logged in: ' + link)
                 continue
         if self.custom_l:
-            self.log_out(self.driver1)
+            self.log_out(self.driver1, url)
         self.driver2.quit()
         self.driver1.quit()
 

@@ -158,10 +158,11 @@ class AdvertiserRusff:
                 return False
         return True
 
-    def log_out(self, driver):
+    def log_out(self, driver, base_url):
         link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
-        driver.get('https://kingscross.f-rpg.me/login.php?action=out&id=' + user_id)
+        print(user_id)
+        driver.get(base_url+'/login.php?action=out&id=' + user_id)
 
     def check_self_present(self, sample, driver):
         for img in sample:
@@ -243,11 +244,11 @@ class AdvertiserRusff:
 
     def custom_login(self, url, username, password):
         self.custom_l = True
+        base_url = url.split('/viewtopic')[0]
         if self.check_cache_login(self.driver1):
-            self.log_out(self.driver1)
+            self.log_out(self.driver1, base_url)
             return True
         try:
-            base_url = url.split('/viewtopic')[0]
             self.driver1.get(base_url + '/login.php')
             WebDriverWait(self.driver1, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "#pun-main .formal>#login"))
@@ -537,13 +538,13 @@ class AdvertiserRusff:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     self.go_to_last_page(self.driver1)
                     cur_link = self.find_last_post_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
@@ -563,7 +564,8 @@ class AdvertiserRusff:
                          message='Not logged in: ' + link)
                 continue
         if self.custom_l:
-            self.log_out(self.driver1)
+            print('Trying to log out')
+            self.log_out(self.driver1, url)
         self.driver2.quit()
         self.driver1.quit()
 
