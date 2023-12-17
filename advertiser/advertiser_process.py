@@ -139,6 +139,13 @@ visited, success, links = advertiser.work(
     stop_list=stop_list
 )
 
+now = timezone.now()
+record.time_end = now.isoformat()
+record.visited = visited
+record.success = success
+record.status = 'finished'
+record.save()
+
 sql_links = []
 if len(links):
     for link in links:
@@ -150,11 +157,4 @@ if len(links):
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES "+sql_links+" ON CONFLICT DO NOTHING")
 
-
-now = timezone.now()
-record.time_end = now.isoformat()
-record.visited = visited
-record.success = success
-record.status = 'finished'
-record.save()
 
