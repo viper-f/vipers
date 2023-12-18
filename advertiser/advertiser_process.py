@@ -127,8 +127,12 @@ if options.custom_credentials == 'true':
             }),
         })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
+    user_dir = "/home/root/vipers/profile-"+str(forum.forum.id)+"-"+options.custom_username
+else:
+    user_dir = "/home/root/vipers/profile"
 
 visited, success, links = advertiser.work(
+    user_dir=user_dir,
     url=options.base_url,
     home_forum_id=forum.forum.id,
     templates=templates,

@@ -5,6 +5,7 @@ from . import views
 app_name = 'advertiser'
 urlpatterns = [
     path("forum-edit/<int:id>", views.forum_edit, name="forum_edit"),
+    path("forum-add", views.forum_add, name="forum_add"),
     path("templates/<int:id>", views.ad_templates, name="ad_templates"),
     path("templates/delete/<int:id>", views.delete_template, name="delete_template"),
     path("templates/priority/<int:id>", views.change_priority_template, name="change_priority_template"),

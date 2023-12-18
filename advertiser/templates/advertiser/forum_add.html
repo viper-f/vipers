@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="title-section">Добавить новый форум</h2>
+
+<div id="bot-form" class="block sul-box-raised-2">
+    <form action="/advertiser/forum-add" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="sul-btn" value="Save">
+    </form>
+</div>
+{% endblock %}

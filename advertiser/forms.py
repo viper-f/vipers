@@ -1,6 +1,7 @@
 from django import forms
-
-from advertiser.models import AdTemplate, CustomCredentials
+from django.contrib.auth.models import User
+from django_select2 import forms as s2forms
+from advertiser.models import AdTemplate, CustomCredentials, HomeForum
 
 
 class AdForm(forms.Form):
@@ -85,3 +86,28 @@ class ScheduleItemForm(forms.Form):
             choices.append((cred.id, cred.username))
         return choices
 
+
+class ForumWidget(s2forms.ModelSelect2Widget):
+    search_fields = [
+        "domain__icontains"
+    ]
+
+class HomeForumForm(forms.Form):
+    name = forms.CharField(label="Name (label)", widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+    domain = forms.CharField(label="Domain (label)", widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+    ad_topic_url = forms.CharField(label="Ad Topic Url", widget=forms.TextInput(attrs={'class': 'sul-text-field'}))
+    users = forms.MultipleChoiceField(label="Users",
+                                         widget=forms.RadioSelect(attrs={'class': 'temp-radio'}))
+    forum = forms.ChoiceField(label="Forum", widget=ForumWidget())
+    is_rusff =forms.BooleanField(label="Form Is Rusff", widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(HomeForumForm, self).__init__(*args, **kwargs)
+        self.fields['users'].choices = self.get_templates()
+
+    def get_templates(self):
+        users = User.objects.all()
+        choices = []
+        for user in users:
+            choices.append((user.id, user.username))
+        return choices

@@ -168,7 +168,7 @@ def schedule_partner_update():
             custom_username = cc.username
             custom_password = cc.password
 
-            updater = WantedUpdater()
+            updater = WantedUpdater(user_dir="/home/root/vipers/profile-"+str(forum.id)+"-"+cc.username)
             updater.work(
                 donor_url=update.donor_url,
                 receiver_url_base=update.target_url,

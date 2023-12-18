@@ -25,11 +25,12 @@ from advertiser.models import Forum, BotSession, AdTemplate
 
 
 class AdvertiserRusff:
-    def __init__(self, log_mode='console', channel=None, session_id=None):
+    def __init__(self, user_dir="/home/root/vipers/profile", log_mode='console', channel=None, session_id=None):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
+        options.add_argument("user-data-dir=" + user_dir)
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
@@ -162,6 +163,9 @@ class AdvertiserRusff:
         link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         user_id = link.split('=')[1]
         driver.get(base_url+'/login.php?action=out&id=' + user_id)
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.ID, "navlogin"))
+        )
 
     def check_self_present(self, sample, driver):
         for img in sample:

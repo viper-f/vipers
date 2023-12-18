@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.timezone import make_aware
 
-from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemForm
+from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemForm, HomeForumForm
 from django.urls import reverse
 import subprocess
 
@@ -433,6 +433,35 @@ def schedule(request, id):
                               {"link": "/", "name": "Главная"},
                               {"link": "/user-index", "name": "Мои форумы"},
                               {"link": "/advertiser/schedule/" + str(id), "name": "Расписание"}
+                          ]
+                      })
+
+@login_required
+def forum_add(request):
+    if request.method == "POST":
+        form = HomeForumForm(request.POST)
+        if form.is_valid():
+            forum = HomeForum(
+               name=form.cleaned_data['name'],
+               domain=form.cleaned_data['domain'],
+               ad_topic_url=form.cleaned_data['ad_topic_url'],
+               users=form.cleaned_data['users'],
+               forum=form.cleaned_data['forum'],
+               is_rusff=form.cleaned_data['is_rusff'],
+            )
+            forum.save()
+            return HttpResponseRedirect(reverse('advertiser:forum_edit', kwargs={'id': forum.id}))
+        else:
+            print('Something is wrong')
+    else:
+        form = HomeForumForm()
+        return render(request, "advertiser/forum_add.html",
+                      {
+                          "form": form,
+                          "breadcrumbs": [
+                              {"link": "/", "name": "Главная"},
+                              {"link": "/user-index", "name": "Мои форумы"},
+                              {"link": "/advertiser/forum-add/", "name": "Добавить форум"}
                           ]
                       })
 
