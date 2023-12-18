@@ -15,8 +15,9 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 
-
+import os
 sys.path.insert(0, './../vipers')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'vipers.settings'
 import vipers
 import django
 django.setup()
