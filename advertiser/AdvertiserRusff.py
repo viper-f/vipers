@@ -48,7 +48,9 @@ class AdvertiserRusff:
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
         self.templates = []
 
+        options.add_argument("user-data-dir=" + user_dir)
         self.driver1 = webdriver.Chrome(options=options)
+        options.add_argument("user-data-dir=/home/root/vipers/profile")
         self.driver2 = webdriver.Chrome(options=options)
 
 

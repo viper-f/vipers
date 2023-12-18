@@ -74,11 +74,17 @@ for cl_forum in cl_forums:
 
 stop_list = list(Forum.objects.filter(stop=True).values_list('domain', flat=True))
 
+if options.custom_credentials == 'true':
+    user_dir = "/home/root/vipers/profile-"+str(forum.forum.id)+"-"+options.custom_username
+else:
+    user_dir = "/home/root/vipers/profile"
+
 try:
     if forum.is_rusff:
-        advertiser = AdvertiserRusff(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+        advertiser = AdvertiserRusff(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
     else:
-        advertiser = AdvertiserV2(log_mode='channel', channel=channel_layer, session_id=options.session_id)
+        advertiser = AdvertiserV2(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
+
 except NoSuchDriverException:
     now = timezone.now()
     record.time_end = now.isoformat()
@@ -127,12 +133,8 @@ if options.custom_credentials == 'true':
             }),
         })
     advertiser.custom_login(url=options.base_url, username=options.custom_username, password=options.custom_password)
-    user_dir = "/home/root/vipers/profile-"+str(forum.forum.id)+"-"+options.custom_username
-else:
-    user_dir = "/home/root/vipers/profile"
 
 visited, success, links = advertiser.work(
-    user_dir=user_dir,
     url=options.base_url,
     home_forum_id=forum.forum.id,
     templates=templates,
