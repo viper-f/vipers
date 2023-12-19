@@ -35,7 +35,7 @@ def user_index(request):
                 sessions[active_session.home_forum.id] = {}
             sessions[active_session.home_forum.id][active_session.type] = active_session.session_id
 
-    forums = HomeForum.objects.filter(users=request.user)
+    forums = HomeForum.objects.filter(users=request.user).order_by("id")
     for forum in forums:
         if forum.id in sessions:
             if 'advertiser' in sessions[forum.id]:

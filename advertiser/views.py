@@ -15,7 +15,7 @@ from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemF
 from django.urls import reverse
 import subprocess
 
-from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession, ScheduleItem
+from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession, ScheduleItem, Forum
 from .restrictions import check_allowed
 from django.conf import settings
 
@@ -441,18 +441,29 @@ def forum_add(request):
     if request.method == "POST":
         form = HomeForumForm(request.POST)
         if form.is_valid():
-            forum = HomeForum(
+
+            forum = Forum.objects.get(pk=form.cleaned_data['forum'])
+            if forum.domain not in form.cleaned_data['ad_topic_url']:
+                messages.error(request, "Домен в ссылке рекламной темы не совпадает с доменом форума")
+                return HttpResponseRedirect(reverse('advertiser:forum_add'))
+
+
+            home_forum = HomeForum(
                name=form.cleaned_data['name'],
-               domain=form.cleaned_data['domain'],
+               domain=forum.domain,
                ad_topic_url=form.cleaned_data['ad_topic_url'],
-               users=form.cleaned_data['users'],
-               forum=form.cleaned_data['forum'],
+               forum=forum,
                is_rusff=form.cleaned_data['is_rusff'],
             )
-            forum.save()
-            return HttpResponseRedirect(reverse('advertiser:forum_edit', kwargs={'id': forum.id}))
+            home_forum.save()
+            home_forum.users.set(form.cleaned_data['users'])
+            home_forum.save()
+            return HttpResponseRedirect(reverse('advertiser:forum_edit', kwargs={'id': home_forum.id}))
         else:
-            print('Something is wrong')
+            for error in form.errors:
+                messages.error(request, error)
+                return HttpResponseRedirect(reverse('advertiser:forum_add'))
+            print(form.errors)
     else:
         form = HomeForumForm()
         return render(request, "advertiser/forum_add.html",

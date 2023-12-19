@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
+<link rel="stylesheet" href="https://bluzky.github.io/nice-select2/dist/css/nice-select2.css">
+<style>
+    .nice-select.sul-select   {
+     background-color: inherit;
+     font-size: 16px;
+     float: none;
+     height: auto;
+     width: 100%;
+    }
+
+    .nice-select .nice-select-dropdown {
+      width: 100%;
+      background-color: #ebecf0;
+    }
+</style>
 <h2 class="title-section">Добавить новый форум</h2>
+<p>Все поля обязательны</p>
 
 <div id="bot-form" class="block sul-box-raised-2">
     <form action="/advertiser/forum-add" method="post">
@@ -9,4 +25,10 @@
         <input type="submit" class="sul-btn" value="Save">
     </form>
 </div>
+
+<script src="https://bluzky.github.io/nice-select2/dist/js/nice-select2.js"></script>
+<script>
+    var options = {searchable: true};
+    NiceSelect.bind(document.getElementById("id_forum"), options);
+</script>
 {% endblock %}
