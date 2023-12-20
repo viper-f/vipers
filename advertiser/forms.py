@@ -109,7 +109,7 @@ class HomeForumForm(forms.Form):
         return choices
 
     def get_forums(self):
-        forums = Forum.objects.filter(stop=False)
+        forums = Forum.objects.exclude(stop=True)
         choices = [(None, 'Select')]
         for forum in forums:
             choices.append((forum.id, forum.domain))
