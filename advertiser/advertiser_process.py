@@ -160,3 +160,4 @@ if len(links):
         with connection.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO advertiser_forum (domain, verified_forum_id, board_id, board_found, inactive_days) VALUES " + sql_links + " ON CONFLICT DO NOTHING")
+            connection.commit()
