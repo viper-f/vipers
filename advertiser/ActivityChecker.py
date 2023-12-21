@@ -62,6 +62,7 @@ class ActivityChecker:
         values = ','.join(values)
         #print("update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
         with connection.cursor() as cursor:
+            connection.autocommit(True)
             cursor.execute(
                 "update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
             connection.commit()
