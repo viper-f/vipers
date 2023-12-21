@@ -62,6 +62,7 @@ class ActivityChecker:
         values = ','.join(values)
         #print("update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
 
+        connection.autocommit = True
         with connection.cursor() as cursor:
             results = cursor.execute(
                 "update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
@@ -72,11 +73,6 @@ class ActivityChecker:
                     pass
             except Exception as e:
                 pass
-
-            warnings = cursor.fetchwarnings()
-            if warnings:
-                for warning in warnings:
-                    print(warning)
 
             cursor.close()
             connection.close()
