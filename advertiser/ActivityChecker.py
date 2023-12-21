@@ -40,14 +40,14 @@ class ActivityChecker:
         now = time.time()
         if now - founded > 2628000:  # 1 month
             if inactive_days >= 5:
-                return 'true'
+                return True
             else:
-                return 'false'
+                return False
         else:
             if inactive_days >= 15:
-                return 'true'
+                return True
             else:
-                return 'false'
+                return False
 
     def work(self):
         values = []
