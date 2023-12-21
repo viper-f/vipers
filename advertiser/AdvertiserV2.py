@@ -448,17 +448,20 @@ class AdvertiserV2:
         else:
             self.load_templates(templates)
 
+        total = 0
+        success = 0
+        skipped = 0
+        visited = 0
+
         if not self.logged_in:
             self.login(self.driver1, url)
         self_form = self.check_answer_form(self.driver1)
         if not self_form:
             self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                      message='Your ad topic is over! Please, update forum settings!')
+            return visited, success, self.links
+
         n = -1
-        total = 0
-        success = 0
-        skipped = 0
-        visited = 0
         #while n < 10:
         while n < len(self.links) - 1:
 
