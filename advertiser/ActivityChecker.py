@@ -60,6 +60,7 @@ class ActivityChecker:
             is_dead = self.is_forum_dead(days, forum[3])
             values.append('(' + str(number) + ',' + str(days) + ',' + is_dead + ',' + str(forum[0]) + ')')
         values = ','.join(values)
+        print("update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
         with connection.cursor() as cursor:
             cursor.execute(
                 "update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
