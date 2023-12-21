@@ -20,7 +20,7 @@ class ActivityChecker:
         self.forums = self.load_forums()
 
     def load_forums(self):
-        return list(Forum.objects.filter(stop=False).values_list('id', 'domain', 'inactive_days', 'board_found'))
+        return Forum.objects.filter(stop=False)
 
     def check_activity_24(self, url):
         try:
@@ -52,12 +52,12 @@ class ActivityChecker:
     def work(self):
         values = []
         for forum in self.forums:
-            number = self.check_activity_24(forum[1])
+            number = self.check_activity_24(forum.domain)
             if number < 5:
                 days = forum[2] + 1
             else:
                 days = 0
-            is_dead = self.is_forum_dead(days, forum[3])
+            is_dead = self.is_forum_dead(days, forum.board_found)
             forum.stop = is_dead
             forum.activity = number
             forum.inactive_days = days
