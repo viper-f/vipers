@@ -98,10 +98,10 @@ function format_message(posts, before)
     let total = 0
     for (let post of posts) {
         total += post['price']
-        message += 'пост ' + post['number'] + ' символов — ' + post['price'] + ' ' + post['currency'] + ' [[url=' + post['href'] + ']' + post['topic_title'] + '[/url]]' + "\n"
+        message += '\xd0\xbf\xd0\xbe\xd1\x81\xd1\x82\x20 ' + post['number'] + ' \xd1\x81\xd0\xb8\xd0\xbc\xd0\xb2\xd0\xbe\xd0\xbb\xd0\xbe\xd0\xb2 — ' + post['price'] + ' ' + post['currency'] + ' [[url=' + post['href'] + ']' + post['topic_title'] + '[/url]]' + "\n"
     }
     const new_total = parseInt(before) + total
-    message += 'Итого в профиле: ' + before + ' + ' + total + ' = ' + new_total
+    message += '\xd0\x98\xd1\x82\xd0\xbe\xd0\xb3\xd0\xbe\x20\xd0\xb2\x20\xd0\xbf\xd1\x80\xd0\xbe\xd1\x84\xd0\xb8\xd0\xbb\xd0\xb5: ' + before + ' + ' + total + ' = ' + new_total
     return message
 }
 
