@@ -42,23 +42,23 @@ async function get_topic_start_post(topic_id) {
 }
 
 function convert_date_string(date_string) {
-    if (date_string.indexOf('РЎРµРіРѕРґРЅСЏ') !== -1) {
+    if (date_string.indexOf('Сегодня') !== -1) {
         const date = new Date();
         let day = date.getDate();
         let month = date.getMonth() + 1;
         let year = date.getFullYear();
         const today = `${day}-${month}-${year}`;
-        date_string = date_string.replace('РЎРµРіРѕРґРЅСЏ', today)
+        date_string = date_string.replace('Сегодня', today)
     }
 
-    if (date_string.indexOf('Р’С‡РµСЂР°') !== -1) {
+    if (date_string.indexOf('Вчера') !== -1) {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         let day = date.getDate();
         let month = date.getMonth() + 1;
         let year = date.getFullYear();
         const yesterday = `${day}-${month}-${year}`;
-        date_string = date_string.replace('Р’С‡РµСЂР°', yesterday)
+        date_string = date_string.replace('Вчера', yesterday)
     }
 
     return date_string
@@ -98,10 +98,10 @@ function format_message(posts, before)
     let total = 0
     for (let post of posts) {
         total += post['price']
-        message += "РїРѕСЃС‚ " + post['number'] + ' СЃРёРјРІРѕР»РѕРІ вЂ” ' + post['price'] + ' ' + post['currency'] + ' [[url=' + post['href'] + ']' + post['topic_title'] + '[/url]]' + "\n"
+        message += "пост " + post['number'] + ' символов — ' + post['price'] + ' ' + post['currency'] + ' [[url=' + post['href'] + ']' + post['topic_title'] + '[/url]]' + "\n"
     }
     const new_total = parseInt(before) + total
-    message += 'РС‚РѕРіРѕ РІ РїСЂРѕС„РёР»Рµ: ' + before + ' + ' + total + ' = ' + new_total
+    message += 'Итого в профиле: ' + before + ' + ' + total + ' = ' + new_total
     return message
 }
 
