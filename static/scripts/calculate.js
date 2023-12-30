@@ -59,8 +59,9 @@ function convert_date_string(date_string) {
         let year = date.getFullYear();
         const yesterday = `${day}-${month}-${year}`;
         date_string = date_string.replace('Вчера', yesterday)
-        return date_string
     }
+
+    return date_string
 }
 
 
@@ -112,8 +113,11 @@ async function get_posts(subforums, user_name, start_time_str, currency_dict) {
 
     for (let subforum of subforums) {
         const last_page = await find_last_page(subforum, user_name)
+        let stop = false
 
         for (let n = 1; n <= last_page; n++) {
+            if (stop) break
+
             const url = '/search.php?action=search&keywords=&author=' + user_name + '&forum=' + subforum + '&search_in=0&sort_dir=DESC&show_as=posts&topics=&p=' + n
             const html = await fetch_decoded(url)
             const htmlDoc = parser.parseFromString(html, 'text/html')
@@ -124,8 +128,11 @@ async function get_posts(subforums, user_name, start_time_str, currency_dict) {
                 const href = header_links[2]['href']
                 const topic_title = header_links[1].text
 
-                const post_time = Date.parse(convert_date_string(header_links[2].textContent))
-                if (post_time < start_time) break
+                const post_time = Date.parse(convert_date_string(header_links[2].text))
+                if (post_time < start_time) {
+                    stop = true
+                    break
+                }
 
                 const topic_id = parseInt(header_links[1]['href'].split('=')[1])
                 if (!topics['topic_id'])
@@ -150,6 +157,5 @@ async function get_posts(subforums, user_name, start_time_str, currency_dict) {
             }
         }
     }
-
     return posts
 }
