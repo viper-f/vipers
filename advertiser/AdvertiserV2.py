@@ -460,9 +460,9 @@ class AdvertiserV2:
             return False
 
 
-    def work(self, url, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
+    def work(self, url, id, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
-        self.load_forum_settings(home_forum_id)
+        self.load_forum_settings(id)
         self.load_from_db(home_forum_id)
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')

@@ -136,6 +136,7 @@ if options.custom_credentials == 'true':
 
 visited, success, links = advertiser.work(
     url=options.base_url,
+    id=forum.id,
     home_forum_id=forum.forum.id,
     templates=templates,
     custom_login_code=custom_login_code,
