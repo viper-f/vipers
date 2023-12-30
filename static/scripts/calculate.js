@@ -71,7 +71,8 @@ function calculate_currency(text, currency_dict) {
     let currency = ''
 
     for (let p of currency_dict['pricelist']) {
-        if (!p['max']) p['max'] = 1000000000000000000
+        if (!p['max'] && p['min'] <= number)
+            price = p['price']
 
         if (p['min'] <= number && number <= p['max'])
             price = p['price']
