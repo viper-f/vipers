@@ -28,6 +28,8 @@ class HomeForum(models.Model):
     users = models.ManyToManyField(User, related_name="manager")
     forum = models.ForeignKey(Forum, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
     is_rusff = models.BooleanField(default=None, blank=True, null=True)
+    ad_topic_template = models.TextField(default=None, blank=True, null=True)
+    create_ad_topic = models.BooleanField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.name

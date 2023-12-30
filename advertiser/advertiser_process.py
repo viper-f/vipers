@@ -5,7 +5,7 @@ from django.utils import timezone
 from selenium.common import NoSuchDriverException
 
 from AdvertiserV2 import AdvertiserV2
-from AdvertiserRusff import AdvertiserRusff
+from AdvertiserV2Rusff import AdvertiserV2Rusff
 from optparse import OptionParser
 import json
 
@@ -81,7 +81,7 @@ else:
 
 try:
     if forum.is_rusff:
-        advertiser = AdvertiserRusff(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
+        advertiser = AdvertiserV2Rusff(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
     else:
         advertiser = AdvertiserV2(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
 

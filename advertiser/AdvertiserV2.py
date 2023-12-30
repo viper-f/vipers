@@ -19,7 +19,7 @@ sys.path.insert(0, './../vipers')
 import vipers
 import django
 django.setup()
-from advertiser.models import Forum, BotSession, AdTemplate
+from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
 from django.conf import settings
 
 
@@ -45,6 +45,7 @@ class AdvertiserV2:
         self.custom_l = False
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
         self.templates = []
+        self.forum_settings = {}
 
         options.add_argument("user-data-dir=" + user_dir)
         self.driver1 = webdriver.Chrome(options=options)
@@ -52,6 +53,10 @@ class AdvertiserV2:
         self.driver2 = webdriver.Chrome(options=options)
 
 
+    def load_forum_settings(self, home_forum_id):
+        home_forum = HomeForum.objects.get(pk=home_forum_id)
+        self.forum_settings['create_ad_topic'] = home_forum.create_ad_topic
+        self.forum_settings['ad_topic_template'] = home_forum.ad_topic_template
 
 
     def load_templates(self, ids):
@@ -426,9 +431,38 @@ class AdvertiserV2:
 
         return X, topics
 
+    def start_new_topic(self):
+        try:
+            link = self.driver1.find_element(By.XPATH, "//*[contains(text(), 'Начать новую тему')]")
+            title = self.driver1.title
+            number = re.search(r'\D*(\d*)', title).group(1)
+            new_number = int(number) + 1
+            new_title = title.replace(number, str(new_number))
+            link.click()
+
+            try:
+                WebDriverWait(self.driver1, 5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, '#mail-reply, #post'))
+                )
+            except:
+                self.driver1.find_element(By.TAG_NAME, 'body').send_keys("Keys.ESCAPE")
+            try:
+                tarea = self.driver1.find_element(By.ID, "main-reply")
+                title_field = self.driver1.find_element(By.ID, "fld3")
+            except:
+                return False
+            tarea.clear()
+            self.driver1.execute_script("arguments[0].value = arguments[1]", title_field, new_title)
+            self.driver1.execute_script("arguments[0].value = arguments[1]", tarea, self.forum_settings['ad_topic_template'])
+            self.driver1.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
+            return True
+        except:
+            return False
+
 
     def work(self, url, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        self.load_forum_settings(home_forum_id)
         self.load_from_db(home_forum_id)
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')

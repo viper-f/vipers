@@ -221,6 +221,9 @@ def forum_edit(request, id):
 
             forum.name = form.cleaned_data['name']
             forum.ad_topic_url = form.cleaned_data['ad_topic_url']
+            forum.is_rusff = form.cleaned_data['is_rusff']
+            forum.ad_topic_template = form.cleaned_data['ad_topic_template']
+            forum.create_ad_topic = form.cleaned_data['create_ad_topic']
             forum.save()
 
             if form.cleaned_data['custom_credentials']:
