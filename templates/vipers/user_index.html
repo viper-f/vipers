@@ -12,17 +12,17 @@
     <ul>
         <li><a href="/advertiser/forum-edit/{{ forum.id }}">Редактировать</a></li>
         <li><a href="/advertiser/templates/{{ forum.id }}">Рекламные шаблоны</a></li>
-        {% if lock or forum.session_advertiser %}
+        {% if lock or ('session_advertiser' in forum) %}
         <li>Запустить рекламу 🔒
-            {% if forum.session_advertiser %}
+            {% if 'session_advertiser' in forum %}
                 <a href="/advertiser/observe-advertiser-process/{{ forum.session_advertiser }}">Текущая сессия</a>
             {% endif %} </li>
         {% else %}
         <li><a href="/advertiser/advertiser/{{ forum.id }}">Запустить рекламу</a></li>
         {% endif %}
-        {% if lock or forum.session_partner %}
+        {% if lock or ('session_partner' in forum) %}
         <li>Запустить партнерство 🔒
-            {% if forum.session_partner %}
+            {% if 'session_partner' in forum %}
                 <a href="/advertiser/observe-advertiser-process/{{ forum.session_partner }}">Текущая сессия</a>
             {% endif %} </li>
         {% else %}
