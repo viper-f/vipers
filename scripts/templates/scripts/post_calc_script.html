@@ -1,0 +1,63 @@
+<div>
+<form>
+    <div><label> Имя пользователя:
+    <input type="text" id="user_name_fld" name="user_name" />
+    </label></div>
+    <div><label> Дата последнего захода в банк (в формате гггг-мм-дд чч:мм:сс):
+    <input type="text" id="last_date_fld" name="last_date" />
+    </label></div>
+    <div><label> Сколько сейчас билетов в профиле:
+    <input type="text" id="before_fld" name="before" />
+    </label></div>
+    <a onclick="calculate()">Посчитать</a>
+</form>
+</div>
+<div id="code"></div>
+
+<script src="https://frpgtools.com/static/scripts/calculate.js"></script>
+<script>
+    const currency_dict = {
+        "one": "шестеренка",
+        "two": "шестеренки",
+        "five": "шестеренок",
+        "pricelist": [{
+            "min": 0,
+            "max": 100,
+            "price": 1
+        },
+            {
+                "min": 101,
+                "max": 200,
+                "price": 2
+            },
+            {
+                "min": 201,
+                "max": 300,
+                "price": 3
+            },
+            {
+                "min": 301,
+                "price": 4
+            }]
+    }
+
+    const subforums = [10, 11, 9, 19, 20]
+
+    document.getElementById('user_name_fld').value = UserLogin;
+    let tickets = 0
+
+    if (typeof UserFld3 !== 'undefined') {
+        let numberPattern = /\d+/g;
+        tickets = UserFld3.match(numberPattern)[0]
+    }
+    document.getElementById('before_fld').value = tickets
+
+    async function calculate() {
+        const user_name = document.getElementById('user_name_fld').value
+        const start_time_str = document.getElementById('last_date_fld').value
+        const before = document.getElementById('before_fld').value
+        const posts = await get_posts(subforums, user_name, start_time_str, currency_dict)
+        const result = '<div class="code-box"><strong class="legend">Код:</strong><div class="blockcode"><div class="scrollbox"><pre>'+format_message(posts, before)+'</pre></div></div></div>'
+        document.getElementById('code').innerHTML = result
+    }
+</script>
