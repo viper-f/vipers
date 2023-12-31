@@ -290,9 +290,12 @@ def forum_edit(request, id):
             'domain': forum.domain,
             'ad_topic_url': forum.ad_topic_url,
             'partner_urls': partner_urls,
+            'is_rusff': forum.is_rusff,
             'custom_credentials': credentials != False,
             'custom_username': credentials.username if credentials != False else '',
             'custom_password': credentials.password if credentials != False else '',
+            'ad_topic_template': forum.ad_topic_template,
+            'create_ad_topic': forum.create_ad_topic
         })
         return render(request, "advertiser/forum_form.html",
                       {

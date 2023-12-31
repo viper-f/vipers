@@ -101,7 +101,7 @@ class HomeForumForm(forms.Form):
     users = forms.MultipleChoiceField(label="Users",
                                          widget=forms.CheckboxSelectMultiple(attrs={'class': 'temp-radio'}))
     forum = forms.ChoiceField(label="Forum", widget=forms.Select(attrs={'class': 'sul-select'}))
-    is_rusff =forms.BooleanField(label="Form Is Rusff", widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
+    is_rusff =forms.BooleanField(label="Forum Is Rusff", widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
 
     def __init__(self, *args, **kwargs):
         super(HomeForumForm, self).__init__(*args, **kwargs)
