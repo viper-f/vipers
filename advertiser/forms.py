@@ -49,7 +49,7 @@ class ForumForm(forms.Form):
                                       widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
     custom_password = forms.CharField(label="Custom Password", max_length=100,
                                       widget=forms.TextInput(attrs={'class': 'sul-text-field'}), required=False)
-    is_rusff = forms.BooleanField(label="Form Is Rusff",
+    is_rusff = forms.BooleanField(label="Forum Is Rusff",
                                   widget=forms.CheckboxInput(attrs={'class': 'sul-checkbox-type-2'}), required=False)
     ad_topic_template = forms.CharField(label="Ad Topic Template",
                                    widget=forms.Textarea(attrs={"rows": "10", 'class': 'sul-text-field'}),
