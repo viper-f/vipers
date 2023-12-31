@@ -81,10 +81,8 @@ else:
 
 try:
     if forum.is_rusff:
-        print('rusff - yes')
         advertiser = AdvertiserV2Rusff(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
     else:
-        print('rusff - no')
         advertiser = AdvertiserV2(user_dir=user_dir, log_mode='channel', channel=channel_layer, session_id=options.session_id)
 
 except NoSuchDriverException:
