@@ -41,12 +41,15 @@ def user_index(request):
             if 'advertiser' in sessions[forum.id]:
                 forum.session_advertiser = sessions[forum.id]['advertiser']
             else:
-                forum.session_advertiser= False
+                forum.session_advertiser = False
 
             if 'partner' in sessions[forum.id]:
                 forum.session_partner = sessions[forum.id]['partner']
             else:
                 forum.session_partner = False
+        else:
+            forum.session_advertiser = False
+            forum.session_partner = False
 
     return render(request, "vipers/user_index.html", {
         "username": request.user.username,
