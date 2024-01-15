@@ -27,6 +27,7 @@ urlpatterns = [
     path("episodelist/", include("episodelist.urls")),
     path("episodemover/", include("episodemover.urls")),
     path("scripts/", include("scripts.urls")),
+    path("tracker/", include("tracker.urls")),
     path("advertiser/", include("advertiser.urls")),
     path('admin/', admin.site.urls),
     path("select2/", include("django_select2.urls")),
