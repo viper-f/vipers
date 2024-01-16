@@ -10,5 +10,7 @@ class TrackedClick(models.Model):
     user_client = models.CharField(max_length=300, default=None, blank=True, null=True)
     session = models.ForeignKey(advertiser.models.BotSession, default=None, blank=True, null=True, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return str(self.referrer) + ' - ' + str(self.click_time)
 
 
