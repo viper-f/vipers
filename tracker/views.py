@@ -30,8 +30,8 @@ def track(request):
     return HttpResponseRedirect('https://kingscross.f-rpg.me')
 
 def charts(request):
-    now = datetime.now()
-    week_ago = datetime.now() - timedelta(days=7)
+    now = datetime.utcnow()
+    week_ago = datetime.utcnow() - timedelta(days=7)
 
     # chart 1
 
