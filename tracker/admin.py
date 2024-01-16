@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from tracker.models import TrackedClick
+
+admin.site.register(TrackedClick)
+
+
+class TrackedClickAdmin(admin.ModelAdmin):
+    search_fields = ['referrer_domain']
