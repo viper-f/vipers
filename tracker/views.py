@@ -141,7 +141,11 @@ def charts(request):
             data4['datasets'][n]['label'] = db_datum[1].strftime("%Y-%m-%d %H:%M")
             data4['datasets'][n]['data'] = [0] * 24
             n += 1
-        data4['datasets'][indexes[db_datum[0]]]['data'][hours.index(int(db_datum[2]))] = db_datum[3] + 3
+
+        t = int(db_datum[2]) + 3
+        if t >= 24:
+            t = t - 24
+        data4['datasets'][indexes[db_datum[0]]]['data'][hours.index(t)] = db_datum[3]
 
 
 
