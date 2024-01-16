@@ -1,13 +1,21 @@
-<div>
-  <canvas id="totalPieChart"></canvas>
-  <canvas id="dailyLineChart"></canvas>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2 class="title-section">Статистика кликов</h2>
+
+<div style="display: grid; grid-template-columns: 47% 47%; justify-content: space-between; justify-items: center; grid-row-gap: 1em;">
+  <div><canvas id="totalPieChart"></canvas></div>
+  <div><canvas id="refererPieChart"></canvas></div>
 </div>
+<canvas id="dailyLineChart"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   const ctx1 = document.getElementById('totalPieChart');
+  const ctx3 = document.getElementById('refererPieChart');
   const ctx2 = document.getElementById('dailyLineChart');
+
 {% autoescape off %}
 const data1 = {{ data1 }};
 {% endautoescape %}
@@ -23,11 +31,33 @@ const data1 = {{ data1 }};
       },
       title: {
         display: true,
-        text: 'Total click number for each bot run'
+        text: 'Total click number for each bot run (last 7 days)'
       }
     }
   },
 });
+
+{% autoescape off %}
+const data3 = {{ data3 }};
+{% endautoescape %}
+
+  new Chart(ctx3, {
+  type: 'pie',
+  data: data3,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Total click number by origin (last 7 days)'
+      }
+    }
+  },
+});
+
 
 
 {% autoescape off %}
@@ -52,3 +82,4 @@ const data2 = {{ data2 }};
   },
 });
 </script>
+{% endblock %}
