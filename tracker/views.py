@@ -121,8 +121,13 @@ def charts(request):
         cursor.execute(sql)
         db_data = cursor.fetchall()
 
-    for i in range(0, 25):
-        data4['labels'].append(i)
+    hours = []
+    for i in range(0, 24):
+        hours.append(i)
+        c = i+1
+        if c == 24:
+            c = 0
+        data4['labels'].append(str(i)+ ':00 - ' + str(c) + ':00')
 
     n = 0
     indexes = {}
@@ -134,10 +139,9 @@ def charts(request):
                 'data': []
             })
             data4['datasets'][n]['label'] = db_datum[1].strftime("%Y-%m-%d %H:%M")
-            data4['datasets'][n]['data'] = [0] * 7
+            data4['datasets'][n]['data'] = [0] * 24
             n += 1
-        print(int(db_datum[2]))
-        data4['datasets'][indexes[db_datum[0]]]['data'][data4['labels'].index(int(db_datum[2]))] = db_datum[3]
+        data4['datasets'][indexes[db_datum[0]]]['data'][hours.index(int(db_datum[2]))] = db_datum[3] + 3
 
 
 
