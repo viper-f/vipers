@@ -62,8 +62,9 @@ class AdvertiserV2:
     def load_templates(self, ids):
         templates = AdTemplate.objects.filter(id__in=ids)
         template_dict = {}
+        session = BotSession.objects.filter(session_id=self.session_id).first()
         for template in templates:
-            code = template.code.replace('{session_id}', str(self.session_id))
+            code = template.code.replace('{session_id}', str(session.id))
             template_dict[template.id] = {
                 'code': code,
                 'sample': self.sample_template(template.code)
