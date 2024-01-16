@@ -30,19 +30,10 @@ const data1 = {{ data1 }};
 });
 
 
-const data2 = {
-  labels: ['2023-12-25', '2023-12-26'],
-  datasets: [
-    {
-      label: 'Dec 24, 12:15',
-      data: [{x: '2023-12-25', y: 20}, {x: '2023-12-26', y: 10}],
-    },
-    {
-    label: 'Dec 24, 23:45',
-      data: [{x: '2023-12-25', y: 2}, {x: '2023-12-26', y: 26}],
-    }
-  ]
-};
+{% autoescape off %}
+const data2 = {{ data2 }};
+{% endautoescape %}
+
 
  new Chart(ctx2, {
   type: 'line',

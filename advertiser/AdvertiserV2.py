@@ -63,8 +63,9 @@ class AdvertiserV2:
         templates = AdTemplate.objects.filter(id__in=ids)
         template_dict = {}
         for template in templates:
+            code = template.code.replace('{session_id}', str(self.session_id))
             template_dict[template.id] = {
-                'code': template.code,
+                'code': code,
                 'sample': self.sample_template(template.code)
             }
         for tid in ids:
