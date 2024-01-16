@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<h2 class="title-section">Модифицировать шаблон для трэкинга</h2>
+
+<textarea id="input" rows="10" class="sul-text-field"></textarea>
+<input type="submit" class="sul-btn" onclick="modify()" value="Modify">
+
+<div style="margin-top: 1em; overflow-x: scroll;"><pre id="modified"></pre></div>
+
+<script>
+    function replace_urls(url)
+    {
+       return 'test'
+    }
+
+    function modify()
+    {
+        code = document.getElementById('input').value
+        modified = document.getElementById('modified')
+
+        code = code.replace(/\[url=[^\]]*\]/g, function (){
+            s = arguments[0]
+            url = s.slice(5, -1)
+            return '[url=https://frpgtools.com/tracker/track?id={session_id}&rd='+encodeURIComponent(url)+']'
+        })
+        modified.innerText = code
+    }
+</script>
+{% endblock %}

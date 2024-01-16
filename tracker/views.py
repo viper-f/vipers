@@ -157,3 +157,13 @@ def charts(request):
                           {"link": "/tracker/charts", "name": "Трэкинг"},
                       ]
                   })
+
+
+def modify(request):
+    return render(request, "tracker/modify.html",
+                  {
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/tracker/modify", "name": "Шаблон для трэкинга"},
+                      ]
+                  })
