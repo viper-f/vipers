@@ -19,6 +19,7 @@ def track(request):
         session_id = int(request.GET['id'])
     except:
         session_id = None
+    rd = request.GET['rd']
     c = TrackedClick(
         click_time=make_aware(datetime.today()),
         referrer=referrer,
@@ -27,7 +28,7 @@ def track(request):
         session_id=session_id
     )
     c.save()
-    return HttpResponseRedirect('https://kingscross.f-rpg.me')
+    return HttpResponseRedirect(rd)
 
 def charts(request):
     now = datetime.utcnow()
