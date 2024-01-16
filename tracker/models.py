@@ -5,7 +5,6 @@ import advertiser.models
 
 class TrackedClick(models.Model):
     click_time = models.DateTimeField()
-    referrer_domain = models.CharField(max_length=200)
     referrer = models.CharField(max_length=200)
     user_ip = models.CharField(max_length=50, default=None, blank=True, null=True)
     user_client = models.CharField(max_length=300, default=None, blank=True, null=True)

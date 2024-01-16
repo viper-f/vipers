@@ -13,7 +13,6 @@ def track(request):
         referrer = request.META['HTTP_REFERER']
     except:
         referrer = ''
-    domain = referrer.split('/')[0]
     ip = request.META['REMOTE_ADDR']
     client = request.META['HTTP_USER_AGENT']
     try:
@@ -22,7 +21,6 @@ def track(request):
         session_id = None
     c = TrackedClick(
         click_time=make_aware(datetime.today()),
-        referrer_domain=domain,
         referrer=referrer,
         user_ip=ip,
         user_client=client,
