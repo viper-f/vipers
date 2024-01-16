@@ -74,7 +74,6 @@ def charts(request):
 
     for db_datum in db_data:
         if db_datum[0] not in indexes:
-            print(db_datum[0])
             indexes[db_datum[0]] = n
             data2['datasets'].append({
                 'data': []
@@ -109,6 +108,37 @@ def charts(request):
         data3['datasets'][0]['data'].append(db_datum[1])
 
 
+    # chart 4
+
+    data4 = {
+        'labels': [],
+        'datasets': []
+    }
+
+    sql = "SELECT b.id, b.time_start, DATE_PART('hour', t.click_time), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
+        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time);"
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        db_data = cursor.fetchall()
+
+    for i in range(0, 25):
+        data4['labels'].append(i)
+
+    n = 0
+    indexes = {}
+
+    for db_datum in db_data:
+        if db_datum[0] not in indexes:
+            indexes[db_datum[0]] = n
+            data4['datasets'].append({
+                'data': []
+            })
+            data4['datasets'][n]['label'] = db_datum[1].strftime("%Y-%m-%d %H:%M")
+            data4['datasets'][n]['data'] = [0] * 7
+            n += 1
+        print(int(db_datum[2]))
+        data4['datasets'][indexes[db_datum[0]]]['data'][data4['labels'].index(int(db_datum[2]))] = db_datum[3]
+
 
 
     return render(request, "tracker/charts.html",
@@ -116,6 +146,7 @@ def charts(request):
                       'data1': json.dumps(data1),
                       'data2': json.dumps(data2),
                       'data3': json.dumps(data3),
+                      'data4': json.dumps(data4),
                       "breadcrumbs": [
                           {"link": "/", "name": "Главная"},
                           {"link": "/tracker/charts", "name": "Трэкинг"},

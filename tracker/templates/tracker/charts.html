@@ -8,6 +8,7 @@
   <div><canvas id="refererPieChart"></canvas></div>
 </div>
 <canvas id="dailyLineChart"></canvas>
+<canvas id="hourlyLineChart"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -15,6 +16,7 @@
   const ctx1 = document.getElementById('totalPieChart');
   const ctx3 = document.getElementById('refererPieChart');
   const ctx2 = document.getElementById('dailyLineChart');
+  const ctx4 = document.getElementById('hourlyLineChart');
 
 {% autoescape off %}
 const data1 = {{ data1 }};
@@ -76,7 +78,29 @@ const data2 = {{ data2 }};
       },
       title: {
         display: true,
-        text: 'Chart.js Line Chart'
+        text: 'Number of clicks per day for each bot run (last 7 days)'
+      }
+    }
+  },
+});
+
+{% autoescape off %}
+const data4 = {{ data4 }};
+{% endautoescape %}
+
+
+ new Chart(ctx4, {
+  type: 'line',
+  data: data4,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Number of clicks during day hour for each bot run (combined for last 7 days)'
       }
     }
   },
