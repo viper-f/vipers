@@ -49,7 +49,7 @@ def charts(request):
         ]
     }
 
-    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start ORDER BY b.time_start DESC"
+    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -65,7 +65,7 @@ def charts(request):
     }
 
     sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start DESC"
+        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -121,7 +121,7 @@ def charts(request):
     }
 
     sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_PART('hour', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start DESC"
+        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
