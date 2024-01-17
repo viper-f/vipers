@@ -1,6 +1,7 @@
 import copy
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
 from django.http import HttpResponseRedirect
 from django.utils.timezone import make_aware
 from django.db import connection
@@ -33,6 +34,9 @@ def track(request):
 def charts(request):
     now = datetime.utcnow()
     week_ago = datetime.utcnow() - timedelta(days=7)
+    timezone_offset = +3.0
+    tzinfo = timezone(timedelta(hours=timezone_offset))
+    moscow_now = datetime.now(tzinfo)
 
     # chart 1
 
@@ -67,7 +71,7 @@ def charts(request):
         db_data = cursor.fetchall()
 
     for i in reversed(range(0, 7)):
-        t = now - timedelta(days=i)
+        t = moscow_now - timedelta(days=i)
         data2['labels'].append(t.strftime("%Y-%m-%d"))
 
     n = 0
@@ -83,6 +87,7 @@ def charts(request):
             data2['datasets'][n]['data'] = [0] * 7
             n += 1
         data2['datasets'][indexes[db_datum[0]]]['data'][data2['labels'].index(db_datum[2].strftime("%Y-%m-%d"))] = db_datum[3]
+        data2['datasets'].sort(key=lambda x: x['label'], reverse=True)
 
     # chart 3
 
@@ -144,6 +149,7 @@ def charts(request):
             n += 1
 
         data4['datasets'][indexes[db_datum[0]]]['data'][hours.index(db_datum[2])] = db_datum[3]
+        data4['datasets'].sort(key=lambda x: x['label'], reverse=True)
 
 
 
