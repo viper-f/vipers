@@ -49,7 +49,7 @@ def charts(request):
         ]
     }
 
-    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start"
+    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start ORDER BY b.time_start DESC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -65,7 +65,7 @@ def charts(request):
     }
 
     sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow');"
+        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start DESC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -87,7 +87,6 @@ def charts(request):
             data2['datasets'][n]['data'] = [0] * 7
             n += 1
         data2['datasets'][indexes[db_datum[0]]]['data'][data2['labels'].index(db_datum[2].strftime("%Y-%m-%d"))] = db_datum[3]
-        data2['datasets'].sort(key=lambda x: x['label'], reverse=True)
 
     # chart 3
 
@@ -101,7 +100,7 @@ def charts(request):
     }
 
     sql = "SELECT referrer, COUNT(*) FROM tracker_trackedclick AS t WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY referrer;"
+        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY referrer ORDER BY referrer ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -122,7 +121,7 @@ def charts(request):
     }
 
     sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_PART('hour', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow');"
+        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start DESC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -149,7 +148,6 @@ def charts(request):
             n += 1
 
         data4['datasets'][indexes[db_datum[0]]]['data'][hours.index(db_datum[2])] = db_datum[3]
-        data4['datasets'].sort(key=lambda x: x['label'], reverse=True)
 
 
 
