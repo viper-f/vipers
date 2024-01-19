@@ -87,30 +87,6 @@ def charts(request):
             n += 1
         data2['datasets'][indexes[db_datum[0]]]['data'][data2['labels'].index(db_datum[2].strftime("%Y-%m-%d"))] = db_datum[3]
 
-    # chart 3
-
-    data3 = {
-        'labels': [],
-        'datasets': [
-            {
-                'data': [],
-            }
-        ]
-    }
-
-    sql = "SELECT referrer, COUNT(*) FROM tracker_trackedclick AS t WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY referrer ORDER BY referrer ASC"
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        db_data = cursor.fetchall()
-    for db_datum in db_data:
-        if db_datum[0] == '':
-            text = 'Unknown'
-        else:
-            text = db_datum[0]
-        data3['labels'].append(text)
-        data3['datasets'][0]['data'].append(db_datum[1])
-
 
     # chart 4
 
@@ -149,12 +125,25 @@ def charts(request):
         data4['datasets'][indexes[db_datum[0]]]['data'][hours.index(db_datum[2])] = db_datum[3]
 
 
+    # List
+
+
+
+    sql = ("SELECT split_part(RTRIM(referrer, '/'),'?', 1) as r, COUNT(*) as c, ROUND(AVG(a.activity), 1) as av FROM tracker_trackedclick AS t "
+           "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
+           "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
+           "WHERE t.click_time >= TO_DATE('"
+           + week_ago.strftime("%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY r ORDER BY c DESC")
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        origins = cursor.fetchall()
+
 
     return render(request, "tracker/charts.html",
                   {
                       'data1': json.dumps(data1),
                       'data2': json.dumps(data2),
-                      'data3': json.dumps(data3),
+                      'origins': origins,
                       'data4': json.dumps(data4),
                       "breadcrumbs": [
                           {"link": "/", "name": "Главная"},

@@ -3,18 +3,32 @@
 {% block content %}
 <h2 class="title-section">Статистика кликов</h2>
 
-<div style="display: grid; grid-template-columns: 47% 47%; justify-content: space-between; justify-items: center; grid-row-gap: 1em;">
-  <div><canvas id="totalPieChart"></canvas></div>
-  <div><canvas id="refererPieChart"></canvas></div>
-</div>
+<div style="max-width: 300px"><canvas id="totalPieChart"></canvas></div>
 <canvas id="dailyLineChart"></canvas>
 <canvas id="hourlyLineChart"></canvas>
+
+<h2>Источники переходов за последние 7 дней</h2>
+<table id="origins">
+  <thead>
+  <th>Форум</th>
+  <th>Кликов</th>
+  <th>Средняя активность форума</th>
+  </thead>
+  <tbody>
+  {% for origin in origins %}
+  <tr>
+    {% for o in origin %}
+  <td style="text-align: right">{{ o }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   const ctx1 = document.getElementById('totalPieChart');
-  const ctx3 = document.getElementById('refererPieChart');
   const ctx2 = document.getElementById('dailyLineChart');
   const ctx4 = document.getElementById('hourlyLineChart');
 
@@ -38,28 +52,6 @@ const data1 = {{ data1 }};
     }
   },
 });
-
-{% autoescape off %}
-const data3 = {{ data3 }};
-{% endautoescape %}
-
-  new Chart(ctx3, {
-  type: 'pie',
-  data: data3,
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Total click number by origin (last 7 days)'
-      }
-    }
-  },
-});
-
 
 
 {% autoescape off %}
