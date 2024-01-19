@@ -21,6 +21,7 @@ class Forum(models.Model):
     def __str__(self):
         return self.domain
 
+
 class HomeForum(models.Model):
     name = models.CharField(max_length=100)
     domain = models.CharField(max_length=100, unique=True)
@@ -67,6 +68,7 @@ class BotSession(models.Model):
     visited = models.IntegerField(default=None, blank=True, null=True)
     success = models.IntegerField(default=None, blank=True, null=True)
     stop_signal = models.BooleanField(default=None, blank=True, null=True)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -84,7 +86,8 @@ class ScheduleItem(models.Model):
     type = models.CharField(max_length=10, default='ad')
     week_day = models.CharField(max_length=7)
     time_start = models.TimeField()
-    custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True, on_delete=models.SET_NULL)
+    custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True,
+                                           on_delete=models.SET_NULL)
     active = models.BooleanField(default=True)
     last_run = models.DateTimeField()
 
@@ -94,4 +97,11 @@ class WantedUpdate(models.Model):
     target_url = models.CharField(max_length=200)
     home_forum = models.ForeignKey(HomeForum, on_delete=models.CASCADE)
     target_post_id = models.IntegerField(default=None, blank=True, null=True)
-    custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True, on_delete=models.SET_NULL)
+    custom_credentials = models.ForeignKey(CustomCredentials, default=None, blank=True, null=True,
+                                           on_delete=models.SET_NULL)
+
+
+class ActivityRecord(models.Model):
+    forum = models.ForeignKey(Forum, on_delete=models.CASCADE)
+    activity = models.IntegerField()
+    day = models.DateField()
