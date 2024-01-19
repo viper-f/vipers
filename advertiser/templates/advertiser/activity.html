@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<table id="acitvity">
+<table id="activity">
     <thead>
     <tr>
         <th>Ссылка на форум</th>
@@ -11,7 +11,7 @@
     {% for record in records %}
     <tr>
         <td>{{ record.forum.domain }}</td>
-        <td>{{ record.activity }}</td>
+        <td style="text-align: center">{{ record.activity }}</td>
     </tr>
     {% endfor %}
     </tbody>

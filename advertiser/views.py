@@ -484,9 +484,10 @@ def forum_add(request):
                       })
 
 def activity_list(request):
-    max_day = ActivityRecord.objects.latest('day')
-    records = ActivityRecord.objects.filter(day=max_day, status='active').order_by('-activity')
-    return render(request, "advertiser/forum_add.html",
+    max_record = ActivityRecord.objects.latest('day')
+    max_day = max_record.day
+    records = ActivityRecord.objects.filter(day=max_day).order_by('-activity')
+    return render(request, "advertiser/activity.html",
                   {
                       "records": records,
                       "breadcrumbs": [
