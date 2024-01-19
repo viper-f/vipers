@@ -133,7 +133,7 @@ def charts(request):
            "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
            "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
            "WHERE t.click_time >= TO_DATE('"
-           + week_ago.strftime("%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY r ORDER BY c DESC")
+           + week_ago.strftime("%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY r, f.id ORDER BY c DESC")
     with connection.cursor() as cursor:
         cursor.execute(sql)
         origins = cursor.fetchall()
