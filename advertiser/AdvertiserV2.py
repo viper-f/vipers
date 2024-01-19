@@ -190,6 +190,8 @@ class AdvertiserV2:
         except SSLError as e:
             url = url.replace('https://', 'http://')
             text = requests.get(url).text
+        except:
+            return False, False
         try:
             data = json.loads(text)
         except:
