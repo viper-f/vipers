@@ -134,7 +134,7 @@ def charts(request):
     #        "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
     #        "WHERE t.click_time >= TO_DATE('"
     #        + week_ago.strftime("%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY r, f.id ORDER BY c DESC")
-    sql = ("SELECT f.id, split_part(RTRIM(referrer, '/'),'/viewtopic', 1) as r, 1 as c, a.activity as av FROM tracker_trackedclick AS t "
+    sql = ("SELECT DATE(t.click_time), split_part(RTRIM(referrer, '/'),'/viewtopic', 1) as r, 1 as c, a.activity as av FROM tracker_trackedclick AS t "
            "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
            "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
            "WHERE t.click_time >= TO_DATE('"
