@@ -129,7 +129,7 @@ def charts(request):
 
 
 
-    sql = ("SELECT split_part(RTRIM(referrer, '/'),'?', 1) as r, COUNT(*) as c, ROUND(SUM(a.activity), 1) as av FROM tracker_trackedclick AS t "
+    sql = ("SELECT f.id, split_part(RTRIM(referrer, '/'),'?', 1) as r, COUNT(*) as c, ROUND(AVG(a.activity), 1) as av FROM tracker_trackedclick AS t "
            "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
            "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
            "WHERE t.click_time >= TO_DATE('"
