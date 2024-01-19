@@ -32,7 +32,6 @@ def track(request):
     return HttpResponseRedirect(rd)
 
 def charts(request):
-    now = datetime.utcnow()
     week_ago = datetime.utcnow() - timedelta(days=7)
     timezone_offset = +3.0
     tzinfo = timezone(timedelta(hours=timezone_offset))

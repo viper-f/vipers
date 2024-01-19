@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<table id="acitvity">
+    <thead>
+    <tr>
+        <th>Ссылка на форум</th>
+        <th>Активность</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in records %}
+    <tr>
+        <td>{{ record.forum.domain }}</td>
+        <td>{{ record.activity }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

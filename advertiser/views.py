@@ -1,7 +1,7 @@
 import json
 import random
 import string
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.utils import timezone
@@ -15,7 +15,8 @@ from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemF
 from django.urls import reverse
 import subprocess
 
-from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession, ScheduleItem, Forum
+from .models import HomeForum, CustomCredentials, PartnerTopic, AdTemplate, BotSession, ScheduleItem, Forum, \
+    ActivityRecord
 from .restrictions import check_allowed
 from django.conf import settings
 
@@ -481,4 +482,16 @@ def forum_add(request):
                               {"link": "/advertiser/forum-add/", "name": "Добавить форум"}
                           ]
                       })
+
+def activity_list(request):
+    max_day = ActivityRecord.objects.latest('day')
+    records = ActivityRecord.objects.filter(day=max_day, status='active').order_by('-activity')
+    return render(request, "advertiser/forum_add.html",
+                  {
+                      "records": records,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/advertiser/activity", "name": "Активность форумов"}
+                      ]
+                  })
 

@@ -66,10 +66,10 @@ class ActivityChecker:
         #print("update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
 
         with connection.cursor() as cursor:
-            # cursor.execute(
-            #     "update advertiser_forum as forum set activity = c.activity, inactive_days = c.days from (values " + values + ") as c(activity, days, id) where c.id = forum.id;")
-            # cursor.execute(
-            #     "INSERT INTO advertiser_activityrecord (forum_id, activity, day) SELECT id, activity, CURRENT_DATE FROM advertiser_forum WHERE stop <> TRUE;")
+            cursor.execute(
+                "update advertiser_forum as forum set activity = c.activity, inactive_days = c.days from (values " + values + ") as c(activity, days, id) where c.id = forum.id;")
+            cursor.execute(
+                "INSERT INTO advertiser_activityrecord (forum_id, activity, day) SELECT id, activity, CURRENT_DATE FROM advertiser_forum WHERE stop <> TRUE;")
             cursor.execute(
                 "update advertiser_forum as forum set stop = c.is_dead from (values " + flags + ") as c(is_dead, id) where c.id = forum.id;")
 
