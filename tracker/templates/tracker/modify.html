@@ -19,7 +19,7 @@
         code = document.getElementById('input').value
         modified = document.getElementById('modified')
 
-        code = code.replace(/\[[^\]]*\]/g, function (){
+        code = code.replace(/\[url=[^\]]*\]/g, function (){
             s = arguments[0]
             url = s.slice(5, -1)
             return '[url=https://frpgtools.com/tracker/track?id={session_id}&rd='+encodeURIComponent(url)+']'
