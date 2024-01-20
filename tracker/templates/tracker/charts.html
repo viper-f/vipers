@@ -3,7 +3,13 @@
 {% block content %}
 <h2 class="title-section">Статистика кликов</h2>
 
-<div style="max-width: 300px"><canvas id="totalPieChart"></canvas></div>
+<div style="float: right">
+  <p>Общее количество кликов за 7 дней: {{ total }}</p>
+  <p>Среднее количестко кликов после прохода бота: {{ average }}</p>
+  <p>Максимальное количестко за день (последние 7 дней): {{ max_day }}</p>
+  <p>Минимальное количестко за день (последние 7 дней): {{ min_day }}</p>
+</div>
+<div style="max-height: 400px;"><canvas id="totalPieChart"></canvas></div>
 <canvas id="dailyLineChart"></canvas>
 <canvas id="hourlyLineChart"></canvas>
 
@@ -47,7 +53,7 @@ const data1 = {{ data1 }};
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: 'right',
       },
       title: {
         display: true,

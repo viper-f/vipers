@@ -1,5 +1,6 @@
 import copy
 import json
+import math
 from datetime import datetime, timedelta, timezone
 
 from django.http import HttpResponseRedirect
@@ -37,6 +38,10 @@ def charts(request, id, key=''):
     check_chart_access(request, id, key)
     link = request.build_absolute_uri()
     link += '/' + get_hash(id)
+    total = 0
+    average_per_run = 0
+    max_day = 0
+    min_day = 1000
 
 
 
@@ -63,6 +68,10 @@ def charts(request, id, key=''):
     for db_datum in db_data:
         data1['labels'].append(db_datum[0].strftime("%Y-%m-%d %H:%M"))
         data1['datasets'][0]['data'].append(db_datum[1])
+        total += db_datum[1]
+        average_per_run += db_datum[1]
+
+    average_per_run = math.floor(average_per_run / len(data1['labels']))
 
     # chart 2
 
@@ -94,6 +103,10 @@ def charts(request, id, key=''):
             data2['datasets'][n]['data'] = [0] * 7
             n += 1
         data2['datasets'][indexes[db_datum[0]]]['data'][data2['labels'].index(db_datum[2].strftime("%Y-%m-%d"))] = db_datum[3]
+        if (db_datum[3]) < min_day:
+            min_day = db_datum[3]
+        if (db_datum[3]) > max_day:
+            max_day = db_datum[3]
 
 
     # chart 4
@@ -158,6 +171,10 @@ def charts(request, id, key=''):
                       'origins': origins,
                       'data4': json.dumps(data4),
                       'link': link,
+                      'total': total,
+                      'average': average_per_run,
+                      'min_day': min_day,
+                      'max_day': max_day,
                       "breadcrumbs": [
                           {"link": "/", "name": "Главная"},
                           {"link": "/tracker/charts", "name": "Трэкинг"},
