@@ -8,6 +8,8 @@ from django.db import connection
 from tracker.models import TrackedClick
 from django.shortcuts import render
 
+from tracker.util import check_chart_access, get_hash
+
 
 def track(request):
     try:
@@ -31,7 +33,13 @@ def track(request):
     c.save()
     return HttpResponseRedirect(rd)
 
-def charts(request):
+def charts(request, id, key=''):
+    check_chart_access(request, id, key)
+    link = request.build_absolute_uri()
+    link += '/' + get_hash(id)
+
+
+
     week_ago = datetime.utcnow() - timedelta(days=7)
     timezone_offset = +3.0
     tzinfo = timezone(timedelta(hours=timezone_offset))
@@ -48,7 +56,7 @@ def charts(request):
         ]
     }
 
-    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start ORDER BY b.time_start ASC"
+    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -63,7 +71,7 @@ def charts(request):
         'datasets': []
     }
 
-    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
+    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
         "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
@@ -95,7 +103,7 @@ def charts(request):
         'datasets': []
     }
 
-    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_PART('hour', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
+    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_PART('hour', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
         "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
@@ -128,6 +136,7 @@ def charts(request):
     # List
 
     sql = ("SELECT split_part(RTRIM(referrer, '/'),'/viewtopic', 1) as r, COUNT(*) as c, ROUND(AVG(a.activity), 1) as av FROM tracker_trackedclick AS t "
+           "JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" "
            "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
            "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
            "WHERE t.click_time >= TO_DATE('"
@@ -148,6 +157,7 @@ def charts(request):
                       'data2': json.dumps(data2),
                       'origins': origins,
                       'data4': json.dumps(data4),
+                      'link': link,
                       "breadcrumbs": [
                           {"link": "/", "name": "Главная"},
                           {"link": "/tracker/charts", "name": "Трэкинг"},
