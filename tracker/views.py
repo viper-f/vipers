@@ -61,7 +61,7 @@ def charts(request, id, key=''):
         ]
     }
 
-    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= TO_DATE('"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"', '%Y-%m-%d %T') GROUP BY b.id, b.time_start ORDER BY b.time_start ASC"
+    sql = "SELECT b.time_start at time zone 'Europe/Moscow', COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= '"+week_ago.strftime("%Y-%m-%d %H:%M:%S")+"' GROUP BY b.id, b.time_start ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
