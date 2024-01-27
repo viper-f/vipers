@@ -80,13 +80,17 @@ def charts(request, id, key=''):
         'datasets': []
     }
 
-    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
+    print (week_ago.strftime("%Y-%m-%d %H:%M:%S"))
+
+    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= '" + week_ago.strftime(
+        "%Y-%m-%d %H:%M:%S") + "' GROUP BY b.id, b.time_start, DATE_TRUNC('day', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
 
-    for i in reversed(range(0, 8)):
+        print(db_data)
+
+    for i in reversed(range(0, 7)):
         t = moscow_now - timedelta(days=i)
         data2['labels'].append(t.strftime("%Y-%m-%d"))
 
@@ -116,8 +120,8 @@ def charts(request, id, key=''):
         'datasets': []
     }
 
-    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_PART('hour', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= TO_DATE('" + week_ago.strftime(
-        "%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
+    sql = "SELECT b.id, b.time_start at time zone 'Europe/Moscow', DATE_PART('hour', t.click_time at time zone 'Europe/Moscow'), COUNT(*) FROM tracker_trackedclick AS t JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" WHERE t.click_time >= '" + week_ago.strftime(
+        "%Y-%m-%d %H:%M:%S") + "' GROUP BY b.id, b.time_start, DATE_PART('hour', t.click_time at time zone 'Europe/Moscow') ORDER BY b.time_start ASC"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         db_data = cursor.fetchall()
@@ -152,8 +156,8 @@ def charts(request, id, key=''):
            "JOIN advertiser_botsession AS b ON b.id = t.session_id AND b.home_forum_id = "+str(id)+" "
            "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
            "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
-           "WHERE t.click_time >= TO_DATE('"
-           + week_ago.strftime("%Y-%m-%d %H:%M:%S") + "', '%Y-%m-%d %T') GROUP BY r, f.id ORDER BY c DESC")
+           "WHERE t.click_time >= '"
+           + week_ago.strftime("%Y-%m-%d %H:%M:%S") + "' GROUP BY r, f.id ORDER BY c DESC")
     # sql = ("SELECT DATE(t.click_time), split_part(RTRIM(referrer, '/'),'/viewtopic', 1) as r, 1 as c, a.activity as av FROM tracker_trackedclick AS t "
     #        "LEFT JOIN advertiser_forum AS f ON f.domain = split_part(RTRIM(t.referrer, '/'),'?', 1) "
     #        "LEFT JOIN advertiser_activityrecord AS a ON a.forum_id = f.id AND a.day = DATE(t.click_time) "
