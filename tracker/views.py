@@ -86,7 +86,7 @@ def charts(request, id, key=''):
         cursor.execute(sql)
         db_data = cursor.fetchall()
 
-    for i in reversed(range(0, 7)):
+    for i in reversed(range(0, 8)):
         t = moscow_now - timedelta(days=i)
         data2['labels'].append(t.strftime("%Y-%m-%d"))
 
