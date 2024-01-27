@@ -124,7 +124,7 @@ class AdvertiserV2:
         # link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         # user_id = link.split('=')[1]
         user_id = driver.execute_script('return UserID')
-        driver.get(base_url+'/login.php?action=out&id=' + user_id)
+        driver.get(base_url+'/login.php?action=out&id=' + str(user_id))
         WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.ID, "navlogin"))
         )
