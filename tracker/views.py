@@ -90,7 +90,7 @@ def charts(request, id, key=''):
 
         print(db_data)
 
-    for i in reversed(range(0, 7)):
+    for i in reversed(range(0, 8)):
         t = moscow_now - timedelta(days=i)
         data2['labels'].append(t.strftime("%Y-%m-%d"))
 
@@ -104,7 +104,7 @@ def charts(request, id, key=''):
                 'data': []
             })
             data2['datasets'][n]['label'] = db_datum[1].strftime("%Y-%m-%d %H:%M")
-            data2['datasets'][n]['data'] = [0] * 7
+            data2['datasets'][n]['data'] = [0] * 8
             n += 1
         data2['datasets'][indexes[db_datum[0]]]['data'][data2['labels'].index(db_datum[2].strftime("%Y-%m-%d"))] = db_datum[3]
         if (db_datum[3]) < min_day:
