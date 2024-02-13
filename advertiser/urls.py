@@ -18,5 +18,6 @@ urlpatterns = [
     path("history/<int:id>/<int:page>", views.history, name="history"),
     path("stop_session/<str:session_id>", views.stop_session, name="stop_session"),
     path("schedule/<int:id>", views.schedule, name="schedule"),
-    path("activity", views.activity_list, name="activity_list")
+    path("activity", views.activity_list, name="activity_list"),
+    path("activity/<int:id>", views.forum_activity, name="forum_activity")
 ]

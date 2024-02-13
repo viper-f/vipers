@@ -496,3 +496,17 @@ def activity_list(request):
                       ]
                   })
 
+def forum_activity(request, id):
+    forum = Forum.objects.get(pk=id)
+    records = ActivityRecord.objects.filter(forum=id).order_by('-day')
+    return render(request, "advertiser/forum_activity.html",
+                  {
+                      "records": records,
+                      "forum": forum,
+                      "breadcrumbs": [
+                          {"link": "/", "name": "Главная"},
+                          {"link": "/advertiser/activity", "name": "Активность форумов"},
+                          {"link": "/advertiser/activity/"+str(id), "name": "Активность форума "}
+                      ]
+                  })
+

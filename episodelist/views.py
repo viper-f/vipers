@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils.html import strip_tags
 
 from episodelist.calc_utils import get_category, get_category_text
-from episodelist.models import EpisodeListSettings
+from episodelist.models import EpisodeListSettings, Episode
 
 
 def index(request, forum_id, ids):
@@ -115,4 +115,15 @@ def post_count(request, forum_id, user_id, time, before):
         "before": before,
         "total": total,
         "new_total": before + total
+    })
+
+def episodelist(request, id):
+    episodes = Episode.objects.filter(list_id=id).order_by('category__weight')
+    episode_list = {}
+    for episode in episodes:
+        if episode.category.title not in episode_list:
+            episode_list[episode.category.title] = []
+        episode_list[episode.category.title].append(episode)
+    return render(request, "episodelist/episodelist.html", {
+        "list": episode_list
     })

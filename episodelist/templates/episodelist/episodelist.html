@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for category, episodes in list %}
+ <h2>{{ category }}</h2>
+<ul>
+    {%for episode in episodes %}
+    <li>
+        {% for character in episode.character_set.all %}
+        <img class="user-list-avatar" src="{{ character.avatar_url }}" />
+        {% endfor %}
+        <a href="{{ episode.url }}">{{ episode.title }}</a> | {{ episode.forum_name }}
+    </li>
+    {% endfor %}
+</ul>
+{% endfor %}
+</body>
+</html>
