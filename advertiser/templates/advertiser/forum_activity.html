@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {{ forum.domain }}
+  <canvas id="chart"></canvas>
 <table id="activity">
     <thead>
     <tr>
@@ -10,8 +11,6 @@
     </thead>
     <tbody>
     {% for record in records %}
-
-    <canvas id="chart"></canvas>
 
     <tr>
         <td>{{ record.day|date:"Y-m-d" }}</td>
