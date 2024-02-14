@@ -498,11 +498,22 @@ def activity_list(request):
 
 def forum_activity(request, id):
     forum = Forum.objects.get(pk=id)
-    records = ActivityRecord.objects.filter(forum=id).order_by('-day')
+    records = ActivityRecord.objects.filter(forum=id).order_by('-day').values("activity", "day")
+    data = {
+        "labels": [],
+        "datasets": [{
+            "data": [],
+            "label": "activity"
+        }]
+    }
+    for record in reversed(records):
+        data['labels'].append(record['day'].strftime('%Y-%m-%d'))
+        data['datasets'][0]['data'].append(record['activity'])
     return render(request, "advertiser/forum_activity.html",
                   {
                       "records": records,
                       "forum": forum,
+                      "data": data,
                       "breadcrumbs": [
                           {"link": "/", "name": "Главная"},
                           {"link": "/advertiser/activity", "name": "Активность форумов"},

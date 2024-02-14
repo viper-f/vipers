@@ -10,6 +10,9 @@
     </thead>
     <tbody>
     {% for record in records %}
+
+    <canvas id="chart"></canvas>
+
     <tr>
         <td>{{ record.day|date:"Y-m-d" }}</td>
         <td style="text-align: center">{{ record.activity }}</td>
@@ -17,4 +20,31 @@
     {% endfor %}
     </tbody>
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx1 = document.getElementById('chart');
+  {% autoescape off %}
+const data = {{ data }};
+{% endautoescape %}
+
+
+ new Chart(ctx1, {
+  type: 'line',
+  data: data,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Activity chart'
+      }
+    }
+  },
+});
+  </script>
 {% endblock %}
