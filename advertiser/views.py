@@ -530,7 +530,7 @@ def download_activity(request):
     for date in dates:
         fields.append("max(t.activity) filter (where day = '"+date.strftime('%Y-%m-%d')+"') as "+'"'+date.strftime('%Y-%m-%d')+'"')
     fields = ', '.join(fields)
-    query = "select domain, board_id, TO_CHAR(board_found, 'YYYY-MM-DD HH24:MM:SS'), "+fields+" from (select * from advertiser_activityrecord) t join advertiser_forum on advertiser_forum.id = t.forum_id group by forum_id, domain, board_id, board_found order by forum_id"
+    query = "select domain, board_id, board_found, "+fields+" from (select * from advertiser_activityrecord) t join advertiser_forum on advertiser_forum.id = t.forum_id group by forum_id, domain, board_id, board_found order by forum_id"
 
     #return HttpResponse(query)
 
