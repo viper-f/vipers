@@ -1,14 +1,14 @@
+import csv
 import json
 import random
 import string
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.utils import timezone
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.utils.timezone import make_aware
 
 from .forms import AdForm, PartnerForm, ForumForm, AdTemplateForm, ScheduleItemForm, HomeForumForm
@@ -520,4 +520,36 @@ def forum_activity(request, id):
                           {"link": "/advertiser/activity/"+str(id), "name": "Активность форума "}
                       ]
                   })
+
+
+
+def download_activity(request):
+    forum_id = ActivityRecord.objects.last().forum.id
+    dates = ActivityRecord.objects.filter(forum_id=forum_id).values_list('day', flat=True)
+    fields = []
+    for date in dates:
+        fields.append("max(t.activity) filter (where day = '"+date.strftime('%Y-%m-%d')+"') as "+'"'+date.strftime('%Y-%m-%d')+'"')
+    fields = ', '.join(fields)
+    query = "select domain, board_id, TO_CHAR(board_found, 'yyyy-mm-dd'), "+fields+" from (select * from advertiser_activityrecord) t join advertiser_forum on advertiser_forum.id = t.forum_id group by forum_id, domain, board_id, board_found order by forum_id"
+
+    #return HttpResponse(query)
+
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="forum_activity.csv"'},
+    )
+
+    writer = csv.writer(response)
+    writer.writerow(['Forum URL', 'Board ID', 'Forum Created',  'Date', 'Activity'])
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        row = 0
+        while row is not None:
+            row = cursor.fetchone()
+            if row is None:
+                break
+            writer.writerow(row)
+
+    return response
 
