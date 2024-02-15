@@ -530,7 +530,7 @@ def download_activity(request):
     for date in dates:
         fields.append("max(t.activity) filter (where day = '"+date.strftime('%Y-%m-%d')+"') as "+'"'+date.strftime('%Y-%m-%d')+'"')
     fields = ', '.join(fields)
-    query = "select domain, board_id, board_found, "+fields+" from (select * from advertiser_activityrecord) t join advertiser_forum on advertiser_forum.id = t.forum_id group by forum_id, domain, board_id, board_found order by forum_id"
+    query = "select domain, board_id, to_char(to_timestamp(board_found), 'yyyy-mm-dd hh24:ii:ss'), "+fields+" from (select * from advertiser_activityrecord) t join advertiser_forum on advertiser_forum.id = t.forum_id group by forum_id, domain, board_id, board_found order by forum_id"
 
     #return HttpResponse(query)
 
@@ -540,7 +540,7 @@ def download_activity(request):
     )
 
     writer = csv.writer(response)
-    writer.writerow(['Forum URL', 'Board ID', 'Forum Created',  'Date', 'Activity'])
+    writer.writerow(['Forum URL', 'Board ID', 'Forum Created']+list(dates))
 
     with connection.cursor() as cursor:
         cursor.execute(query)
