@@ -524,7 +524,9 @@ def forum_activity(request, id):
 
 
 def download_activity(request):
-    forum_id = ActivityRecord.objects.last().forum.id
+    with connection.cursor() as cursor:
+        cursor.execute('select forum_id, count(*) as c from advertiser_activityrecord group by forum_id order by c desc limit 1')
+        forum_id = cursor.fetchone()[0]
     dates = ActivityRecord.objects.filter(forum_id=forum_id).values_list('day', flat=True)
     fields = []
     for date in dates:
