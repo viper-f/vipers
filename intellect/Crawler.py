@@ -1,6 +1,5 @@
 import json
 import os
-import urllib
 from datetime import datetime
 import sys
 import tensorflow as tf
@@ -14,6 +13,7 @@ from bs4 import BeautifulSoup
 sys.path.insert(0, './../vipers')
 import vipers
 import django
+
 django.setup()
 from advertiser.models import Forum
 from intellect.models import Page, CrawlSession
@@ -27,10 +27,8 @@ class Crawler:
         self.session_id = session_id
         self.channel = channel
         self.group_name = 'comm_' + session_id
-        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
+        self.model = tf.keras.models.load_model(str(settings.BASE_DIR) + '/topic_model')
         self.dead_included = dead_included
-
-
 
     def load_from_db(self):
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
@@ -193,12 +191,11 @@ class Crawler:
                 })
 
     def download_file(self, folder_path, url, forum_id):
-        file_path = folder_path + '/' + str(forum_id)+".html"
+        file_path = folder_path + '/' + str(forum_id) + ".html"
         with open(file_path, "wb") as f:
             r = requests.get(url)
             f.write(r.content)
         return file_path
-
 
     def work(self, session_id, folder_path):
         os.mkdir(folder_path)
@@ -224,9 +221,9 @@ class Crawler:
             n += 1
             visited += 1
 
-            forum_link = self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1])
+            forum_link = self.links[n][0] + '/viewforum.php?id=' + str(self.links[n][1])
             path = self.download_file(folder_path, forum_link, self.links[n][2])
-            topic_link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
+            topic_link = self.get_topic_url(self.links[n][0] + '/viewforum.php?id=' + str(self.links[n][1]))
             if not topic_link:
                 skipped += 1
                 topic_link = None
@@ -248,6 +245,5 @@ class Crawler:
                 verified=False
             )
             page.save()
-
 
         return visited, success

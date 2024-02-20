@@ -250,7 +250,7 @@ float: right;
 margin-left: 0.5rem
 }
 
-#session-history th, #activity th, #origins th {
+th {
     background: #ddd;
     padding: 0.3rem 1rem;
 }

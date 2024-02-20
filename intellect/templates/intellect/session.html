@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Crawling session {{ session_id }} from {{ session_date }}</h3>
+
+<table>
+    <thead>
+    <th>Verified</th>
+    <th>Domain</th>
+    <th>Page</th>
+    <th>Deducted Topic ID</th>
+    <th>Verified Topic ID</th>
+    <th>Actions</th>
+    </thead>
+    <tbody>
+    {% for record in records %}
+        <tr>
+            <td>{{ record.verified }}</td>
+            <td>{{ record.domain }}</td>
+            <td><a href="/intellect/page/{{ record.id }}" target="_blank">Open</a></td>
+            <td>{{ record.automatic_topic_id }}</td>
+            <td>{{ record.corrected_topic_id }}</td>
+            <td><a>Verify</a>/<a>Correct</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

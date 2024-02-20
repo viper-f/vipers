@@ -3,19 +3,47 @@ import subprocess
 import random
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.db import connection
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 
 from intellect.forms import CrawlerForm
-from intellect.models import CrawlSession
+from intellect.models import CrawlSession, Page
 
 
 def index(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect("/")
-    return render(request, "intellect/index.html")
-    
+
+    sql = ('select control_session_id, intellect_crawlsession.time_start, intellect_crawlsession.session_id, '
+           'count(*) as page_number, count(CASE WHEN verified THEN 1 END) as verified_number from intellect_page join '
+           'intellect_crawlsession on intellect_page.control_session_id = intellect_crawlsession.id group by '
+           'control_session_id, intellect_crawlsession.time_start, intellect_crawlsession.session_id order by '
+           'intellect_crawlsession.time_start desc limit 5')
+    records = []
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        columns = [x.name for x in cursor.description]
+        for row in cursor:
+            records.append(dict(zip(columns, row)))
+    return render(request, "intellect/index.html", {"records": records})
+
+
+def session(request, id):
+    session = CrawlSession.objects.get(pk=id)
+    pages = Page.objects.filter(control_session=session)
+    return render(request, "intellect/session.html", {
+        "session_id": session.session_id,
+        "session_date": session.time_start,
+        "records": pages
+    })
+def render_page(request, id):
+    page = Page.objects.get(pk=id)
+    f = open(page.file_path, "r", encoding="windows-1251")
+    content = f.read()
+    return HttpResponse(content)
+
 @login_required
 def crawler_form(request):
     #check_allowed(request, id)

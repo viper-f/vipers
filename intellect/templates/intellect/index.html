@@ -3,21 +3,26 @@
 
 <a href="/intellect/crawler-start">Начать кроулинг</a>
 
-<h3>Страницы</h3>
-<ul>
-    <li>Уникальных страниц:</li>
-    <li>Верифицированных страниц:</li>
-     <li>Страниц в последнем обходе: </li>
-     <li>Дата последнего обхода: </li>
-</ul>
+<h3>Crawling</h3>
+<table>
+    <thead>
+    <th>Session</th>
+    <th>Date</th>
+    <th>Page number</th>
+    <th>Verified number</th>
+    </thead>
+    <tbody>
+    {% for record in records %}
+    <tr>
+        <td><a href="/intellect/session/{{ record.control_session_id }}">{{ record.session_id }}</a></td>
+        <td>{{ record.time_start }}</td>
+        <td style="text-align: center">{{ record.page_number }}</td>
+        <td style="text-align: center">{{ record.verified_number }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
-<h3>Датасеты</h3>
-<ul>
-    <li>Страниц в последнем датасете:</li>
-    <li>Строк в последнем датасете:</li>
-    <li>Дата создания последнего датасета:</li>
-</ul>
 
-<a href="">Страницы</a>
-<a href="">Датасеты</a>
+
 {% endblock %}
