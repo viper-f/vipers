@@ -36,7 +36,7 @@ class TrainingSet(models.Model):
 
 class TrainingSetItem(models.Model):
     training_set = models.ForeignKey(TrainingSet, on_delete=models.DO_NOTHING)
-    page = models.ForeignKey(Page)
+    page = models.ForeignKey(Page, on_delete=models.DO_NOTHING)
     shuffled = models.BooleanField(default=False)
     input = models.TextField()
     label = models.TextField()
