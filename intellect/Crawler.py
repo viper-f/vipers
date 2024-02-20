@@ -1,4 +1,5 @@
 import json
+import os
 import urllib
 from datetime import datetime
 import sys
@@ -10,14 +11,12 @@ import re
 from requests.exceptions import SSLError
 from bs4 import BeautifulSoup
 
-from advertiser.AdvertiserV2 import AdvertiserV2
-from intellect.models import Page
-
 sys.path.insert(0, './../vipers')
 import vipers
 import django
 django.setup()
-from advertiser.models import Forum, BotSession
+from advertiser.models import Forum
+from intellect.models import Page, CrawlSession
 from django.conf import settings
 
 
@@ -44,7 +43,7 @@ class Crawler:
             self.links.append([forum.domain, forum.verified_forum_id, forum.id])
 
     def check_stop_signal(self):
-        session = BotSession.objects.filter(session_id=self.session_id).first()
+        session = CrawlSession.objects.filter(session_id=self.session_id).first()
         if session.stop_signal:
             return True
         else:
@@ -202,6 +201,7 @@ class Crawler:
 
 
     def work(self, session_id, folder_path):
+        os.mkdir(folder_path)
         print('Starting control at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         self.load_from_db()
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
@@ -225,7 +225,7 @@ class Crawler:
             visited += 1
 
             forum_link = self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1])
-            path = self.download_file(folder_path, forum_link)
+            path = self.download_file(folder_path, forum_link, self.links[n][2])
             topic_link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
             if not topic_link:
                 skipped += 1
@@ -238,7 +238,7 @@ class Crawler:
 
             page = Page(
                 domain=self.links[n][0],
-                forum=self.links[n][2],
+                forum_id=self.links[n][2],
                 subforum_id=self.links[n][1],
                 automatic_topic_url=topic_link,
                 automatic_topic_id=topic_id,
@@ -250,4 +250,4 @@ class Crawler:
             page.save()
 
 
-        return visited, success, self.links
+        return visited, success

@@ -54,7 +54,7 @@ def crawl_process(request):
         return render(request, "advertiser/stop.html")
 
     session_id = request.session['session_id']
-    dead_included = int(request.sesson['dead_included'])
+    dead_included = str(int(request.session['dead_included']))
 
     subprocess.Popen(["venv/bin/python", "intellect/crawler_process.py",
                       "-i", session_id,
