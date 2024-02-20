@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Bot run on {{ date }}</h3>
+
+<table>
+    <thead>
+    <th>Status</th>
+    <th>Domain</th>
+    <th>Page</th>
+    <th>Deduced url</th>
+    <th>Deducted Topic ID</th>
+    <th>Verified Topic ID</th>
+    <th>Actions</th>
+    </thead>
+    <tbody>
+    {% for record in records: %}
+        <tr>
+            <td>{{ record.status }}</td>
+            <td>{{ record.domain }}</td>
+            <td>{{ record.page_url }}</td>
+            <td>{{ record.deducted_url }}</td>
+            <td>{{ record.deducted_id }}</td>
+            <td>{{ record.verified_id }}</td>
+            <td><a>Verify</a>  <a>Change ID</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

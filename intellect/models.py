@@ -1,5 +1,7 @@
 from django.db import models
 
+from advertiser.models import Forum
+
 
 class CrawlSession(models.Model):
     session_id = models.CharField(max_length=100)
@@ -15,12 +17,13 @@ class CrawlSession(models.Model):
 
 class Page(models.Model):
     domain = models.CharField(max_length=100, unique=True)
-    automatic_page_url = models.CharField(max_length=200, unique=True)
+    forum = models.ForeignKey(Forum, on_delete=models.DO_NOTHING)
+    subforum_id = models.IntegerField()
+    automatic_topic_url = models.CharField(max_length=200, default=None, blank=True, null=True)
+    automatic_topic_id = models.IntegerField(default=None, blank=True, null=True)
+    corrected_topic_id = models.IntegerField(default=None, blank=True, null=True)
     file_path = models.CharField(max_length=200, unique=True)
-    topic_url = models.CharField(max_length=200, unique=True)
-    control_session = models.ForeignKey(CrawlSession)
-    automatic_result = models.CharField(max_length=100, unique=True)
-    corrected_page_url = models.CharField(max_length=200, unique=True)
+    control_session = models.ForeignKey(CrawlSession, on_delete=models.DO_NOTHING)
     verified = models.BooleanField(default=False)
 
 
@@ -32,7 +35,7 @@ class TrainingSet(models.Model):
 
 
 class TrainingSetItem(models.Model):
-    training_set = models.ForeignKey(TrainingSet)
+    training_set = models.ForeignKey(TrainingSet, on_delete=models.DO_NOTHING)
     page = models.ForeignKey(Page)
     shuffled = models.BooleanField(default=False)
     input = models.TextField()
@@ -43,7 +46,7 @@ class TrainingSetItem(models.Model):
 class TrainingSession(models.Model):
     time_start = models.DateTimeField()
     time_end = models.DateTimeField(default=None, blank=True, null=True)
-    training_set = models.ForeignKey(TrainingSet)
+    training_set = models.ForeignKey(TrainingSet, on_delete=models.DO_NOTHING)
     accuracy = models.FloatField()
 
 

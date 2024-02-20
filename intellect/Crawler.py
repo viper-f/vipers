@@ -1,70 +1,47 @@
-from requests.exceptions import SSLError
-from selenium import webdriver
-from selenium.common import NoSuchDriverException, NoSuchElementException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-import re
-from asgiref.sync import async_to_sync
 import json
+import urllib
 from datetime import datetime
 import sys
 import tensorflow as tf
+from asgiref.sync import async_to_sync
 import numpy as np
 import requests
+import re
+from requests.exceptions import SSLError
 from bs4 import BeautifulSoup
 
 from advertiser.AdvertiserV2 import AdvertiserV2
+from intellect.models import Page
 
 sys.path.insert(0, './../vipers')
 import vipers
 import django
 django.setup()
-from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
+from advertiser.models import Forum, BotSession
 from django.conf import settings
 
 
-class Crawler (AdvertiserV2):
-    def __init__(self, user_dir="/home/root/vipers/profile", log_mode='console', channel=None, session_id=None):
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-gpu')
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        prefs = {"profile.managed_default_content_settings.images": 2}
-        options.add_experimental_option("prefs", prefs)
-        options.page_load_strategy = 'eager'
+class Crawler:
+    def __init__(self, log_mode='console', channel=None, session_id=None, dead_included=False):
         self.links = []
-        self.tracked = []
-        self.tracked_id = []
         self.log_mode = log_mode
         self.session_id = session_id
         self.channel = channel
         self.group_name = 'comm_' + session_id
-        self.home_base = ''
-        self.logged_in = False
-        self.custom_l = False
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
-        self.templates = []
-        self.forum_settings = {}
-
-        options.add_argument("user-data-dir=" + user_dir)
-        self.driver1 = webdriver.Chrome(options=options)
-        options.add_argument("user-data-dir=/home/root/vipers/profile")
-        self.driver2 = webdriver.Chrome(options=options)
+        self.dead_included = dead_included
 
 
 
-    def load_from_db(self, home_forum_id):
+    def load_from_db(self):
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Loading known data')
-        forums = Forum.objects.filter(stop=False).order_by("-activity")
+        if not self.dead_included:
+            forums = Forum.objects.filter(stop=False).order_by("-activity")
+        else:
+            forums = Forum.objects.all().order_by("-activity")
         for forum in forums:
-            if forum.id != home_forum_id:
-                self.links.append([forum.domain, forum.verified_forum_id, 'old', forum.board_id])
-            self.tracked.append(forum.domain)
-            self.tracked.append(forum.board_id)
+            self.links.append([forum.domain, forum.verified_forum_id, forum.id])
 
     def check_stop_signal(self):
         session = BotSession.objects.filter(session_id=self.session_id).first()
@@ -73,12 +50,160 @@ class Crawler (AdvertiserV2):
         else:
             return False
 
+    def get_topic_id(self, url):
+        parts_1 = url.split('&p')
+        parts_2 = parts_1[0].split('id=')
+        return int(parts_2[1])
+
+    def analize(self, url):
+        try:
+            html_text = requests.get(url).text
+        except SSLError as e:
+            url = url.replace('https://', 'http://')
+            html_text = requests.get(url).text
+        soup = BeautifulSoup(html_text, 'html.parser')
+        topics = []
+        topic_n = 0
+
+        max_message = 0
+        authors = {}
+
+        X = np.zeros(140)
+
+        for line in soup.css.select('tbody tr'):
+
+            topic = line.css.select('.tcl .tclcon a')
+            if not len(topic):
+                continue
+            else:
+                topic = topic[0]
+
+            topic_n += 1
+
+            if len(line.css.select('.tcr>a')):
+                last_post = line.css.select('.tcr>a')[0]
+                last_poster = line.css.select('.tcr .byuser')[0]
+                post_number = line.css.select('.tc2')[0]
+
+                if last_poster.text not in authors:
+                    authors[last_poster.text] = 0
+                authors[last_poster.text] += 1
+
+                if int(post_number.text) > max_message:
+                    max_message = int(post_number.text)
+
+                topics.append({
+                    'topic_url': topic['href'],
+                    'topic_title': topic.text,
+                    'poster_name': last_poster.text,
+                    'last_post': last_post.text,
+                    'last_page_url': last_post['href'],
+                    'number': topic_n,
+                    'post_number': int(post_number.text)
+                })
+            else:
+                topics.append({
+                    'topic_url': topic['href'],
+                    'topic_title': topic.text,
+                    'poster_name': '',
+                    'last_post': '',
+                    'last_page_url': '',
+                    'number': topic_n,
+                    'post_number': 0
+                })
+
+            if topic_n > 9:
+                break
+
+        max_author = 0
+        max_author_name = ''
+        for author in authors:
+            if authors[author] > max_author:
+                max_author = authors[author]
+                max_author_name = author
+
+        i = 0
+        for topic in topics:
+            X[i] = topic['number'] / topic_n
+            i += 1
+            X[i] = int('#' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int('№' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int(len(re.findall(r'([0-9]*[.]?[0-9])+', topic['topic_title'])) > 0)
+            i += 1
+            X[i] = int('ваш' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int('обмен' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int('реклам' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int('баннер' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int('pr' in topic['poster_name'].lower())
+            i += 1
+            X[i] = int('реклам' in topic['poster_name'].lower())
+            i += 1
+            X[i] = int('сегодня' in topic['last_post'].lower())
+            i += 1
+            X[i] = int('вчера' in topic['last_post'].lower())
+            i += 1
+            X[i] = int(topic['poster_name'] == max_author_name)
+            i += 1
+            X[i] = int(topic['post_number'] == max_message)
+            i += 1
+
+        return X, topics
+
+    def get_topic_url(self, url):
+        try:
+            X, data = self.analize(url)
+        except:
+            return False
+        prediction = self.model.predict(np.array([X]), verbose=0)
+        topic_url = False
+
+        max_v = -1
+        max_n = -1
+
+        for i in range(0, 9):
+            if prediction[0][i] > max_v:
+                max_v = prediction[0][i]
+                max_n = i
+        try:
+            topic_url = data[max_n]['last_page_url']
+        except:
+            pass
+        return topic_url
+
+    def log(self, total, success, skipped, visited, message):
+        if self.log_mode == 'console':
+            print('Total: ' + total + '; Success: ' + success + '; Message: ' + message)
+        if self.log_mode == 'channel':
+            async_to_sync(self.channel.group_send)(
+                self.group_name,
+                {
+                    'type': 'log_message',
+                    'message': json.dumps({
+                        "total": total,
+                        "visited": visited,
+                        "success": success,
+                        "skipped": skipped,
+                        "message": message
+                    }),
+                })
+
+    def download_file(self, folder_path, url, forum_id):
+        file_path = folder_path + '/' + str(forum_id)+".html"
+        with open(file_path, "wb") as f:
+            r = requests.get(url)
+            f.write(r.content)
+        return file_path
 
 
-
-    def work(self, url, id, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
+    def work(self, session_id, folder_path):
         print('Starting control at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
-        self.load_from_db(home_forum_id)
+        self.load_from_db()
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
                  message='Starting')
 
@@ -99,77 +224,30 @@ class Crawler (AdvertiserV2):
             n += 1
             visited += 1
 
-            link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
-            partner_domain = self.links[n][0]
-            print(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]) + ' - ' + str(link))
-            if not link:
+            forum_link = self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1])
+            path = self.download_file(folder_path, forum_link)
+            topic_link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
+            if not topic_link:
                 skipped += 1
+                topic_link = None
+                topic_id = None
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Could not find ad topic or load page: ' + self.links[n][0])
-                continue
-
-            try:
-                self.driver2.get(link)
-                assert self.driver2.current_url == link
-            except:
-                skipped += 1
-                self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Could not load page: ' + link)
-                continue
-
-            self.go_to_last_page(self.driver2)
-            total = len(self.links)
-
-            try:
-                code_partner = self.get_code(self.driver2)
-                if not self.validate_code(code_partner):
-                    skipped += 1
-                    self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message='Invalid code: ' + link)
-                    continue
-            except:
-                skipped += 1
-                self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='No code: ' + link)
-                continue
-
-            if partner_domain in custom_login_code:
-                logged_id = self.custom_login_code(self.driver2, link, custom_login_code[partner_domain])
             else:
-                logged_id = self.login(self.driver2, link)
+                topic_id = self.get_topic_id(topic_link)
 
-            if logged_id:
-                form = self.check_answer_form(self.driver2)
-                if form:
-                    self.post(self.driver1, code_partner)
-                    self_form = self.check_answer_form(self.driver1)
-                    cur_link = self.find_current_link(self.driver1)
+            page = Page(
+                domain=self.links[n][0],
+                forum=self.links[n][2],
+                subforum_id=self.links[n][1],
+                automatic_topic_url=topic_link,
+                automatic_topic_id=topic_id,
+                corrected_topic_id=None,
+                file_path=path,
+                control_session_id=session_id,
+                verified=False
+            )
+            page.save()
 
-                    full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
-                    success += 1
-                    self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message="Success: " + link)
 
-                    if not self_form:
-                        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                                 message='Your topic is over!')
-                        break
-                else:
-                    skipped += 1
-                    self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                             message='No message form: ' + link)
-                    continue
-            else:
-                skipped += 1
-                self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                         message='Not logged in: ' + link)
-                continue
-        if self.custom_l:
-            self.log_out(self.driver1,  self.home_base)
-        self.driver2.quit()
-        self.driver1.quit()
-
-        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
-                 message="Finished!")
         return visited, success, self.links

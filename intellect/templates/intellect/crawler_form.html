@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2 class="title-section">Пройти форумы</h2>
+
+<div id="bot-form" class="block sul-box-raised-2">
+    <form action="/intellect/new-crawl-session" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="sul-btn" value="OK">
+    </form>
+</div>
+{% endblock %}
