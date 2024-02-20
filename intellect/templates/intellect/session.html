@@ -15,14 +15,22 @@
     <tbody>
     {% for record in records %}
         <tr>
-            <td>{{ record.verified }}</td>
+            <td id="verified_{{ record.id }}">{{ record.verified }}</td>
             <td>{{ record.domain }}</td>
             <td><a href="/intellect/page/{{ record.id }}" target="_blank">Open</a></td>
             <td>{{ record.automatic_topic_id }}</td>
             <td>{{ record.corrected_topic_id }}</td>
-            <td><a>Verify</a>/<a>Correct</a></td>
+            <td><a onclick="verify({{ record.id }})">Verify</a>/<a>Correct</a></td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+
+<script>
+     function verify(id) {
+	    let verified = document.getElementById('verified_'+id)
+        fetch("/intellect/verify/"+id)
+        verified.innerHTML = "True"
+      }
+</script>
 {% endblock %}

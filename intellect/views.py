@@ -4,7 +4,7 @@ import random
 
 from django.contrib.auth.decorators import login_required
 from django.db import connection
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -38,15 +38,18 @@ def session(request, id):
         "session_date": session.time_start,
         "records": pages
     })
+
+
 def render_page(request, id):
     page = Page.objects.get(pk=id)
     f = open(page.file_path, "r", encoding="windows-1251")
     content = f.read()
     return HttpResponse(content)
 
+
 @login_required
 def crawler_form(request):
-    #check_allowed(request, id)
+    # check_allowed(request, id)
     if request.method == "POST":
         form = CrawlerForm(request.POST)
         if form.is_valid():
@@ -74,9 +77,10 @@ def crawler_form(request):
                           ]
                       })
 
+
 @login_required
 def crawl_process(request):
-   # check_allowed(request, forum_id)
+    # check_allowed(request, forum_id)
     active_sessions = CrawlSession.objects.filter(status='active')
     if len(active_sessions) > 0:
         return render(request, "advertiser/stop.html")
@@ -100,3 +104,8 @@ def crawl_process(request):
                   })
 
 
+def verify(request, id):
+    page = Page.objects.get(pk=id)
+    page.verified = True
+    page.save()
+    return JsonResponse({"verified": "True"})
