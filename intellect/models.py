@@ -31,16 +31,10 @@ class TrainingSet(models.Model):
     number_of_pages = models.IntegerField()
     number_of_items = models.IntegerField()
     date = models.DateTimeField()
+    control_session = models.ForeignKey(CrawlSession, on_delete=models.DO_NOTHING)
     folder_path = models.CharField(max_length=200, unique=True)
-
-
-class TrainingSetItem(models.Model):
-    training_set = models.ForeignKey(TrainingSet, on_delete=models.DO_NOTHING)
-    page = models.ForeignKey(Page, on_delete=models.DO_NOTHING)
+    shuffle_number = models.IntegerField()
     shuffled = models.BooleanField(default=False)
-    input = models.TextField()
-    label = models.TextField()
-    keys = models.TextField()
 
 
 class TrainingSession(models.Model):

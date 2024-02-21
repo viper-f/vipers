@@ -1,7 +1,11 @@
+import datetime
+from random import shuffle
+import pickle
+import tensorflow as tf
+import keras
 from bs4 import BeautifulSoup
-
 from intellect.Intellect import Intellect
-from intellect.models import Page
+from intellect.models import Page, TrainingSet, CrawlSession
 
 
 class Trainer:
@@ -21,14 +25,14 @@ class Trainer:
                 id = page.corrected_topic_id
             else:
                 id = page.automatic_topic_id
-            y = self.find_label(content, id, page.domain)
-            if y:
+            found, y = self.find_label(content, id, page.domain)
+            if found:
                 dataset.append(data)
                 labels.append(y)
-        #todo
+        return dataset, labels
 
     def find_label(self, html_text, id, domain):
-        url = domain + '/viewtopic.php?id='+str(id)
+        url = domain + '/viewtopic.php?id=' + str(id)
         soup = BeautifulSoup(html_text, 'html.parser')
         label_vector = []
         found = False
@@ -44,3 +48,82 @@ class Trainer:
                 label_vector.append(0)
             n += 1
         return found, label_vector
+
+    def shuffle_dataset(self, dataset, labels):
+        indexes = range(0, 140)
+        shuffle(indexes)
+        shuffle_data = []
+        shuffle_labels = []
+        for i in range(0, len(dataset)):
+            shuffled_datum = []
+            shuffled_label = []
+            for index in indexes:
+                shuffled_datum.append(dataset[i][index])
+                shuffled_label.append(labels[i][index])
+            shuffle_data.append(shuffled_datum)
+            shuffle_labels.append(shuffled_label)
+        return shuffle_data, shuffle_labels
+
+    def make_training_set(self, crawl_session_id, shuffle_number=3):
+        session = CrawlSession.objects.get(pk=id)
+        dataset, labels = self.form_dataset(crawl_session_id)
+        page_number = len(dataset)
+
+        if shuffle_number:
+            shuffled = True
+        else:
+            shuffled = False
+
+        for i in range(0, shuffle_number):
+            shuffle_data, shuffle_labels = self.shuffle_dataset(dataset, labels)
+            dataset += shuffle_data
+            labels += shuffle_labels
+
+        folder_path = './training_sets/' + session.session_id
+        with open(folder_path + '/dataset.pickle', 'wb') as output:
+            pickle.dump(dataset, output)
+        with open(folder_path + '/labels.pickle', 'wb') as output:
+            pickle.dump(labels, output)
+
+        set = TrainingSet(
+            number_of_pages=page_number,
+            number_of_items=len(dataset),
+            date=datetime.datetime,
+            control_session=crawl_session_id,
+            folder_path=folder_path,
+            shuffled=shuffled,
+            shuffle_number=shuffle_number
+        )
+        set.save()
+
+    def train(self, training_set_id):
+        set = TrainingSet.objects.get(pk=training_set_id)
+        with open(set.folder_path + '/dataset.pickle', 'rb') as output:
+            dataset = pickle.load(output)
+        with open(set.folder_path + '/labels.pickle', 'rb') as output:
+            labels = pickle.load(output)
+
+        training_dataset, test_dataset = dataset[:80, :], dataset[80:, :]
+        training_labels, test_labels = labels[:80, :], labels[80:, :]
+
+        model = self.model()
+        model.fit(training_dataset, training_labels, epochs=2000)
+        test_loss, test_acc = model.evaluate(test_dataset, test_labels)
+        print('\nTest accuracy: {}'.format(test_acc))
+
+    def model(self):
+        model = keras.Sequential([
+            keras.layers.Dense(name='layer_1', input_shape=(None, 140), units=100),
+            keras.layers.Dense(name='layer_2', input_shape=(None, 140), units=100),
+            keras.layers.Dense(name='layer_3', input_shape=(None, 140), units=100),
+            keras.layers.Dense(name='layer_4', input_shape=(None, 140), units=100),
+            keras.layers.Dense(name='layer_5', input_shape=(None, 140), units=100),
+            keras.layers.Dense(name='layer_6', input_shape=(None, 140), units=100),
+            keras.layers.Dense(name='layer_7', input_shape=(None, 10), units=100),
+        ])
+        model.summary()
+
+        model.compile(optimizer='adam',
+                      loss=tf.keras.losses.MeanAbsoluteError,
+                      metrics=[keras.metrics.Accuracy])
+        return model

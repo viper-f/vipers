@@ -107,3 +107,25 @@ class Intellect:
             i += 1
 
         return X, topics
+
+
+    def get_topic_url(self, url):
+        try:
+            X, data = self.analize(url)
+        except:
+            return False
+        prediction = self.model.predict(np.array([X]), verbose=0)
+        topic_url = False
+
+        max_v = -1
+        max_n = -1
+
+        for i in range(0, 9):
+            if prediction[0][i] > max_v:
+                max_v = prediction[0][i]
+                max_n = i
+        try:
+            topic_url = data[max_n]['last_page_url']
+        except:
+            pass
+        return topic_url
