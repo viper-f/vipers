@@ -23,7 +23,7 @@ class Intellect:
 
         X = np.zeros(140)
 
-        for line in soup.css.select('tbody tr'):
+        for line in soup.css.select('#pun-main tbody tr'):
 
             topic = line.css.select('.tcl .tclcon a')
             if not len(topic):

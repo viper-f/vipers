@@ -9,5 +9,6 @@ urlpatterns = [
     path("crawler-process", views.crawl_process, name="crawler_process"),
     path("session/<int:id>", views.session, name="session"),
     path("page/<int:id>", views.render_page, name="render_page"),
-    path("verify/<int:id>", views.verify, name="verify")
+    path("verify/<int:id>", views.verify, name="verify"),
+    path("dataset/generate/<int:id>", views.dataset_generate, name="dataset_generate")
 ]

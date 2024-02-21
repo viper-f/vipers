@@ -10,6 +10,7 @@
     <th>Date</th>
     <th>Page number</th>
     <th>Verified number</th>
+    <th>Dataset</th>
     </thead>
     <tbody>
     {% for record in records %}
@@ -18,6 +19,7 @@
         <td>{{ record.time_start }}</td>
         <td style="text-align: center">{{ record.page_number }}</td>
         <td style="text-align: center">{{ record.verified_number }}</td>
+        <td><a href="/intellect/dataset/generate/{{ record.control_session_id }}">Generate</a></td>
     </tr>
     {% endfor %}
     </tbody>

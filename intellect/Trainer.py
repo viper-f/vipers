@@ -1,6 +1,9 @@
-import datetime
+from django.utils import timezone
+import os
 from random import shuffle
 import pickle
+
+import numpy as np
 import tensorflow as tf
 import keras
 from bs4 import BeautifulSoup
@@ -19,7 +22,7 @@ class Trainer:
         for page in pages:
             f = open(page.file_path, "r", encoding="windows-1251")
             content = f.read()
-            data = self.intellect.analize(content, True)
+            data, translation = self.intellect.analize(content, True)
 
             if page.corrected_topic_id is not None:
                 id = page.corrected_topic_id
@@ -34,23 +37,21 @@ class Trainer:
     def find_label(self, html_text, id, domain):
         url = domain + '/viewtopic.php?id=' + str(id)
         soup = BeautifulSoup(html_text, 'html.parser')
-        label_vector = []
+        label_vector = np.zeros(10)
         found = False
         n = 0
-        for line in soup.css.select('tbody tr'):
-            if n >= 20:
+        for line in soup.css.select('#pun-main tbody tr'):
+            if n >= 10:
                 break
-            topic = line.css.select('.tcl>a')[0]
+            topic = line.css.select('td.tcl a')[0]
             if topic['href'] == url:
                 found = True
-                label_vector.append(1)
-            else:
-                label_vector.append(0)
+                label_vector[n] = 1
             n += 1
         return found, label_vector
 
     def shuffle_dataset(self, dataset, labels):
-        indexes = range(0, 140)
+        indexes = list(range(0, 10))
         shuffle(indexes)
         shuffle_data = []
         shuffle_labels = []
@@ -58,14 +59,15 @@ class Trainer:
             shuffled_datum = []
             shuffled_label = []
             for index in indexes:
-                shuffled_datum.append(dataset[i][index])
+                for j in range(0, 14):
+                    shuffled_datum.append(dataset[i][index+j])
                 shuffled_label.append(labels[i][index])
             shuffle_data.append(shuffled_datum)
             shuffle_labels.append(shuffled_label)
         return shuffle_data, shuffle_labels
 
     def make_training_set(self, crawl_session_id, shuffle_number=3):
-        session = CrawlSession.objects.get(pk=id)
+        session = CrawlSession.objects.get(pk=crawl_session_id)
         dataset, labels = self.form_dataset(crawl_session_id)
         page_number = len(dataset)
 
@@ -80,16 +82,18 @@ class Trainer:
             labels += shuffle_labels
 
         folder_path = './training_sets/' + session.session_id
+        os.mkdir(folder_path)
         with open(folder_path + '/dataset.pickle', 'wb') as output:
             pickle.dump(dataset, output)
         with open(folder_path + '/labels.pickle', 'wb') as output:
             pickle.dump(labels, output)
 
+        now = timezone.now()
         set = TrainingSet(
             number_of_pages=page_number,
             number_of_items=len(dataset),
-            date=datetime.datetime,
-            control_session=crawl_session_id,
+            date=now.isoformat(),
+            control_session_id=crawl_session_id,
             folder_path=folder_path,
             shuffled=shuffled,
             shuffle_number=shuffle_number

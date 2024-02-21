@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
+from intellect.Trainer import Trainer
 from intellect.forms import CrawlerForm
 from intellect.models import CrawlSession, Page
 
@@ -109,3 +110,8 @@ def verify(request, id):
     page.verified = True
     page.save()
     return JsonResponse({"verified": "True"})
+
+def dataset_generate(request, id):
+    trainer = Trainer()
+    trainer.make_training_set(id)
+    return JsonResponse({"done": "yes"})
