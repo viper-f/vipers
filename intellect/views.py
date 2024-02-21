@@ -45,6 +45,10 @@ def render_page(request, id):
     page = Page.objects.get(pk=id)
     f = open(page.file_path, "r", encoding="windows-1251")
     content = f.read()
+    content = content.replace('<body>', '<body><div id="page-scroller" style="z-index: 101; position: fixed;top: 0;left: 0; width: calc(100% - 2rem); background: #fff;text-align: center;box-shadow: 0 0 5px #ccc;padding: 1rem;font-size: 1.5rem;"><a style="float: left" href="">Назад</a><a style="float: right" href="">Вперед</a> Проверить форум</div><script>'
+                                        'function pageCheck(b, element) {console.log(element.querySelector("a[href]")); b.innerText = "V"}'
+                                        '</script>')
+    content = content.replace('<div class="tclcon">', '<div class="tclcon"><a style="cursor: pointer; color: green;padding: 3px;" onclick="pageCheck(this, this.parentElement)">=></a>')
     return HttpResponse(content)
 
 
