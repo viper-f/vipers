@@ -1,0 +1,13 @@
+<html>
+<body onload="redirect()">
+<script>
+    function redirect() {
+    pages = {{ pages }};
+    localStorage.setItem("pages", JSON.stringify(pages));
+    index = 1;
+    localStorage.setItem("index", index);
+    window.location = "/intellect/page/"+pages[0]
+    }
+</script>
+</body>
+</html>

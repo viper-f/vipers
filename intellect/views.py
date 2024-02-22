@@ -35,19 +35,32 @@ def session(request, id):
     session = CrawlSession.objects.get(pk=id)
     pages = Page.objects.filter(control_session=session)
     return render(request, "intellect/session.html", {
+        "id": id,
         "session_id": session.session_id,
         "session_date": session.time_start,
         "records": pages
     })
+
+def render_page_redirect(request, id):
+   # session = CrawlSession.objects.get(pk=id)
+    pages = list(Page.objects.filter(control_session_id=id).values_list('id', flat=True))
+    pages = ','.join(str(x) for x in pages)
+    pages = '[' + pages + ']'
+    return render(request, "intellect/page_redirect.html", {
+        "pages": pages
+    })
+
 
 
 def render_page(request, id):
     page = Page.objects.get(pk=id)
     f = open(page.file_path, "r", encoding="windows-1251")
     content = f.read()
-    content = content.replace('<body>', '<body><div id="page-scroller" style="z-index: 101; position: fixed;top: 0;left: 0; width: calc(100% - 2rem); background: #fff;text-align: center;box-shadow: 0 0 5px #ccc;padding: 1rem;font-size: 1.5rem;"><a style="float: left" href="">Назад</a><a style="float: right" href="">Вперед</a> Проверить форум</div><script>'
-                                        'function pageCheck(b, element) {console.log(element.querySelector("a[href]")); b.innerText = "V"}'
-                                        '</script>')
+    content = content.replace('<body>', '<body><div id="page-scroller" style="z-index: 101; position: fixed;top: 0;left: 0; width: calc(100% - 2rem); background: #fff;text-align: center;box-shadow: 0 0 5px #ccc;padding: 1rem;font-size: 1.5rem;"><a style="float: left; cursor: pointer" onclick="pageprev()">Назад</a><a style="float: right; cursor: pointer" onclick="pagenext()">Вперед</a> Проверить форум</div>\n<script>'
+                                        '\nfunction pageCheck(b, element) {console.log(element.querySelector("a[href]")); b.innerText = "V"}'
+                                        '\nfunction pageprev() {pages = JSON.parse(localStorage.getItem("pages")); index = parseInt(localStorage.getItem("index")); index -= 1; localStorage.setItem("index", index); window.location = "/intellect/page/"+pages[index];}'
+                                        '\nfunction pagenext() {pages = JSON.parse(localStorage.getItem("pages")); index = parseInt(localStorage.getItem("index")); index += 1; localStorage.setItem("index", index); window.location = "/intellect/page/"+pages[index];}'
+                                        '\n</script>')
     content = content.replace('<div class="tclcon">', '<div class="tclcon"><a style="cursor: pointer; color: green;padding: 3px;" onclick="pageCheck(this, this.parentElement)">=></a>')
     return HttpResponse(content)
 
