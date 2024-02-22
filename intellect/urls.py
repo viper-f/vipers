@@ -11,5 +11,6 @@ urlpatterns = [
     path("page_redirect/<int:id>", views.render_page_redirect, name="render_page_redirect"),
     path("page/<int:id>", views.render_page, name="render_page"),
     path("verify/<int:id>", views.verify, name="verify"),
+    path("correct/<int:page_id>/<str:topic_url>", views.correct_id, name="correct_id"),
     path("dataset/generate/<int:id>", views.dataset_generate, name="dataset_generate")
 ]
