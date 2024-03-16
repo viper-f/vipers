@@ -21,7 +21,7 @@ from django.conf import settings
 
 
 class Crawler:
-      log_mode='console', channel=None, session_id=None, dead_included=False):
+    def __init__(self, log_mode='console', channel=None, session_id=None, dead_included=False):
         self.links = []
         self.log_mode = log_mode
         self.session_id = session_id
