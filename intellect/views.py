@@ -57,9 +57,9 @@ def render_page(request, id):
     f = open(page.file_path, "r", encoding="windows-1251")
     content = f.read()
     content = content.replace('<body>', '<body><div id="page-scroller" style="z-index: 101; position: fixed;top: 0;left: 0; width: calc(100% - 2rem); background: #fff;text-align: center;box-shadow: 0 0 5px #ccc;padding: 1rem;font-size: 1.5rem;"><a style="float: left; cursor: pointer" onclick="pageprev()">Назад</a><a style="float: right; cursor: pointer" onclick="pagenext()">Вперед</a> Проверить форум</div>\n<script>'
-                                        '\nfunction pageCheck(b, element) {fetch("/intellect/correct/'+id+'/"+encodeURI(element.querySelector("a[href]")), { method: "GET" }).then(b.innerText = "V")}'
+                                        '\nfunction pageCheck(b, element) {console.log(element.querySelector("a[href]").href.split("=")[1]); fetch("/intellect/correct/'+str(id)+'/"+element.querySelector("a[href]").href.split("=")[1], { method: "GET" }).then(b.innerText = "V")}'
                                         '\nfunction pageprev() {pages = JSON.parse(localStorage.getItem("pages")); index = parseInt(localStorage.getItem("index")); index -= 1; localStorage.setItem("index", index); window.location = "/intellect/page/"+pages[index];}'
-                                        '\nfunction pagenext() {pages = JSON.parse(localStorage.getItem("pages")); index = parseInt(localStorage.getItem("index")); index += 1; localStorage.setItem("index", index); window.location = "/intellect/page/"+pages[index];}'
+                                        '\nfunction pagenext() {pages = JSON.parse(localStorage.getItem("pages")); index = parseInt(localStorage.getItem("index")); index += 1; if (pages.length <= index) {window.location = "/intellect"} else { localStorage.setItem("index", index); window.location = "/intellect/page/"+pages[index];}}'
                                         '\n</script>')
     content = content.replace('<div class="tclcon">', '<div class="tclcon"><a style="cursor: pointer; color: green;padding: 3px;" onclick="pageCheck(this, this.parentElement)">=></a>')
     return HttpResponse(content)
@@ -133,9 +133,9 @@ def dataset_generate(request, id):
     trainer.make_training_set(id)
     return JsonResponse({"done": "yes"})
 
-def correct_id(request, page_id, topic_url):
+def correct_id(request, page_id, topic_id):
     page = Page.objects.get(pk=page_id)
-    parts = topic_url.split('?id=')
-    page.corrected_topic_id = int(parts[1])
+    page.corrected_topic_id = topic_id
+    page.verified = True
     page.save()
     return JsonResponse({"corrected": "True"})
