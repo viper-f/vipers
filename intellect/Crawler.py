@@ -21,7 +21,7 @@ from django.conf import settings
 
 
 class Crawler:
-    def __init__(self, log_mode='console', channel=None, session_id=None, dead_included=False):
+      log_mode='console', channel=None, session_id=None, dead_included=False):
         self.links = []
         self.log_mode = log_mode
         self.session_id = session_id
@@ -50,7 +50,8 @@ class Crawler:
     def get_topic_id(self, url):
         parts_1 = url.split('&p')
         parts_2 = parts_1[0].split('id=')
-        return int(parts_2[1])
+        parts_3 = parts_2[1].split('#')
+        return int(parts_3[0])
 
     def analize(self, url):
         try:
