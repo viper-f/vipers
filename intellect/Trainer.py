@@ -138,5 +138,5 @@ class Trainer:
 
         model.compile(optimizer='adam',
                       loss=tf.keras.losses.MeanAbsoluteError,
-                      metrics=[keras.metrics.Accuracy])
+                      metrics=[keras.metrics.Accuracy()])
         return model
