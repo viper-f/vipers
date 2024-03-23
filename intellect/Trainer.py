@@ -24,11 +24,10 @@ class Trainer:
             content = f.read()
             data, translation = self.intellect.analize(content, True)
 
+            found, y = False, False
             if page.corrected_topic_id is not None:
                 id = page.corrected_topic_id
-            else:
-                id = page.automatic_topic_id
-            found, y = self.find_label(content, id, page.domain)
+                found, y = self.find_label(content, id, page.domain)
             if found:
                 dataset.append(data)
                 labels.append(y)
