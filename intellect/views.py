@@ -17,11 +17,7 @@ def index(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect("/")
 
-    sql = ('select control_session_id, intellect_crawlsession.time_start, intellect_crawlsession.session_id, '
-           'count(*) as page_number, count(CASE WHEN verified THEN 1 END) as verified_number from intellect_page join '
-           'intellect_crawlsession on intellect_page.control_session_id = intellect_crawlsession.id group by '
-           'control_session_id, intellect_crawlsession.time_start, intellect_crawlsession.session_id order by '
-           'intellect_crawlsession.time_start desc limit 5')
+    sql = ('select intellect_page.control_session_id, intellect_crawlsession.time_start, intellect_crawlsession.session_id, count(*) as page_number, count(CASE WHEN verified THEN 1 END) as verified_number, intellect_trainingset.id as training_set from intellect_page join intellect_crawlsession on intellect_page.control_session_id = intellect_crawlsession.id left join intellect_trainingset on intellect_trainingset.control_session_id = intellect_crawlsession.id group by intellect_page.control_session_id, intellect_crawlsession.time_start, intellect_crawlsession.session_id, intellect_trainingset.id order by intellect_crawlsession.time_start desc limit 5')
     records = []
     with connection.cursor() as cursor:
         cursor.execute(sql)
