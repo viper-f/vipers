@@ -128,10 +128,6 @@ def verify(request, id):
     page.save()
     return JsonResponse({"verified": "True"})
 
-def dataset_generate(request, id):
-    trainer = Trainer()
-    trainer.make_training_set(id)
-    return JsonResponse({"done": "yes"})
 
 def correct_id(request, page_id, topic_id):
     page = Page.objects.get(pk=page_id)
