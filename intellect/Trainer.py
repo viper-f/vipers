@@ -12,15 +12,21 @@ from intellect.models import Page, TrainingSet, CrawlSession
 
 
 class Trainer:
-    def __init__(self):
+    def __init__(self, root_path=False):
         self.intellect = Intellect()
+        if root_path:
+            self.root_path = root_path
 
     def form_dataset(self, crawl_session_id):
         pages = Page.objects.filter(control_session_id=crawl_session_id)
         dataset = []
         labels = []
         for page in pages:
-            f = open(page.file_path, "r", encoding="windows-1251")
+            if self.root_path:
+                path = page.file_path.replace('./pages', self.root_path+'/pages')
+            else:
+                path = page.file_path
+            f = open(path, "r", encoding="windows-1251")
             content = f.read()
             data, translation = self.intellect.analize(content, True)
 
@@ -80,7 +86,10 @@ class Trainer:
             dataset += shuffle_data
             labels += shuffle_labels
 
-        folder_path = './training_sets/' + session.session_id
+        if self.root_path:
+            folder_path = './../training_sets/' + session.session_id
+        else:
+            folder_path = './training_sets/' + session.session_id
         os.mkdir(folder_path)
         with open(folder_path + '/dataset.pickle', 'wb') as output:
             pickle.dump(dataset, output)
