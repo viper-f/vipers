@@ -126,13 +126,13 @@ class Trainer:
 
     def model(self):
         model = keras.Sequential([
-            keras.layers.Dense(name='layer_1', input_shape=(None, 150), units=100),
+            keras.layers.Dense(name='layer_1', input_shape=(None, 150), units=150),
             keras.layers.Dense(name='layer_2', input_shape=(None, 150), units=100),
             keras.layers.Dense(name='layer_3', input_shape=(None, 100), units=100),
             keras.layers.Dense(name='layer_4', input_shape=(None, 100), units=100),
-            keras.layers.Dense(name='layer_5', input_shape=(None, 50), units=100),
-            keras.layers.Dense(name='layer_6', input_shape=(None, 50), units=100),
-            keras.layers.Dense(name='layer_7', input_shape=(None, 10), units=100),
+            keras.layers.Dense(name='layer_5', input_shape=(None, 100), units=50),
+            keras.layers.Dense(name='layer_6', input_shape=(None, 50), units=10),
+            keras.layers.Dense(name='layer_7', input_shape=(None, 10), units=10),
         ])
         model.summary()
 
