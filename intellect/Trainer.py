@@ -115,8 +115,9 @@ class Trainer:
         with open(set.folder_path + '/labels.pickle', 'rb') as output:
             labels = pickle.load(output)
 
-        training_dataset, test_dataset = dataset[:80, :], dataset[80:, :]
-        training_labels, test_labels = labels[:80, :], labels[80:, :]
+        index = round(len(dataset) * 0.8)
+        training_dataset, test_dataset = dataset[:index], dataset[index:]
+        training_labels, test_labels = labels[:index], labels[index:]
 
         model = self.model()
         model.fit(training_dataset, training_labels, epochs=2000)
