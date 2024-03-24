@@ -13,7 +13,7 @@ from .forms import LoginForm, UserSettingsForm
 
 
 def index(request):
-    return render(request, "vipers/index.html", {"breadcrumbs": False})
+    return render(request, "vipers/index.html")
 
 @login_required
 def user_index(request):

@@ -1,3 +1,4 @@
+{% load filters %}
 <html>
 <head>
     <title>FRPG Tools</title>
@@ -51,7 +52,8 @@
     {% endfor %}
 </ul>
 {% endif %}
-    {% if breadcrumbs is not None %}
+    {% var_exists 'breadcrumbs' as breadcrumbs_exist %}
+    {% if breadcrumbs_exist %}
        {% include "breadcrumbs.html" %}
     {% endif %}
 
