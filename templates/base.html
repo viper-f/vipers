@@ -51,7 +51,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-    {% if breadcrumbs %}
+    {% if breadcrumbs is not None %}
        {% include "breadcrumbs.html" %}
     {% endif %}
 
