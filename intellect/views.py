@@ -1,16 +1,17 @@
+import os
 import string
 import subprocess
 import random
 
 from django.contrib.auth.decorators import login_required
 from django.db import connection
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 from django.urls import reverse
 
 from intellect.Trainer import Trainer
 from intellect.forms import CrawlerForm
-from intellect.models import CrawlSession, Page
+from intellect.models import CrawlSession, Page, TrainingSet
 
 
 def index(request):
@@ -131,3 +132,15 @@ def correct_id(request, page_id, topic_id):
     page.verified = True
     page.save()
     return JsonResponse({"corrected": "True"})
+
+def download_training_set(request, id, filename):
+    training_set = TrainingSet.objects.get(pk=id)
+    file_path = training_set.folder_path.replace('./..', './') + '/' + filename + '.pickle'
+    print(file_path)
+   # if os.path.exists(file_path):
+    with open(file_path, 'rb') as fh:
+        response = HttpResponse(fh.read(), content_type="application/octet-stream")
+        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+        return response
+   # else:
+   #      raise Http404

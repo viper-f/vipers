@@ -19,7 +19,9 @@
         <td>{{ record.time_start }}</td>
         <td style="text-align: center">{{ record.page_number }}</td>
         <td style="text-align: center">{{ record.verified_number }}</td>
-        <td style="text-align: center">{{ record.training_set }}</td>
+        <td style="text-align: center">{{ record.training_set }} <br />
+        <a href="/intellect/download/{{ record.training_set }}/dataset">Dataset</a>
+        <a href="/intellect/download/{{ record.training_set }}/labels">Labels</a></td>
     </tr>
     {% endfor %}
     </tbody>

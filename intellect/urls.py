@@ -11,5 +11,6 @@ urlpatterns = [
     path("page_redirect/<int:id>", views.render_page_redirect, name="render_page_redirect"),
     path("page/<int:id>", views.render_page, name="render_page"),
     path("verify/<int:id>", views.verify, name="verify"),
-    path("correct/<int:page_id>/<int:topic_id>", views.correct_id, name="correct_id")
+    path("correct/<int:page_id>/<int:topic_id>", views.correct_id, name="correct_id"),
+    path("download/<int:id>/<str:filename>", views.download_training_set, name="download")
 ]
