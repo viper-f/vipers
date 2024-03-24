@@ -1,3 +1,5 @@
+import shutil
+
 from django.utils import timezone
 import os
 from random import shuffle
@@ -64,12 +66,19 @@ class Trainer:
             shuffled_datum = []
             shuffled_label = []
             for index in indexes:
-                for j in range(0, 14):
+                for j in range(0, 15):
                     shuffled_datum.append(dataset[i][index+j])
                 shuffled_label.append(labels[i][index])
             shuffle_data.append(shuffled_datum)
             shuffle_labels.append(shuffled_label)
         return shuffle_data, shuffle_labels
+
+    def remake_training_set(self, crawl_session_id, shuffle_number=3):
+        session = CrawlSession.objects.get(pk=crawl_session_id)
+        folder_path = './../training_sets/' + session.session_id
+        shutil.rmtree(folder_path)
+        TrainingSet.objects.filter(control_session_id=crawl_session_id).delete()
+        self.make_training_set(crawl_session_id, shuffle_number)
 
     def make_training_set(self, crawl_session_id, shuffle_number=3):
         session = CrawlSession.objects.get(pk=crawl_session_id)
