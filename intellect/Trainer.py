@@ -108,11 +108,11 @@ class Trainer:
         )
         set.save()
 
-    def train(self, training_set_id):
-        set = TrainingSet.objects.get(pk=training_set_id)
-        with open(set.folder_path + '/dataset.pickle', 'rb') as output:
+    def train(self, folder_name):
+        folder_path = './../training_sets/'+folder_name
+        with open(folder_path + '/dataset.pickle', 'rb') as output:
             dataset = pickle.load(output)
-        with open(set.folder_path + '/labels.pickle', 'rb') as output:
+        with open(folder_path + '/labels.pickle', 'rb') as output:
             labels = pickle.load(output)
 
         index = round(len(dataset) * 0.8)

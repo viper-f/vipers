@@ -10,8 +10,8 @@ django.setup()
 from intellect.Trainer import Trainer
 
 parser = OptionParser()
-parser.add_option("-n", '--number', dest="number")
+parser.add_option("-n", '--name', dest="name")
 (options, args) = parser.parse_args()
 
 trainer = Trainer(root_path='./..')
-trainer.train(options.number)
+trainer.train(options.name)
