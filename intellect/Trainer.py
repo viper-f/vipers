@@ -67,7 +67,7 @@ class Trainer:
             shuffled_label = []
             for index in indexes:
                 for j in range(0, 15):
-                    shuffled_datum.append(dataset[i][index+j])
+                    shuffled_datum.append(dataset[i][index * 15 + j])
                 shuffled_label.append(labels[i][index])
             shuffle_data.append(shuffled_datum)
             shuffle_labels.append(shuffled_label)
