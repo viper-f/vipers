@@ -43,7 +43,7 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.custom_l = False
-        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/model/model-2024-03-24.keras')
+        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/models/model-2024-03-24.keras')
         self.templates = []
         self.forum_settings = {}
 
