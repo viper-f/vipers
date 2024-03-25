@@ -44,7 +44,7 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.custom_l = False
-        self.model = keras.models.load_model(str(settings.BASE_DIR)+'/topic_model_new.keras')
+        self.model = tf.saved_model.load(str(settings.BASE_DIR)+'/topic_model_new')
         self.templates = []
         self.forum_settings = {}
 
