@@ -1,4 +1,6 @@
-import keras
+import os
+
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 from requests.exceptions import SSLError
 from selenium import webdriver
 from selenium.common import NoSuchDriverException, NoSuchElementException
@@ -19,6 +21,7 @@ from bs4 import BeautifulSoup
 sys.path.insert(0, './../vipers')
 import vipers
 import django
+
 django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
 from django.conf import settings
@@ -44,7 +47,7 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.custom_l = False
-        self.model = tf.saved_model.load(str(settings.BASE_DIR)+'/topic_model_new')
+        self.model = tf.keras.models.load_model(str(settings.BASE_DIR) + '/topic_model_new')
         self.templates = []
         self.forum_settings = {}
 
@@ -53,12 +56,10 @@ class AdvertiserV2:
         options.add_argument("user-data-dir=/home/root/vipers/profile")
         self.driver2 = webdriver.Chrome(options=options)
 
-
     def load_forum_settings(self, home_forum_id):
         home_forum = HomeForum.objects.get(pk=home_forum_id)
         self.forum_settings['create_ad_topic'] = home_forum.create_ad_topic
         self.forum_settings['ad_topic_template'] = home_forum.ad_topic_template
-
 
     def load_templates(self, ids):
         templates = AdTemplate.objects.filter(id__in=ids)
@@ -73,13 +74,12 @@ class AdvertiserV2:
         for tid in ids:
             self.templates.append(template_dict[tid])
 
-
     def get_topic_url(self, url):
         try:
             X, data = self.analize(url)
         except:
             return False
-        prediction = self.model(np.array([X]))
+        prediction = self.model.predict(np.array([X]), verbose=0)
         topic_url = False
 
         max_v = -1
@@ -94,7 +94,6 @@ class AdvertiserV2:
         except:
             pass
         return topic_url
-
 
     def load_from_db(self, home_forum_id):
         self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
@@ -113,7 +112,6 @@ class AdvertiserV2:
         else:
             return False
 
-
     def check_cache_login(self, driver):
         try:
             driver.find_element(By.ID, "navlogout")
@@ -125,11 +123,10 @@ class AdvertiserV2:
         # link = driver.find_element(By.CSS_SELECTOR, "#navprofile a").get_attribute('href')
         # user_id = link.split('=')[1]
         user_id = driver.execute_script('return UserID')
-        driver.get(base_url+'/login.php?action=out&id=' + str(user_id))
+        driver.get(base_url + '/login.php?action=out&id=' + str(user_id))
         WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.ID, "navlogin"))
         )
-
 
     def log(self, total, success, skipped, visited, message):
         if self.log_mode == 'console':
@@ -180,7 +177,7 @@ class AdvertiserV2:
 
     def check_self_present(self, sample, driver):
         for img in sample:
-            el = driver.find_elements(By.CSS_SELECTOR, 'img[src="'+img+'"]')
+            el = driver.find_elements(By.CSS_SELECTOR, 'img[src="' + img + '"]')
             if not len(el):
                 return False
         return True
@@ -218,7 +215,6 @@ class AdvertiserV2:
                         id, found = self.get_board_id(track)
                         if id is not False and id not in self.tracked_id:
                             self.links.append([parts[0], 0, 'new', id, found])
-
 
     def login(self, driver, url):
         if self.check_cache_login(driver):
@@ -317,7 +313,7 @@ class AdvertiserV2:
             return False
         tarea.clear()
         driver.execute_script("arguments[0].value = arguments[1]", tarea, message)
-        #tarea.send_keys(message)
+        # tarea.send_keys(message)
         driver.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
         return True
 
@@ -461,12 +457,12 @@ class AdvertiserV2:
                 return False
             tarea.clear()
             self.driver1.execute_script("arguments[0].value = arguments[1]", title_field, new_title)
-            self.driver1.execute_script("arguments[0].value = arguments[1]", tarea, self.forum_settings['ad_topic_template'])
+            self.driver1.execute_script("arguments[0].value = arguments[1]", tarea,
+                                        self.forum_settings['ad_topic_template'])
             self.driver1.execute_script("document.querySelector('.punbb .formsubmit input.submit').click()")
             return True
         except:
             return False
-
 
     def work(self, url, id, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
@@ -504,7 +500,7 @@ class AdvertiserV2:
             return visited, success, self.links
 
         n = -1
-        #while n < 10:
+        # while n < 10:
         while n < len(self.links) - 1:
 
             if self.check_stop_signal():
@@ -517,9 +513,9 @@ class AdvertiserV2:
             link = self.links[n][0]
 
             if self.links[n][2] == 'old':
-                link = self.get_topic_url(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]))
+                link = self.get_topic_url(self.links[n][0] + '/viewforum.php?id=' + str(self.links[n][1]))
                 partner_domain = self.links[n][0]
-                print(self.links[n][0]+'/viewforum.php?id='+str(self.links[n][1]) + ' - ' + str(link))
+                print(self.links[n][0] + '/viewforum.php?id=' + str(self.links[n][1]) + ' - ' + str(link))
                 if not link:
                     skipped += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
@@ -581,12 +577,12 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    #self.post(self.driver1, code_partner)
+                    # self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    #self.post(self.driver2, full_code_home)
+                    # self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
@@ -606,7 +602,7 @@ class AdvertiserV2:
                          message='Not logged in: ' + link)
                 continue
         if self.custom_l:
-            self.log_out(self.driver1,  self.home_base)
+            self.log_out(self.driver1, self.home_base)
         self.driver2.quit()
         self.driver1.quit()
 
