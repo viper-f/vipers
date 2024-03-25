@@ -43,7 +43,7 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.custom_l = False
-        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model')
+        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/model/model-2024-03-24.keras')
         self.templates = []
         self.forum_settings = {}
 
@@ -578,12 +578,12 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
-                    self.post(self.driver1, code_partner)
+                    #self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    #self.post(self.driver2, full_code_home)
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
