@@ -79,7 +79,7 @@ class AdvertiserV2:
             X, data = self.analize(url)
         except:
             return False
-        prediction = self.model.predict(np.array([X]), verbose=0)
+        prediction = self.model(np.array([X]), verbose=0)
         topic_url = False
 
         max_v = -1
@@ -350,7 +350,7 @@ class AdvertiserV2:
         max_message = 0
         authors = {}
 
-        X = np.zeros(140)
+        X = np.zeros(150)
 
         for line in soup.css.select('tbody tr'):
 
@@ -421,6 +421,8 @@ class AdvertiserV2:
             X[i] = int('реклам' in topic['topic_title'].lower())
             i += 1
             X[i] = int('баннер' in topic['topic_title'].lower())
+            i += 1
+            X[i] = int(' от ' in topic['topic_title'].lower())
             i += 1
             X[i] = int('pr' in topic['poster_name'].lower())
             i += 1
