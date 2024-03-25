@@ -1,4 +1,5 @@
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 from requests.exceptions import SSLError
 from selenium import webdriver
