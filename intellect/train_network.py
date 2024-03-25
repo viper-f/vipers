@@ -4,9 +4,9 @@ from optparse import OptionParser
 sys.path.insert(0, os.path.abspath('./..'))
 import vipers
 
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
-django.setup()
+# import django
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
+# django.setup()
 from intellect.Trainer import Trainer
 
 parser = OptionParser()
