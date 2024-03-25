@@ -1,6 +1,5 @@
 import os
 
-os.environ["TF_USE_LEGACY_KERAS"] = "1"
 from requests.exceptions import SSLError
 from selenium import webdriver
 from selenium.common import NoSuchDriverException, NoSuchElementException
