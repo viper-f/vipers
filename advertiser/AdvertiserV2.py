@@ -79,7 +79,7 @@ class AdvertiserV2:
             X, data = self.analize(url)
         except:
             return False
-        prediction = self.model(np.array([X]), verbose=0)
+        prediction = self.model(np.array([X]))
         topic_url = False
 
         max_v = -1
