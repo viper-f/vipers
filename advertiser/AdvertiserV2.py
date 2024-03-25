@@ -12,6 +12,7 @@ from asgiref.sync import async_to_sync
 import json
 from datetime import datetime
 import sys
+import keras
 import tensorflow as tf
 import numpy as np
 import requests
@@ -46,7 +47,7 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.custom_l = False
-        self.model = tf.keras.models.load_model(str(settings.BASE_DIR) + '/topic_model_new.keras')
+        self.model = keras.models.load_model(str(settings.BASE_DIR) + '/topic_model_new.keras')
         self.templates = []
         self.forum_settings = {}
 
