@@ -26,7 +26,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
 django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
-#from django.conf import settings
+from django.conf import settings
 
 
 class AdvertiserV2:
@@ -49,7 +49,7 @@ class AdvertiserV2:
         self.home_base = ''
         self.logged_in = False
         self.custom_l = False
-        self.model = tf.keras.models.load_model('./models/model-2024-03-24.keras')
+        self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/topic_model_new')
         self.templates = []
         self.forum_settings = {}
 
