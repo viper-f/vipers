@@ -103,7 +103,7 @@ def crawl_process(request):
     session_id = request.session['session_id']
     dead_included = str(int(request.session['dead_included']))
 
-    subprocess.Popen(["venv/bin/python", "intellect/crawler_process.py",
+    subprocess.Popen(["venv312/bin/python", "intellect/crawler_process.py",
                       "-i", session_id,
                       "-d", dead_included,
                       "symbol"], stdout=open('subprocess.log', 'a'), stderr=open('subprocess.errlog', 'a'))

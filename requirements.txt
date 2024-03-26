@@ -14,3 +14,4 @@ django-crontab
 django_select2
 beautifulsoup4
 daphne
+gunicorn

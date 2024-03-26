@@ -105,7 +105,7 @@ def advertiser_process(request):
     custom_password = request.session['custom_password']
 
 
-    subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
+    subprocess.Popen(["venv312/bin/python", "advertiser/advertiser_process.py",
                       "-l", url,
                       "-i", session_id,
                       "-t", ','.join(templates),
@@ -187,7 +187,7 @@ def partner_process(request):
     urls = request.session['partner_urls']
     template = request.session['partner_template']
     user_id = request.user.id
-    subprocess.Popen(["venv/bin/python", "advertiser/partner_mailer_process.py",
+    subprocess.Popen(["venv312/bin/python", "advertiser/partner_mailer_process.py",
                       "-u", urls,
                       "-i", session_id,
                       "-t", template,

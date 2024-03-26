@@ -45,7 +45,7 @@ def index(request):
         })
 
 def process(request):
-    p = subprocess.Popen(["venv/bin/python",
+    p = subprocess.Popen(["venv312/bin/python",
                           "episodemover/process.py",
                           "-j", request.session['json'],
                           "symbol"],
