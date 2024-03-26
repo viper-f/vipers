@@ -18,9 +18,9 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 
-# sys.path.insert(0, './../vipers')
+sys.path.insert(0, './../vipers')
 # import vipers
-sys.path.insert(0, os.path.abspath('./..'))
+#sys.path.insert(0, os.path.abspath('./..'))
 import vipers
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
