@@ -23,9 +23,8 @@ from bs4 import BeautifulSoup
 sys.path.insert(0, os.path.abspath('./..'))
 import vipers
 import django
-
-django.setup()
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
+django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
 #from django.conf import settings
 
