@@ -20,9 +20,9 @@ from bs4 import BeautifulSoup
 
 # sys.path.insert(0, './../vipers')
 # import vipers
-# import django
-#
-# django.setup()
+import django
+
+django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
 from django.conf import settings
 
