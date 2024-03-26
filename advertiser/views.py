@@ -2,7 +2,7 @@ import csv
 import json
 import random
 import string
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.contrib import messages
 from django.db import connection
@@ -85,7 +85,6 @@ def advertiser_process(request):
     forum_id = request.session['forum_id']
     check_allowed(request, forum_id)
     active_sessions = BotSession.objects.filter(status='active')
-    print(settings.MAX_CONCURRENT)
     if not settings.MAX_CONCURRENT:
         max_concurrent = 1
     else:
@@ -104,6 +103,7 @@ def advertiser_process(request):
         custom_credentials = 'false'
     custom_username = request.session['custom_username']
     custom_password = request.session['custom_password']
+
 
     subprocess.Popen(["venv/bin/python", "advertiser/advertiser_process.py",
                       "-l", url,

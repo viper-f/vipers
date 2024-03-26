@@ -13,4 +13,4 @@ tensorflow
 django-crontab
 django_select2
 beautifulsoup4
-keras
+daphne
