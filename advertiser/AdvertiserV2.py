@@ -20,11 +20,14 @@ from bs4 import BeautifulSoup
 
 # sys.path.insert(0, './../vipers')
 # import vipers
+sys.path.insert(0, os.path.abspath('./..'))
+import vipers
 import django
 
 django.setup()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
 from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
-from django.conf import settings
+#from django.conf import settings
 
 
 class AdvertiserV2:
