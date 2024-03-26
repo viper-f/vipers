@@ -18,11 +18,11 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 
-sys.path.insert(0, './../vipers')
-import vipers
-import django
-
-django.setup()
+# sys.path.insert(0, './../vipers')
+# import vipers
+# import django
+#
+# django.setup()
 from advertiser.models import Forum, BotSession, AdTemplate, HomeForum
 from django.conf import settings
 
@@ -51,10 +51,10 @@ class AdvertiserV2:
         self.templates = []
         self.forum_settings = {}
 
-        # options.add_argument("user-data-dir=" + user_dir)
-        # self.driver1 = webdriver.Chrome(options=options)
-        # options.add_argument("user-data-dir=/home/root/vipers/profile")
-        # self.driver2 = webdriver.Chrome(options=options)
+        options.add_argument("user-data-dir=" + user_dir)
+        self.driver1 = webdriver.Chrome(options=options)
+        options.add_argument("user-data-dir=/home/root/vipers/profile")
+        self.driver2 = webdriver.Chrome(options=options)
 
     def load_forum_settings(self, home_forum_id):
         home_forum = HomeForum.objects.get(pk=home_forum_id)
