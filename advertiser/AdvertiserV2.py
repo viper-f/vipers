@@ -1,4 +1,5 @@
 import os
+import time
 
 from requests.exceptions import SSLError
 from selenium import webdriver
@@ -51,6 +52,7 @@ class AdvertiserV2:
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/models/model-2024-03-24.keras')
         self.templates = []
         self.forum_settings = {}
+        self.step_min_delay = 5
 
 
         options.add_argument("user-data-dir=" + user_dir)
@@ -506,6 +508,7 @@ class AdvertiserV2:
         # while n < 10:
         while n < len(self.links) - 1:
 
+            time_step_start = time.time()
             if self.check_stop_signal():
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Stop signal received')
@@ -580,6 +583,9 @@ class AdvertiserV2:
             if logged_id:
                 form = self.check_answer_form(self.driver2)
                 if form:
+                    current_time = time.time()
+                    if current_time - time_step_start < self.step_min_delay:
+                        time.sleep(self.step_min_delay - (current_time - time_step_start))
                     self.post(self.driver1, code_partner)
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
