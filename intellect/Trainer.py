@@ -128,29 +128,30 @@ class Trainer:
         training_dataset, test_dataset, training_labels, test_labels = train_test_split(dataset, labels, test_size=0.20, random_state=33)
 
         model = self.model()
-        model.fit(training_dataset, training_labels, epochs=500)
+        model.fit(training_dataset, training_labels, epochs=1000)
         test_loss, test_acc = model.evaluate(test_dataset, test_labels)
         print('\nTest accuracy: {}'.format(test_acc))
-        model.save('./../topic_model_new/model.keras')
-      #  tf.keras.models.save_model(model, './../topic_model_new')
+        model.save('./../models/model-2024-03-26.keras')
+       # tf.keras.models.save_model(model, './../topic_model_new')
        # tf.saved_model.save(model, './../topic_model_new')
 
     def model(self):
-        model = keras.Sequential([
-            keras.layers.Dense(150),
+        model = tf.keras.Sequential([
+            tf.keras.layers.Dense(150),
            # keras.layers.Dropout(rate=0.3),
-            keras.layers.Dense(200),
-            keras.layers.Dense(250),
+            tf.keras.layers.Dense(200),
+            tf.keras.layers.Dense(250),
           #  keras.layers.Dropout(rate=0.3),
            # keras.layers.Dropout(rate=0.3),
-            keras.layers.Dense(200),
+            tf.keras.layers.Dense(200),
            # keras.layers.Dropout(rate=0.3),
-            keras.layers.Dense(150),
+            tf.keras.layers.Dense(150),
            # keras.layers.Dropout(rate=0.3),
-            keras.layers.Dense(100),
+            tf.keras.layers.Dense(100),
             #keras.layers.Dropout(rate=0.3),
-            keras.layers.Dense(10, activation='softmax'),
+            tf.keras.layers.Dense(10, activation='softmax'),
         ])
+        model.build(input_shape=(None,150))
         model.summary()
 
         initial_learning_rate = 0.001
@@ -160,7 +161,7 @@ class Trainer:
             decay_rate=0.1,
             staircase=True)
 
-        model.compile(optimizer=tf.keras.optimizers.Adam(),
+        model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.000001),
                       loss=tf.keras.losses.CategoricalCrossentropy(),
                       metrics=['accuracy'])
         return model
