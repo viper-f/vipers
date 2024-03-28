@@ -3,7 +3,11 @@ import requests
 import re
 from requests.exceptions import SSLError
 from bs4 import BeautifulSoup
+import tensorflow as tf
+#from django.conf import settings
 class Intellect:
+    # def __init__(self,):
+    #     self.model = keras.models.load_model(str(settings.BASE_DIR) + '/topic_model')
 
     def analize(self, url, file=False):
         if file:
