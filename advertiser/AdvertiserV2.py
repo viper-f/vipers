@@ -52,7 +52,7 @@ class AdvertiserV2:
         self.model = tf.keras.models.load_model(str(settings.BASE_DIR)+'/models/model-2024-03-24.keras')
         self.templates = []
         self.forum_settings = {}
-        self.step_min_delay = 5
+        self.step_min_delay = 3
 
 
         options.add_argument("user-data-dir=" + user_dir)
