@@ -5,8 +5,7 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-from requests.exceptions import SSLError
-from urllib3.exceptions import NameResolutionError
+from requests.exceptions import SSLError, ConnectionError
 
 sys.path.insert(0, './../vipers')
 import vipers
@@ -29,13 +28,13 @@ class ActivityChecker:
         try:
             try:
                 html = requests.get(url).text
-            except ConnectionError | NameResolutionError as e:
+            except ConnectionError:
                 return 0
         except SSLError as e:
             url = url.replace('https://', 'http://')
             try:
                 html = requests.get(url).text
-            except ConnectionError | NameResolutionError as e:
+            except ConnectionError:
                 return 0
         soup = BeautifulSoup(html, 'html.parser')
         try:
