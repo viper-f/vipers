@@ -6,14 +6,17 @@ import time
 import requests
 from bs4 import BeautifulSoup
 from requests.exceptions import SSLError
+from urllib3.exceptions import NameResolutionError
 
 sys.path.insert(0, './../vipers')
 import vipers
 import django
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
 django.setup()
 from django.db import connection
 from advertiser.models import Forum
+
 
 class ActivityChecker:
     def __init__(self):
@@ -26,13 +29,13 @@ class ActivityChecker:
         try:
             try:
                 html = requests.get(url).text
-            except ConnectionError as e:
+            except ConnectionError | NameResolutionError as e:
                 return 0
         except SSLError as e:
             url = url.replace('https://', 'http://')
             try:
                 html = requests.get(url).text
-            except ConnectionError as e:
+            except ConnectionError | NameResolutionError as e:
                 return 0
         soup = BeautifulSoup(html, 'html.parser')
         try:
@@ -69,7 +72,7 @@ class ActivityChecker:
             flags.append('(' + is_dead + ',' + str(forum[0]) + ')')
         values = ','.join(values)
         flags = ','.join(flags)
-        #print("update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
+        # print("update advertiser_forum as forum set activity = c.activity, inactive_days = c.days, stop = c.is_dead from (values " + values + ") as c(activity, days, is_dead, id) where c.id = forum.id;")
 
         with connection.cursor() as cursor:
             cursor.execute(
