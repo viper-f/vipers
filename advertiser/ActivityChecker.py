@@ -25,24 +25,19 @@ class ActivityChecker:
         return list(Forum.objects.exclude(stop=True).values_list('id', 'domain', 'inactive_days', 'board_found'))
 
     def check_activity_24(self, url):
+        url += '/api.php?method=board.get&fields=users_24h'
         try:
-            try:
-                html = requests.get(url).text
-            except ConnectionError:
-                return 0
+            text = requests.get(url).text
         except SSLError as e:
             url = url.replace('https://', 'http://')
-            try:
-                html = requests.get(url).text
-            except ConnectionError:
-                return 0
-        soup = BeautifulSoup(html, 'html.parser')
-        try:
-            block = soup.css.select('.users_24h')[0]
-            number = block.css.select('strong')[0].text
-            return int(number)
+            text = requests.get(url).text
         except:
             return 0
+        try:
+            data = json.loads(text)
+        except:
+            return 0
+        return int(data['response']['users_24h'])
 
     def is_forum_dead(self, inactive_days, founded):
         now = time.time()
