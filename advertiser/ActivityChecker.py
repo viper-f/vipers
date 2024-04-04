@@ -24,10 +24,16 @@ class ActivityChecker:
 
     def check_activity_24(self, url):
         try:
-            html = requests.get(url).text
+            try:
+                html = requests.get(url).text
+            except ConnectionError as e:
+                return 0
         except SSLError as e:
             url = url.replace('https://', 'http://')
-            html = requests.get(url).text
+            try:
+                html = requests.get(url).text
+            except ConnectionError as e:
+                return 0
         soup = BeautifulSoup(html, 'html.parser')
         try:
             block = soup.css.select('.users_24h')[0]
