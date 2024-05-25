@@ -1,3 +1,5 @@
 from django.contrib import admin
+from storage.models import StorageForum, StorageRecord
 
-# Register your models here.
+admin.site.register(StorageRecord)
+admin.site.register(StorageForum)

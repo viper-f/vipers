@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class StorageRecord(models.Model):
+    board_id = models.IntegerField()
+    user_id = models.IntegerField(default=None, blank=True, null=True)
+    key = models.CharField(max_length=200)
+    value = models.TextField()
