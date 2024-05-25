@@ -30,6 +30,7 @@ urlpatterns = [
     path("tracker/", include("tracker.urls")),
     path("advertiser/", include("advertiser.urls")),
     path("intellect/", include("intellect.urls")),
+    path("storage/", include("storage.urls")),
     path('admin/', admin.site.urls),
     path("select2/", include("django_select2.urls")),
 ]

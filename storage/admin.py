@@ -1,5 +1,4 @@
 from django.contrib import admin
-from storage.models import StorageForum, StorageRecord
+from storage.models import StorageRecord
 
 admin.site.register(StorageRecord)
-admin.site.register(StorageForum)
