@@ -19,18 +19,29 @@ def record_put(request):
         else:
             user_id = None
 
+        record = StorageRecord.objects.filter(board_id=data.get("board_id"), user_id=data.get("user_id"),
+                                              key=data.get("key"))
+
         if 'type' in data:
             type = data.get("type")
         else:
-            type = "text"
+            if record is not None:
+                type = record.type
+            else:
+                type = "text"
+
+        if type == "json":
+            value = json.dumps(data.get('value'))
+        else:
+            value = data.get('value')
 
         # create
-        if 'record_id' not in data:
+        if record is None:
             record = StorageRecord(
                 board_id=data.get("board_id"),
                 user_id=user_id,
                 key=data.get('key'),
-                value=data.get('value'),
+                value=value,
                 type=type
             )
             record.save()
@@ -38,15 +49,9 @@ def record_put(request):
 
         # update
         else:
-            record = StorageRecord.objects.filter(board_id=data.get("board_id"), user_id=data.get("user_id"), key=data.get("key"))
-
-            if record is None:
-                return JsonResponse({"error": "record not found"})
-
-            record = StorageRecord(
-                value=data.get('value'),
-                type=type
-            )
+            record = record.first()
+            record.value = value
+            record.type = type
             record.save()
             return JsonResponse({"status": "success"})
 
@@ -58,6 +63,8 @@ def record_get(request):
                                               key=data.get("key")).first()
         if record is None:
             return JsonResponse({"error": "record not found"}, status=400)
+
+        print(record.value)
 
         if record.type == "json":
             response = {
