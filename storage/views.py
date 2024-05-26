@@ -57,7 +57,7 @@ def record_get(request):
         record = StorageRecord.objects.filter(board_id=data.get("board_id"), user_id=data.get("user_id"),
                                               key=data.get("key")).first()
         if record is None:
-            return JsonResponse({"error": "record not found"})
+            return JsonResponse({"error": "record not found"}, status=400)
 
         if record.type == "json":
             response = {
