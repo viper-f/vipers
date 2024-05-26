@@ -20,7 +20,7 @@ def record_put(request):
             user_id = None
 
         record = StorageRecord.objects.filter(board_id=data.get("board_id"), user_id=data.get("user_id"),
-                                              key=data.get("key"))
+                                              key=data.get("key")).first()
 
         if 'type' in data:
             type = data.get("type")
@@ -49,7 +49,6 @@ def record_put(request):
 
         # update
         else:
-            record = record.first()
             record.value = value
             record.type = type
             record.save()
