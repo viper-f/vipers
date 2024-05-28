@@ -39,7 +39,7 @@ def style(request):
         filename_prefix = request.COOKIES.get('style_filename')
         print(filename_prefix)
         if filename_prefix is None:
-            filename_prefix = "old"
+            filename_prefix = "green"
 
         file = open(os.path.join(BASE_DIR, "dynamicfiles/files", filename_prefix+'_'+path))
         content = file.read()
