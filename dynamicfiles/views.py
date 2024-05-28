@@ -17,7 +17,6 @@ def set_cookie(request):
 
         max_age = 365 * 24 * 60 * 60
         expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT")
-        filename_prefix = request.COOKIES.get('style_filename')
 
         m = MyMorsel()
         m["SameSite"] = "None"
@@ -40,7 +39,6 @@ def style(request):
         path = request.path.split('/')[2]
 
         filename_prefix = request.COOKIES.get("style_"+path.split('.')[0])
-        print(filename_prefix)
         if filename_prefix is None:
             filename_prefix = "default"
 

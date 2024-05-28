@@ -1,10 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
 app_name = 'dynamicfiles'
 urlpatterns = [
-    path("style.css", views.style, name="stype"),
-    path("cs_style.css", views.style, name="cs_stype"),
+    re_path(r"^[a-zA-Z0-9_]*\.css/$", views.style, name="stype"),
     path("set_cookie", views.set_cookie, name="set_cookie"),
 ]
