@@ -11,11 +11,13 @@ from vipers.settings import BASE_DIR
 @xframe_options_exempt
 def set_cookie(request):
     if request.method == "GET":
-        cookie = request.GET.get("cookie")
+        cookie_name = request.GET.get("cookie_name")
+        cookie_value = request.GET.get("cookie_value")
         response = HttpResponse("Yes")
 
         max_age = 365 * 24 * 60 * 60
         expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT")
+        filename_prefix = request.COOKIES.get('style_filename')
 
         m = MyMorsel()
         m["SameSite"] = "None"
@@ -23,11 +25,12 @@ def set_cookie(request):
         m["Secure"] = True
         m["Path"] = "/"
         m["expires"] = expires
-        m.set("style_filename", cookie, cookie)
+        m.set("style_"+cookie_name, cookie_value, cookie_value)
         c = SimpleCookie()
-        c["style_filename"] = m
+        c["style_"+cookie_name] = m
 
-        response.cookies["style_filename"] = m
+        response.cookies["style_"+cookie_name] = m
+        response.cookies["style_"+cookie_name] = m
 
         return response
 
@@ -36,10 +39,10 @@ def style(request):
     if request.method == "GET":
         path = request.path.split('/')[2]
 
-        filename_prefix = request.COOKIES.get('style_filename')
+        filename_prefix = request.COOKIES.get("style_"+path.split('.')[0])
         print(filename_prefix)
         if filename_prefix is None:
-            filename_prefix = "green"
+            filename_prefix = "default"
 
         file = open(os.path.join(BASE_DIR, "dynamicfiles/files", filename_prefix+'_'+path))
         content = file.read()
