@@ -16,7 +16,6 @@ def set_cookie(request):
 
         max_age = 365 * 24 * 60 * 60
         expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT")
-        print(expires)
 
         m = MyMorsel()
         m["SameSite"] = "None"
