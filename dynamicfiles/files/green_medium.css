@@ -1,0 +1,35 @@
+:root {
+    --base-bg-custom: #B7EDB0 url(https://forumstatic.ru/files/001a/08/74/69005.png);
+
+    --pun-custom: #EEEDE0;
+    --pun-drop-custom:0 20px 45px 0 rgba(162, 180, 70, 0.2), 0 82px 82px 0 rgba(162, 180, 70, 0.17), 0 184px 110px 0 rgba(162, 180, 70, 0.1), 0 326px 131px 0 rgba(162, 180, 70, 0.03), 0 510px 143px 0 rgba(162, 180, 70, 0);
+
+    --cover-custom: #EAE8DA;
+
+    --text1-custom: #313430; /* black */
+    --text2-custom: #BEBCAE; /* light black */
+    --text3-custom: #FAFFEF; /*white*/
+    --links-custom: #ED413E;
+    --accent-custom: #A5DA86;
+
+    --head-img-left-custom: url(https://forumstatic.ru/files/001a/08/74/59355.png);
+    --head-img-right-custom: url(https://forumstatic.ru/files/001a/08/74/55112.png);
+    --head-drop-custom: url(https://forumstatic.ru/files/001a/08/74/32935.svg);
+    --tu-tu-custom: #5AA765;
+
+    --cat-drop-custom: 0 3px 6px 0 rgba(209, 251, 122, 0.2), 2px 10px 11px 0 rgba(209, 251, 122, 0.17), 4px 23px 14px 0 rgba(209, 251, 122, 0.1), 8px 42px 17px 0 rgba(209, 251, 122, 0.03), 12px 65px 19px 0 rgba(209, 251, 122, 0);
+    --cat-bg-custom: linear-gradient(42deg, #d4fc79 0%, #96e6a1 100%);
+    --cat-numb-custom: #D4FC79;
+    --cat-text-color-custom: #313430;
+
+    --arrow-drop-custom: 0 1px 1px 0 rgba(210, 215, 198, 0.1), 0 2px 2px 0 rgba(210, 215, 198, 0.09), 0 5px 3px 0 rgba(210, 215, 198, 0.05), 0 8px 3px 0 rgba(210, 215, 198, 0.01), 0 13px 4px 0 rgba(210, 215, 198, 0);
+
+    --foo-custom: url(https://forumstatic.ru/files/001a/08/74/39285.png);
+
+    --borders-custom: #D9D7C9;
+
+    --other-drop-custom: 0 1px 1px 0 rgba(210, 215, 198, 0.1), 0 2px 2px 0 rgba(210, 215, 198, 0.09), 0 5px 3px 0 rgba(210, 215, 198, 0.05), 0 8px 3px 0 rgba(210, 215, 198, 0.01), 0 13px 4px 0 rgba(210, 215, 198, 0);
+
+    --tab-img-multiply-custom: #D4FC79;
+    --tab-img-overlay-custom: rgba(212, 252, 121, 0.25);
+}
