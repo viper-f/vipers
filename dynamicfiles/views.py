@@ -34,6 +34,7 @@ def set_cookie(request):
         return response
 
 
+@xframe_options_exempt
 def style(request):
     if request.method == "GET":
         path = request.path.split('/')[2]
