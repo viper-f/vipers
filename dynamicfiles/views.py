@@ -44,7 +44,7 @@ def style(request):
 
         file = open(os.path.join(BASE_DIR, "dynamicfiles/files", filename_prefix+'_'+path))
         content = file.read()
-        response = HttpResponse(content=content)
+        response = HttpResponse(content=content, content_type='text/css')
         response['Content-Type'] = 'text/css'
         return response
 
