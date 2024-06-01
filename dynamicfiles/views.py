@@ -43,7 +43,7 @@ def check_cookie(request, cookie_name):
         parts = filename_prefix.split('_')
 
         response = JsonResponse({"main": parts[0], "contrast": parts[1]})
-        response["Access-Control-Allow-Credentials"] = True
+        response["Access-Control-Allow-Credentials"] = 'true'
         return response
 
 
