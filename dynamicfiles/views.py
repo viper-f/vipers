@@ -42,7 +42,9 @@ def check_cookie(request, cookie_name):
             filename_prefix = "default_default"
         parts = filename_prefix.split('_')
 
-        return JsonResponse({"main": parts[0], "contrast": parts[1]})
+        response = JsonResponse({"main": parts[0], "contrast": parts[1]})
+        response["Access-Control-Allow-Credentials"] = True
+        return response
 
 
 @xframe_options_exempt
