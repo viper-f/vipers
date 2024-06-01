@@ -1,7 +1,8 @@
+import json
 import os
 import datetime
 
-from django.http import HttpResponse, SimpleCookie
+from django.http import HttpResponse, SimpleCookie, JsonResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from dynamicfiles.hack import MyMorsel
@@ -33,6 +34,16 @@ def set_cookie(request):
 
         return response
 
+@xframe_options_exempt
+def check_cookie(request, cookie_name):
+    if request.method == "GET":
+        filename_prefix = request.COOKIES.get("style_" + cookie_name)
+        if filename_prefix is None:
+            filename_prefix = "default_default"
+        parts = filename_prefix.split('_')
+
+        return JsonResponse({"main": parts[0], "contrast": parts[1]})
+
 
 @xframe_options_exempt
 def style(request):
@@ -41,7 +52,7 @@ def style(request):
 
         filename_prefix = request.COOKIES.get("style_"+path.split('.')[0])
         if filename_prefix is None:
-            filename_prefix = "default"
+            filename_prefix = "default_default"
 
         file = open(os.path.join(BASE_DIR, "dynamicfiles/files", filename_prefix+'_'+path))
         content = file.read()
