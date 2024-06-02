@@ -67,10 +67,11 @@ def style_font(request):
     if request.method == "GET":
 
         font = request.COOKIES.get("style_font")
+        print(font)
         if font is None:
             content = '/* Nothing to change */'
         else:
-            font_parts = font.split(';')
+            font_parts = font.split('.')
             content = '.post-content p, textarea {font-size: '+font_parts[0]+'px!important; font-family: '+font_parts[1]+'!important}'
         response = HttpResponse(content=content, content_type='text/css')
         response['Content-Type'] = 'text/css'
