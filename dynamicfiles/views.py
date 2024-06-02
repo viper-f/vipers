@@ -35,7 +35,7 @@ def set_cookie(request):
         return response
 
 @xframe_options_exempt
-def check_cookie(request, cookie_name):
+def check_cookie_style(request, cookie_name):
     if request.method == "GET":
         filename_prefix = request.COOKIES.get("style_" + cookie_name)
         if filename_prefix is None:
@@ -43,6 +43,15 @@ def check_cookie(request, cookie_name):
         parts = filename_prefix.split('_')
 
         response = JsonResponse({"main": parts[0], "contrast": parts[1]})
+        response["Access-Control-Allow-Credentials"] = 'true'
+        return response
+
+@xframe_options_exempt
+def check_cookie(request, cookie_name):
+    if request.method == "GET":
+        value = request.COOKIES.get("style_" + cookie_name)
+
+        response = JsonResponse({"value": value})
         response["Access-Control-Allow-Credentials"] = 'true'
         return response
 
