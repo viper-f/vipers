@@ -62,3 +62,18 @@ def style(request):
         response['Content-Type'] = 'text/css'
         return response
 
+@xframe_options_exempt
+def style_font(request):
+    if request.method == "GET":
+        path = request.path.split('/')[2]
+
+        font_size = request.COOKIES.get("style_font")
+        if font_size is None:
+            content = '/* Nothing to change */'
+        else:
+            content = '.post-content p, textarea {font-size: '+font_size+'px}'
+        response = HttpResponse(content=content, content_type='text/css')
+        response['Content-Type'] = 'text/css'
+        return response
+
+
