@@ -37,7 +37,10 @@ class ActivityChecker:
             data = json.loads(text)
         except:
             return 0
-        return int(data['response']['users_24h'])
+        if 'response' in data and 'users_24h' in data['response']:
+            return int(data['response']['users_24h'])
+        else:
+            return 0
 
     def is_forum_dead(self, inactive_days, founded):
         now = time.time()
