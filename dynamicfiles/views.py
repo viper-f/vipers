@@ -72,6 +72,21 @@ def style(request):
         return response
 
 @xframe_options_exempt
+def mobile(request):
+    if request.method == "GET":
+        path = request.path.split('/')[2]
+
+        filename_prefix = request.COOKIES.get("style_"+path.split('.')[0])
+        if filename_prefix is None:
+            filename_prefix = "mobile-off"
+
+        file = open(os.path.join(BASE_DIR, "dynamicfiles/files", filename_prefix+'_'+path))
+        content = file.read()
+        response = HttpResponse(content=content, content_type='text/css')
+        response['Content-Type'] = 'text/css'
+        return response
+
+@xframe_options_exempt
 def style_font(request):
     if request.method == "GET":
 
