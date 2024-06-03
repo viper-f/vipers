@@ -56,7 +56,6 @@ def check_cookie(request, cookie_name):
         return response
 
 
-@xframe_options_exempt
 def style(request):
     if request.method == "GET":
         path = request.path.split('/')[2]
@@ -69,6 +68,7 @@ def style(request):
         content = file.read()
         response = HttpResponse(content=content, content_type='text/css')
         response['Content-Type'] = 'text/css'
+        response["X-Frame-Options"] = "ALLOWALL"
         return response
 
 @xframe_options_exempt
