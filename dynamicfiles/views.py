@@ -87,11 +87,10 @@ def mobile(request):
         return response
 
 @xframe_options_exempt
-def style_font(request):
+def font(request):
     if request.method == "GET":
 
         font = request.COOKIES.get("style_font")
-        print(font)
         if font is None:
             content = '/* Nothing to change */'
         else:
