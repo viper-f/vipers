@@ -1,0 +1,297 @@
+@media screen and (max-width: 720px) {
+    html, body, #pun, .punbb {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-size: contain;
+    -webkit-text-size-adjust: none;
+    overflow-wrap: break-word;
+    float: none;
+}
+body {
+    position: relative;
+    background-position: center 0;
+    overflow: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: auto !important;
+    z-index: 1;
+}
+img {
+    max-width: 100% !important;
+    height: auto;
+}
+#pun_wrap #pun {
+    width: 100% !important;
+    border-width: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+	border-radius: 0 !important;
+}
+#pun .punbb {
+		padding: 15px !important;
+    box-sizing: border-box
+	}
+
+    #pun #pun-redirect.punbb .info .container {
+        width: 100% !important;
+    }
+
+    #pun-navlinks {
+        width: 100% !important;
+    }
+
+    #pun-navlinks span, #pun a#nav_fast-nav {
+        font-size: 0 !important;
+    }
+    #pun-navlinks ul.container > li a {
+        gap: 0 !important;
+        padding: 3px 10px !important;
+    }
+    #nav_fast-nav:before {
+        margin: 0 !important;
+    }
+    #pun-ulinks .container, #pun-ulinks {
+        flex-wrap: wrap;
+        height: auto !important;
+        align-items: flex-start !important;
+    }
+    #pun-ulinks .container a, #pun a#my_settings  {
+        padding: 3px 10px !important;
+    }
+    #pun-navlinks ul.container > li a:before {
+        background: var(--text1) !important;
+    }
+    .leaf, .for-music, .for-ams, .header_section-left:after, .header_section-right, .persons_second-wrap, .Add, #pun .user-avatar, .banners_part2 {
+        display: none !important;
+    }
+    #pun-status {
+        margin-left: 0 !important;
+        width: 100% !important;
+        right: 15px;
+        top: 59px !important;
+    }
+    #pun-status .item3, #pun-status .item4, #pun-status .item2 {
+        display: none !important;
+    }
+    #header_wrapper {
+        width: 100%;
+        overflow: hidden;
+        height: 143px !important;
+    }
+    .header_section-left {
+        background-position: center !important;
+        background-size: cover !important;
+        background: var(--head-img-right) !important;
+        background-size: cover !important;
+        height: 143px !important;
+    }
+    #pun-index .category tr {
+        padding: 0 !important;
+        flex-direction: column;
+        width: 100% !important;
+        align-items: flex-end;
+        gap: 10px !important;
+    }
+    #pun-index .tcl, #pun-index .tcr {
+        width: 100% !important;
+        overflow: visible;
+    }
+    #pun-index td.tcr {
+        border-top: 1px solid var(--borders) !important;
+        padding: 0px !important;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+    #pun .lastmess_wrap {
+        display: flex;
+        flex-direction: column;
+        line-height: 100%;
+        gap: 3px;
+        flex: 1;
+        align-items: flex-end;
+        text-align: right
+    }
+    #pun-index .tcr a.lastpost-link {
+        width: 100% !important;
+    }
+   #pun #pun-stats .container {
+        padding: 0 !important;
+    }
+    #pun .banners-wrap, #pun .banners_part1 {
+        width: 100%;
+    }
+    #pun-index table Div.icon {
+        top: -2px !important;
+        left: calc(100% - 40px)!important;
+        pointer-events: none;
+        background-position-y: 0 !important;
+        width: 20px;
+        height: 15px !important;
+        background: var(--accent) !important;
+        border-radius: 8px !important;
+    }
+#pun-viewforum .forum .tc2, #pun-viewforum .forum .tc3,
+    #pun-searchtopics .forum .tc3 {
+	display: none
+}
+
+    #pun .forum tr {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+    }
+    #pun .forum tr td {
+        width: auto !important;
+    }
+#pun .punbb .forum .tcr {
+	display: flex;
+	flex-direction: column;
+	text-align: left !important;
+	align-items: flex-start !important;
+}
+#pun .linkst, #pun .linksb {
+	flex-wrap: wrap !important;
+	gap: 5px !important;
+}
+   #pun .post-author {
+        float: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+    .field_wrap2, .pa-fld1, .pa-fld2, .pa-fld3, .pa-fld4 {
+        display: none !important;
+    }
+    .field_wrap {
+        border-radius: 10px 10px 10px 2px !important;
+display: grid;
+  grid-template-columns: 50px 1fr;
+  grid-template-rows: minmax 1fr;
+  gap: 0px 10px;
+  grid-template-areas:
+    "ava name"
+    "ava title";
+        padding: 10px !important;
+}
+#pun .pa-author {
+  align-self: end;
+  grid-area: name;
+    margin: 0 !important;
+    text-align: left !important;
+}
+#pun .pa-title {
+  align-self: start;
+  grid-area: title;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+    .pa-avatar, .pa-avatar img {
+        width: 50px;
+        height: 50px;
+        border-radius: 100% !important;
+    }
+    #pun .pa-avatar {
+        grid-area: ava;
+    }
+    #pun .post-body {
+        margin: 0
+    }
+    #pun .punbb .post-links {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #pun .punbb .post-links ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 5px;
+    }
+
+    #pun .punbb .post-links ul a {
+        background: var(--cover);
+        border-radius: 8px;
+        padding: 5px 10px !important;
+    }
+    .pl-email.pm {
+        margin-right: auto !important;
+    }
+    .post-links li + li, .pa-links li + li {
+        margin: 0 !important;
+    }
+    #pun #post.container {
+        padding: 0 !important;
+    }
+    #pun #form-buttons {
+        flex-direction: column;
+    }
+    .tcl.username {
+        width: 20% !important;
+    }
+    .tc3.num_posts, .tc3.registered {
+        display: none
+    }
+    .tc3.last_visit {
+        width: 20% !important;
+    }
+    #viewprofile .container, #viewprofile .container ul {
+        padding: 0
+    }
+    #viewprofile tr {
+        flex-direction: column;
+    }
+    #pun #viewprofile #profile-left {
+        width: 100% !important;
+    }
+    #pun-messages #profilenav ul {
+        flex-wrap: wrap
+    }
+    #pun-messages .fs-box .container tr {
+        padding: 0 !important;
+    }
+    #pun-messages .fs-box .container td {
+        text-align: left;
+        padding: 5px !important;
+    }
+    .tc2.pmtc22, .tc3.pmtc33 {
+        white-space: wrap !important;
+        width: 25% !important;
+    }
+        #punbbsearch.container {
+        padding: 0 !important;
+    }
+    .forum div.tclcon {
+        flex: 1;
+    }
+    #pun .arrow_wrap {
+        margin: 0 !important;
+        z-index: 9999;
+        right: 10px;
+        justify-content: flex-end;
+        height: calc(100% - 20px)
+    }
+    .go-up span, .go-down span {
+        background: var(--accent) !important;
+        padding: 0 10px !important;
+    }
+    .mobile_header {
+        display: flex !important;
+        position: absolute;
+        z-index: 4;
+        width: 100%;
+        height: 100%;
+        padding: 45px 30px 30px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        box-sizing: border-box;
+        color: var(--text3);
+        gap: 0px;
+    }
+    .mobile_logo {
+        font: normal 45px var(--font-accent);
+        text-shadow: 1px 1px 1px rgba(0,0,0,.2)
+    }
+}
