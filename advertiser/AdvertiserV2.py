@@ -361,6 +361,9 @@ class AdvertiserV2:
             else:
                 topic = topic[0]
 
+            if " от " in topic.text or "игрок" in topic.text:
+                continue
+
             topic_n += 1
 
             if len(line.css.select('.tcr>a')):
