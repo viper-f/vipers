@@ -1,0 +1,35 @@
+:root {
+	--base-bg-custom: #252525 url(https://forumstatic.ru/files/001a/08/74/83032.png);
+
+	--pun-custom: #333431;
+	--pun-drop-custom: 0 20px 45px 0 rgba(32, 34, 25, 0.2), 0 82px 82px 0 rgba(32, 34, 25, 0.17), 0 184px 110px 0 rgba(32, 34, 25, 0.1), 0 326px 131px 0 rgba(32, 34, 25, 0.03), 0 510px 143px 0 rgba(32, 34, 25, 0);
+
+	--cover-custom: #2C2D2A;
+
+	--text1-custom: #BAC1B4; /* black */
+	--text2-custom: #545552; /* light black */
+	--text3-custom: #FAFFEF; /*white*/
+	--links-custom: #7AB82C;
+	--accent-custom: #F5B792;
+
+	--head-img-left-custom: url(https://forumstatic.ru/files/001a/08/74/94455.png);
+	--head-img-right-custom: url(https://forumstatic.ru/files/001a/08/74/21063.png);
+	--head-drop-custom: transparent;
+	--tu-tu-custom: #D09C78;
+
+	--cat-drop-custom: none;
+	--cat-bg-custom: linear-gradient(42deg, #f5b792 0%, #ffe8bc 100%);
+	--cat-numb-custom: #F5B792;
+	--cat-text-color-custom: #2C2D2A;
+
+	--arrow-drop-custom: 0 1px 1px 0 rgba(34, 35, 32, 0.1), 0 2px 2px 0 rgba(34, 35, 32, 0.09), 0 5px 3px 0 rgba(34, 35, 32, 0.05), 0 8px 3px 0 rgba(34, 35, 32, 0.01), 0 13px 4px 0 rgba(34, 35, 32, 0);
+
+	--foo-custom: url(https://forumstatic.ru/files/001a/08/74/81807.png);
+
+	--borders-custom: #3B3C39;
+
+	--other-drop-custom:  0 1px 1px 0 rgba(34, 35, 32, 0.1), 0 2px 2px 0 rgba(34, 35, 32, 0.09), 0 5px 3px 0 rgba(34, 35, 32, 0.05), 0 8px 3px 0 rgba(34, 35, 32, 0.01), 0 13px 4px 0 rgba(34, 35, 32, 0);
+
+	--tab-img-multiply-custom: #FCC079;
+	--tab-img-overlay-custom: rgba(252, 223, 121, 0.25);
+}

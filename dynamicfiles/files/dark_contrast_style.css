@@ -1,0 +1,10 @@
+:root {
+
+    --pun: var(--pun-custom, #EEEDE0);
+
+    --cover: var(--cover-custom, #EAE8DA);
+
+    --text2: var(--text2-custom, #BEBCAE); /* light black */
+
+    --borders: var(--borders-custom, #D9D7C9);
+}
