@@ -64,7 +64,7 @@ h2 {
 }
 
 .block div {
-    display: inline-block
+    display: block
 }
 
 #logs {
