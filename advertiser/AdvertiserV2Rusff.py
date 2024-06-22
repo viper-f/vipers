@@ -153,8 +153,8 @@ class AdvertiserV2Rusff (AdvertiserV2):
                 form = self.check_answer_form(self.driver2)
                 if form:
                     self.post(self.driver1, code_partner)
-                    self_form = self.check_answer_form(self.driver1)
                     self.go_to_last_page(self.driver1)
+                    self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_last_post_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
