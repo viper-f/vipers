@@ -20,5 +20,6 @@ urlpatterns = [
     path("schedule/<int:id>", views.schedule, name="schedule"),
     path("activity", views.activity_list, name="activity_list"),
     path("activity/<int:id>", views.forum_activity, name="forum_activity"),
-    path("activity_download", views.download_activity, name="download_activity")
+    path("activity_download", views.download_activity, name="download_activity"),
+    path("toggle-visibility/<int:forum_id>/<str:hidden>", views.toggle_visibility, name="toggle-visibility"),
 ]

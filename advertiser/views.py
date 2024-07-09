@@ -555,3 +555,14 @@ def download_activity(request):
 
     return response
 
+
+@login_required
+def toggle_visibility(request, forum_id, hidden):
+    forum = HomeForum.objects.get(id=forum_id)
+    if hidden == 'hide':
+        forum.is_hidden = True
+    else:
+        forum.is_hidden = None
+    forum.save()
+    return JsonResponse({"result": "success"})
+

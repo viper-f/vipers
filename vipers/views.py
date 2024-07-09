@@ -36,7 +36,13 @@ def user_index(request):
             sessions[active_session.home_forum.id][active_session.type] = active_session.session_id
 
     forums = HomeForum.objects.filter(users=request.user).order_by("id")
+    forums_visible = []
+    forums_hidden = []
+
     for forum in forums:
+        if forum.is_hidden:
+            forums_hidden.append(forum)
+            continue
         if forum.id in sessions:
             if 'advertiser' in sessions[forum.id]:
                 forum.session_advertiser = sessions[forum.id]['advertiser']
@@ -50,10 +56,12 @@ def user_index(request):
         else:
             forum.session_advertiser = False
             forum.session_partner = False
+        forums_visible.append(forum)
 
     return render(request, "vipers/user_index.html", {
         "username": request.user.username,
-        "forums": forums,
+        "forums": forums_visible,
+        "hidden_forums": forums_hidden,
         "lock": lock,
         "breadcrumbs": [{"link": "/", "name": "Главная"}, {"link": "/user-index", "name": "Мои форумы"}]
     })

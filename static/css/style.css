@@ -220,6 +220,11 @@ a:hover {
     gap: 10px;
     row-gap: 10px;
     flex-wrap: wrap;
+    margin-bottom: 2em;
+}
+
+#hidden-forum-wrapper {
+   margin-top: 1em;
 }
 
 .forum-box {
@@ -339,4 +344,8 @@ th {
 #schedule-form > form > label {
    margin-top: 1rem;
    display: block
+}
+
+.hidden {
+   display: none;
 }

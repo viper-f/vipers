@@ -30,12 +30,25 @@
         {% endif %}
         <li><a href="/tracker/charts/{{ forum.id }}">Статистика кликов</a></li>
         <li><a href="/advertiser/history/{{ forum.id }}">История работы</a></li>
+        <li><a onclick="toggleVisibility({{ forum.id }}, 'hide')">Скрыть форум</a></li>
 <!--         <li><a href="advertiser/schedule/{{ forum.id }}">Расписание</a></li>-->
     </ul>
 
 </div>
     {% endfor %}
     </div>
+
+<a onclick="show_hidden('hidden-forum-wrapper');">Скрытые форумы</a>
+<div id="hidden-forum-wrapper" class="hidden">
+    {% for hidden_forum in hidden_forums %}
+    <div class="forum-box sul-box-raised-2"><h3 class="forum-title">{{ hidden_forum.name }}</h3>
+        <a href="{{ hidden_forum.domain }}">{{ hidden_forum.domain }}</a>
+        <ul>
+            <li><a onclick="toggleVisibility({{ hidden_forum.id }}, 'show')">Показать форум</a></li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
 <h2 class="title-section">Things To Know</h2>
 <ul>
     <li>Каждый пользователь может управлять одним или несколькими форумами.</li>
@@ -48,4 +61,17 @@
      <li>Если в форме рекламы вы не указали Custom Credentials, реклама на вашем форуме будет оставяться от стандартного профиля
      рекламы, но без обратной ссылки. </li>
 </ul>
+
+<script>
+    function show_hidden(elem_id) {
+        document.getElementById(elem_id).classList.toggle('hidden');
+    }
+
+    function toggleVisibility(forum_id, hidden) {
+        fetch("/advertiser/toggle-visibility/"+forum_id+"/"+hidden).then(function(event) {
+           location.reload();
+        })
+    }
+</script>
 {% endblock %}
+
