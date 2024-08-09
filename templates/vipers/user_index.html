@@ -17,6 +17,9 @@
             {% if  forum.session_advertiser != False %}
                 <a href="/advertiser/observe-advertiser-process/{{ forum.session_advertiser }}">Текущая сессия</a>
             {% endif %} </li>
+            {% if  forum.session_advertiser_teminate  != False %}
+                <a href="/advertiser/kill-session/{{ forum.session_advertiser }}">Kill old session</a>
+            {% endif %}
         {% else %}
         <li><a href="/advertiser/advertiser/{{ forum.id }}">Запустить рекламу</a></li>
         {% endif %}
