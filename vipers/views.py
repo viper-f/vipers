@@ -46,10 +46,9 @@ def user_index(request):
         if forum.id in sessions:
             if 'advertiser' in sessions[forum.id]:
                 forum.session_advertiser = sessions[forum.id]['advertiser']
-                forum.session_advertiser_teminate = True
             else:
                 forum.session_advertiser = False
-                 forum.session_advertiser_teminate = False
+
 
             if 'partner' in sessions[forum.id]:
                 forum.session_partner = sessions[forum.id]['partner']
@@ -57,7 +56,7 @@ def user_index(request):
                 forum.session_partner = False
         else:
             forum.session_advertiser = False
-             forum.session_advertiser_teminate = False
+
             forum.session_partner = False
         forums_visible.append(forum)
 
