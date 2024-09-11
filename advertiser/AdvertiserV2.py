@@ -217,9 +217,12 @@ class AdvertiserV2:
                     if track not in self.tracked:
                         parts = l.split('#')
                         self.tracked.append(track)
-                        id, found = self.get_board_id(track)
-                        if id is not False and id not in self.tracked_id:
-                            self.links.append([parts[0], 0, 'new', id, found])
+                        try:
+                            id, found = self.get_board_id(track)
+                            if id is not False and id not in self.tracked_id:
+                                self.links.append([parts[0], 0, 'new', id, found])
+                        except:
+                            continue
 
     def login(self, driver, url):
         if self.check_cache_login(driver):
