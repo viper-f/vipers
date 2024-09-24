@@ -3,7 +3,7 @@ import time
 
 from requests.exceptions import SSLError
 from selenium import webdriver
-from selenium.common import NoSuchDriverException, NoSuchElementException
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -487,7 +487,18 @@ class AdvertiserV2:
             self.tracked += stop_list
         self.home_base = track
 
-        self.driver1.get(url)
+        try:
+            self.driver1.get(url)
+        except:
+            if self.custom_l:
+                self.log_out(self.driver1, self.home_base)
+            self.driver2.quit()
+            self.driver1.quit()
+
+            self.log(total=str(0), success=str(0), skipped=str(0), visited=str(0),
+                 message="Could not load your forum. Please try again a little later")
+            return 0, 0, self.links
+
         if templates is False:
             home_code = self.get_code(self.driver1),
             self.templates.append({
