@@ -30,3 +30,5 @@ subprocess.log
 mover_subprocess.errlog
 mover_subprocess.log
 debug.log
+log
+!log/none
