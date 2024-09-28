@@ -32,7 +32,7 @@ from django.conf import settings
 class AdvertiserV2:
     def __init__(self, user_dir="/home/root/vipers/profile", log_mode='console', channel=None, session_id=None):
         options = Options()
-        options.add_argument('--headless-new')
+        options.add_argument("--headless=new")
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_argument("--disable-dev-shm-usage")
