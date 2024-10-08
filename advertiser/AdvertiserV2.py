@@ -506,7 +506,7 @@ class AdvertiserV2:
             return 0, 0, self.links
 
         if templates is False:
-            home_code = self.get_code(self.driver1),
+            home_code = self.get_code(self.driver1)
             self.templates.append({
                 'code': home_code,
                 'sample': self.sample_template(home_code)
