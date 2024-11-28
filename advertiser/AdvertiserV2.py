@@ -19,9 +19,7 @@ import requests
 from bs4 import BeautifulSoup
 
 sys.path.insert(0, './../vipers')
-# import vipers
-#sys.path.insert(0, os.path.abspath('./..'))
-import vipers
+
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vipers.settings")
 django.setup()
@@ -34,14 +32,8 @@ class AdvertiserV2:
         options = Options()
         options.add_argument("--headless=new")
         options.add_argument('--no-sandbox')
-        options.add_argument('--disable-gpu')
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disable-dev-tools")
-        options.add_argument("--no-zygote")
-        options.add_argument("--single-process")
-        options.add_argument("--remote-debugging-pipe")
-        options.add_argument("--log-path=/tmp")
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        # options.add_argument("--log-path=/tmp")
+        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
         options.page_load_strategy = 'eager'
@@ -481,6 +473,15 @@ class AdvertiserV2:
         except:
             return False
 
+    def skip_warning(self, driver):
+        try:
+            button = driver.find_element(By.CLASS_NAME, 'js-attention-agree')
+            if button:
+                button.click()
+        except:
+            pass
+
+
     def work(self, url, id, home_forum_id, stop_list=False, templates=False, custom_login_code={}):
         print('Starting work at ' + datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         self.load_forum_settings(id)
@@ -560,6 +561,8 @@ class AdvertiserV2:
                          message='Could not load page: ' + link)
                 continue
 
+            self.skip_warning(self.driver2)
+
             if self.links[n][2] == 'new':
                 partner_domain = link.split('/viewtopic')[0]
                 try:
@@ -609,12 +612,24 @@ class AdvertiserV2:
                     current_time = time.time()
                     if current_time - time_step_start < self.step_min_delay:
                         time.sleep(self.step_min_delay - (current_time - time_step_start))
-                    self.post(self.driver1, code_partner)
+                    try:
+                        self.post(self.driver1, code_partner)
+                    except:
+                        skipped += 1
+                        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                                 message='Could not post partner code: ' + link)
+                        continue
                     self_form = self.check_answer_form(self.driver1)
                     cur_link = self.find_current_link(self.driver1)
 
                     full_code_home = chosen_code + '\n' + '[url=' + cur_link + ']Ваша реклама[/url]'
-                    self.post(self.driver2, full_code_home)
+                    try:
+                        self.post(self.driver2, full_code_home)
+                    except:
+                        skipped += 1
+                        self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
+                                 message='Could not post our code: ' + link)
+                        continue
                     success += 1
                     self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                              message="Success: " + link)
