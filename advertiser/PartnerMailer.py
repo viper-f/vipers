@@ -19,7 +19,6 @@ class PartnerMailer:
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
-        options.add_argument('--disable-gpu')
         options.add_argument("user-data-dir=/home/root/vipers/profile")
 
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -103,6 +102,13 @@ class PartnerMailer:
         except:
             return False
 
+    def skip_warning(self, driver):
+        try:
+            button = driver.find_element(By.CLASS_NAME, 'js-attention-agree')
+            if button:
+                button.click()
+        except:
+            pass
 
     def check_answer_form(self, driver):
         try:
@@ -165,6 +171,8 @@ class PartnerMailer:
                 self.log(total=str(total), success=str(success), skipped=str(skipped), visited=str(visited),
                          message='Could not load page: ' + url)
                 continue
+
+            self.skip_warning(self.driver2)
             partner_domain = url.split('/viewtopic')[0]
 
            # self.go_to_last_page(self.driver2)
